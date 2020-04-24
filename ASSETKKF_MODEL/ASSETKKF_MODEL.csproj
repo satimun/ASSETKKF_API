@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Mssql\bsicpers\**" />
+    <Compile Remove="Data\Mssql\Mcis\**" />
+    <Compile Remove="Request\bsicpers\**" />
+    <Compile Remove="Request\ERP\**" />
+    <Compile Remove="Request\Mcis\**" />
+    <Compile Remove="Response\bsicpers\**" />
+    <Compile Remove="Response\ERP\**" />
+    <Compile Remove="Response\Mcis\**" />
+    <Compile Remove="Send\Erp\**" />
+    <EmbeddedResource Remove="Data\Mssql\bsicpers\**" />
+    <EmbeddedResource Remove="Data\Mssql\Mcis\**" />
+    <EmbeddedResource Remove="Request\bsicpers\**" />
+    <EmbeddedResource Remove="Request\ERP\**" />
+    <EmbeddedResource Remove="Request\Mcis\**" />
+    <EmbeddedResource Remove="Response\bsicpers\**" />
+    <EmbeddedResource Remove="Response\ERP\**" />
+    <EmbeddedResource Remove="Response\Mcis\**" />
+    <EmbeddedResource Remove="Send\Erp\**" />
+    <None Remove="Data\Mssql\bsicpers\**" />
+    <None Remove="Data\Mssql\Mcis\**" />
+    <None Remove="Request\bsicpers\**" />
+    <None Remove="Request\ERP\**" />
+    <None Remove="Request\Mcis\**" />
+    <None Remove="Response\bsicpers\**" />
+    <None Remove="Response\ERP\**" />
+    <None Remove="Response\Mcis\**" />
+    <None Remove="Send\Erp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Oracle\" />
+    <Folder Include="Response\Asset\" />
+    <Folder Include="Send\Asset\" />
+  </ItemGroup>
+
+</Project>

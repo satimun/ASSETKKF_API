@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Mssql\bsicpers\**" />
+    <Compile Remove="Mssql\Mcis\**" />
+    <EmbeddedResource Remove="Mssql\bsicpers\**" />
+    <EmbeddedResource Remove="Mssql\Mcis\**" />
+    <None Remove="Mssql\bsicpers\**" />
+    <None Remove="Mssql\Mcis\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.60" />
+    <PackageReference Include="System.Data.Odbc" Version="4.7.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\CORE.csproj" />
+    <ProjectReference Include="..\ASSETKKF_MODEL\ASSETKKF_MODEL.csproj" />
+  </ItemGroup>
+
+</Project>

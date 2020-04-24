@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
+namespace ASSETKKF_API
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            //AllowCors
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllHeaders", builder =>
+                {
+                    builder
+                    .AllowAnyOrigin()                                                                                                                     
+                    .WithOrigins("http://localhost:8080", "http://localhost:8081", "http://ASSETKKF.kkfnets.com", "https://ASSETKKF.kkfnets.com")
+                    //.WithMethods("GET", "PUT", "POST", "DELETE")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .WithExposedHeaders("x-custom-header");
+                });
+            });
+
+            
+            //services.AddWebSocketManager();
+
+            //services.AddHostedService<JobService>();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSingleton<IConfiguration>(Configuration);
+
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
+
+            //--set DB configuration 
+            // 0 จริง 1 สำรอง  2 local
+            switch (Configuration["DBMOD"])
+            {
+                case "1":
+                    ASSETKKF_ADO.Mssql.Asset.Base.conString = Configuration["ConnAssetKKFBak"];
+                    break;
+
+                case "2":
+                    ASSETKKF_ADO.Mssql.Asset.Base.conString = Configuration["ConnAssetKKFLocal"];
+
+                    break;
+                default:
+                    ASSETKKF_ADO.Mssql.Asset.Base.conString = Configuration["ConnAssetKKF"];
+                    break;
+            }
+
+            Core.Recaptha.Recaptha.secret = Configuration["RecaptchaSecretKey"];
+
+            //StaticValue.GetInstant().LoadInstantAll();
+            Constant.StaticValue.GetInstant().LoadInstantAll();
+            //AllowCors
+            app.UseCors("AllowAllHeaders");
+            app.UseHttpsRedirection();
+            app.UseMvc();
+        }
+    }
+}
