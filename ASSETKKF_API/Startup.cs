@@ -32,7 +32,7 @@ namespace ASSETKKF_API
                 {
                     builder
                     .AllowAnyOrigin()                                                                                                                     
-                    .WithOrigins("http://localhost:8080", "http://localhost:8081", "http://ASSETKKF.kkfnets.com", "https://ASSETKKF.kkfnets.com")
+                    .WithOrigins("http://localhost:8080", "http://localhost:8081", "http://assetapi.kkfnets.com", "https://ASSETKKF.kkfnets.com")
                     //.WithMethods("GET", "PUT", "POST", "DELETE")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
