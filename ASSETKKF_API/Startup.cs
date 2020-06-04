@@ -15,12 +15,14 @@ namespace ASSETKKF_API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; set; }
+        public Startup()
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json");
+            Configuration = builder.Build();
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -32,7 +34,7 @@ namespace ASSETKKF_API
                 {
                     builder
                     .AllowAnyOrigin()                                                                                                                     
-                    .WithOrigins("http://localhost:8080", "http://localhost:8081", "http://assetapi.kkfnets.com", "https://ASSETKKF.kkfnets.com")
+                    .WithOrigins("http://localhost:8080", "http://192.168.43.244:8080/", "http://assetapi.kkfnets.com", "https://ASSETKKF.kkfnets.com", "https://kkfauditasset.kkfnets.com")
                     //.WithMethods("GET", "PUT", "POST", "DELETE")
                     .AllowAnyMethod()
                     .AllowAnyHeader()

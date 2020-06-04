@@ -34,7 +34,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                               .Select(s => s)
                               .ToList();
 
-            if (Permission.Count == 0) { throw new Exception("ถูกยกเลิกสิทธิ์เข้าใช้โปรแกรม."); }
+            if (Permission.Count == 0) { throw new Exception("ไม่มีสิทธิ์เข้าใช้โปรแกรม."); }
 
             var pass = Core.Util.EncryptUtil.ENDCodeNEW(dataReq.password.Trim());
             pass = dataReq.password.Trim();
@@ -60,6 +60,51 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                 res.COMPANYLST = user.Where(s => s.A_Review == "Y")
                               .Select(s => s.COMPANY)
                               .ToList();
+
+                var M_Review = user.Where(s => s.M_Review)
+                              .Select(s => s)
+                              .ToList();
+                res.M_Review = M_Review.Count > 0;
+
+                var M_ADD = user.Where(s => s.M_ADD)
+                              .Select(s => s)
+                              .ToList();
+                res.M_ADD = M_ADD.Count > 0;
+                
+                var M_EDIT = user.Where(s => s.M_EDIT)
+                              .Select(s => s)
+                              .ToList();
+                res.M_EDIT = M_EDIT.Count > 0;
+
+                var M_APPROV = user.Where(s => s.M_APPROV)
+                              .Select(s => s)
+                              .ToList();
+                res.M_APPROV = M_APPROV.Count > 0;
+
+                var M_Store = user.Where(s => s.M_Store)
+                              .Select(s => s)
+                              .ToList();
+                res.M_Store = M_Store.Count > 0;
+
+                var Menu1 = user.Where(s => s.Menu1)
+                              .Select(s => s)
+                              .ToList();
+                res.Menu1 = Menu1.Count > 0;
+
+                var Menu2 = user.Where(s => s.Menu2)
+                              .Select(s => s)
+                              .ToList();
+                res.Menu2 = Menu2.Count > 0;
+
+                var Menu3 = user.Where(s => s.Menu3)
+                              .Select(s => s)
+                              .ToList();
+                res.Menu3 = Menu3.Count > 0;
+
+                var Menu4 = user.Where(s => s.Menu4)
+                              .Select(s => s)
+                              .ToList();
+                res.Menu4 = Menu4.Count > 0;
 
                 ASSETKKF_ADO.Mssql.Asset.muTokenAdo.GetInstant().Insert(new ASSETKKF_MODEL.Data.Mssql.Asset.muToken()
                 {

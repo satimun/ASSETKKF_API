@@ -47,6 +47,16 @@ namespace ASSETKKF_API.Engine.Asset
                             
                             break;
                     }
+
+                    if (!String.IsNullOrEmpty(res.ConnStr))
+                    {
+                        var arrCon = res.ConnStr.Split(";");
+                        if (arrCon.Length > 0)
+                        {
+                            var arrServer = arrCon[0].Split("=");
+                            res.ServerAddr = arrServer[1];
+                        }
+                    }
                 }
             }
             catch(Exception ex)
