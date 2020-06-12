@@ -9,10 +9,16 @@ namespace ASSETKKF_ADO.Mssql.Asset
     public abstract class Base
     {
         public static string conString { get; set; }
+        public static string sql { get; set; }
 
         private string getConStr(string conStr)
         {
             return string.IsNullOrEmpty(conStr) ? conString : conStr;
+        }
+
+        protected string QuoteStr(string str)
+        {
+            return "\'" + str.Replace("'", $"{(char)39}") + "\'";
         }
 
         protected T ExecuteScalar<T>(string cmdTxt, DynamicParameters parameter = null, string conStr = null)

@@ -31,6 +31,19 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string COMPANY { get; set; }       
         public string CODCOMP { get; set; }
         public string CODPOSNAME { get; set; }
+
+        public bool M_Review { get; set; }
+        public bool M_ADD { get; set; }
+        public bool M_EDIT { get; set; }
+        public bool M_APPROV { get; set; }
+        public bool M_Store { get; set; }
+
+        public bool Menu1 { get; set; }
+        public bool Menu2 { get; set; }
+        public bool Menu3 { get; set; }
+        public bool Menu4 { get; set; }
+
+        public string DEPCODELST { get; set; }
     }
 
 }

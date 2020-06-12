@@ -57,5 +57,8 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string ACCEDIT { get; set; }
         public DateTime? ACCEDITDT { get; set; }
         public string COMPANY { get; set; }
+        public string LEADERCODE { get; set; }
+        public string AREACODE { get; set; }
+        public string IMGPATH { get; set; }
     }
 }
