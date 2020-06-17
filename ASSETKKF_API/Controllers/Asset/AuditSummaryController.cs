@@ -30,5 +30,13 @@ namespace ASSETKKF_API.Controllers.Asset
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
+
+        [HttpPost("GetDeptInfoSummary")]
+        public async Task<dynamic> GetDeptInfoSummary([FromBody] dynamic data)
+        {
+            var res = new AuditDepInfoSummaryApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
     }
 }

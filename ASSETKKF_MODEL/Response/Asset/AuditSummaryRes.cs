@@ -22,7 +22,7 @@ namespace ASSETKKF_MODEL.Response.Asset
     public class AuditDeptSummary
     {
         public string depcodeol { get; set; }
-        public string deptname { get; set; }
+        public string stname { get; set; }
         public float qty_total { get; set; }
         public float qty_wait { get; set; }
         public float qty_checked { get; set; }

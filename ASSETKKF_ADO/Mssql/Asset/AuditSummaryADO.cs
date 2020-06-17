@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using ASSETKKF_MODEL.Response.Asset;
+using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -135,7 +136,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetDEPMSTSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        public List<AuditDeptSummary> GetDEPMSTSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " select company,DEPMST ,max(DEPNM) as DEPNM,max(SQNO) as SQNO,max(audit_no) as audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
@@ -170,11 +171,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
             cmd += " group by company,DEPMST";
             cmd += " order by company,DEPMST";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param).ToList();
+            var res = Query<AuditDeptSummary>(cmd, param).ToList();
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetSummaryBySqnoDepMst(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        public List<AuditDeptSummary> GetSummaryByDepMst(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " select company,depcodeol,max(stname) as stname,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
@@ -215,7 +216,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             cmd += " group by company,depcodeol,SQNO,audit_no";
             cmd += " order by company,depcodeol,SQNO,audit_no";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param).ToList();
+            var res = Query<AuditDeptSummary>(cmd, param).ToList();
             return res;
         }
 

@@ -1,21 +1,17 @@
-﻿using Core.Util;
-using ASSETKKF_API.Constant;
-using ASSETKKF_MODEL.Request.Oauth;
+﻿using ASSETKKF_MODEL.Data.Mssql.Asset;
+using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
-using ASSETKKF_MODEL.Response.Oauth;
+using ASSETKKF_MODEL.Response.Asset;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ASSETKKF_MODEL.Data.Mssql.Asset;
-using ASSETKKF_MODEL.Request.Asset;
-using ASSETKKF_MODEL.Response.Asset;
 
 namespace ASSETKKF_API.Engine.Asset.Dashboard
 {
-    public class AuditSummaryApi : Base<AuditSummaryReq>
+    public class AuditDepInfoSummaryApi : Base<AuditSummaryReq>
     {
-        public AuditSummaryApi()
+        public AuditDepInfoSummaryApi()
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
@@ -23,12 +19,11 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
 
         protected override void ExecuteChild(AuditSummaryReq dataReq, ResponseAPI dataRes)
         {
-            var res = new AuditSummaryRes();
+            AuditDeptSummaryRes res = new AuditDeptSummaryRes();
             try
             {
 
-                var obj = ASSETKKF_ADO.Mssql.Asset.AuditSummaryADO.GetInstant().GetSummary(dataReq);
-
+                var obj = ASSETKKF_ADO.Mssql.Asset.AuditSummaryADO.GetInstant().GetSummaryByDepMst(dataReq);
                 if (obj == null)
                 {
                     res._result._code = "404";
@@ -37,6 +32,7 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
                 }
                 else
                 {
+                    res.AuditSummaryLST = obj;
 
                     res._result._code = "200";
                     res._result._message = "";
@@ -44,7 +40,6 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
 
                 }
 
-                res.AuditSummaryRPT = obj.FirstOrDefault();
 
             }
             catch (Exception ex)
@@ -53,8 +48,8 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
                 res._result._message = ex.Message;
                 res._result._status = "Internal Server Error";
             }
-
             dataRes.data = res;
+
 
         }
     }

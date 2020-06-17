@@ -36,6 +36,14 @@ namespace ASSETKKF_API.Controllers.Asset
 
         }
 
+        [HttpPost("GetAuditDepLst")]
+        public async Task<dynamic> GetAuditDepLst([FromBody] dynamic data)
+        {
+            var res = new AuditCutDepAPI();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
+
         [HttpPost("GetAuditInfo")]
         public async Task<dynamic> GetAuditInfo([FromBody] dynamic data)
         {
