@@ -18,5 +18,9 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string FLAG { get; set; }
         public string CIR_DESC { get; set; }
         public string COMPANY { get; set; }
+        public string AUDIT_NO { get; set; }
+
+        public List<ASAUDITCUTDATEMST> ASAUDITCUTDATEMSTLST { get; set; }
+
     }
 }
