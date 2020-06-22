@@ -27,7 +27,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
             int i = 0;
-            sql = "Select * from  FR_STPOSITASSET()";
+            sql = "Select distinct POSITCODE,POSITDESC from  FR_STPOSITASSET()";
             sql += " where company = '" + company + "'";
             if (lstDepLike != null && lstDepLike.Count > 0)
             {
@@ -43,6 +43,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 }
                 sql += " )";
             }
+
             
 
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STPOSITASSET>(sql, param).ToList();

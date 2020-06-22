@@ -41,13 +41,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!d.Menu3)
             {
                 cmd += " and (";
-                if (!String.IsNullOrEmpty(d.DeptCode))
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
                 {
-                    cmd += " DEPCODEOL = '" + d.DeptCode + "'";
+                    cmd += " DEPCODEOL = '" + d.DEPCODEOL + "'";
                 }
-                if (d.DeptLST != null && d.DeptLST.Length > 0)
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
                 {
-                    var arrDept = d.DeptLST.Split(",");
+                    var arrDept = d.DEPTCODELST.Split(",");
                     foreach (string s in arrDept)
                     {
                         cmd += " or DEPCODEOL like ' " + s + "%'";
@@ -77,13 +77,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!d.Menu3)
             {
                 cmd += " and (";
-                if (!String.IsNullOrEmpty(d.DeptCode))
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
                 {
-                    cmd += " DEPCODEOL = '" + d.DeptCode + "'";
+                    cmd += " DEPCODEOL = '" + d.DEPCODEOL + "'";
                 }
-                if (d.DeptLST != null && d.DeptLST.Length > 0)
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
                 {
-                    var arrDept = d.DeptLST.Split(",");
+                    var arrDept = d.DEPTCODELST.Split(",");
                     foreach (string s in arrDept)
                     {
                         cmd += " or DEPCODEOL like ' " + s + "%'";
@@ -115,13 +115,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!d.Menu3)
             {
                 cmd += " and (";
-                if (!String.IsNullOrEmpty(d.DeptCode))
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
                 {
-                    cmd += " DEPCODEOL = '" + d.DeptCode + "'";
+                    cmd += " DEPCODEOL = '" + d.DEPCODEOL + "'";
                 }
-                if (d.DeptLST != null && d.DeptLST.Length > 0)
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
                 {
-                    var arrDept = d.DeptLST.Split(",");
+                    var arrDept = d.DEPTCODELST.Split(",");
                     foreach (string s in arrDept)
                     {
                         cmd += " or DEPCODEOL like ' " + s + "%'";
@@ -153,13 +153,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!d.Menu3)
             {
                 cmd += " and (";
-                if (!String.IsNullOrEmpty(d.DeptCode))
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
                 {
-                    cmd += " DEPCODEOL = '" + d.DeptCode + "'";
+                    cmd += " DEPCODEOL = '" + d.DEPCODEOL + "'";
                 }
-                if (d.DeptLST != null && d.DeptLST.Length > 0)
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
                 {
-                    var arrDept = d.DeptLST.Split(",");
+                    var arrDept = d.DEPTCODELST.Split(",");
                     foreach (string s in arrDept)
                     {
                         cmd += " or DEPCODEOL like ' " + s + "%'";
@@ -192,13 +192,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!d.Menu3)
             {
                 cmd += " and (";
-                if (!String.IsNullOrEmpty(d.DeptCode))
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
                 {
-                    cmd += " DEPCODEOL = '" + d.DeptCode + "'";
+                    cmd += " DEPCODEOL = '" + d.DEPCODEOL + "'";
                 }
-                if (d.DeptLST != null && d.DeptLST.Length > 0)
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
                 {
-                    var arrDept = d.DeptLST.Split(",");
+                    var arrDept = d.DEPTCODELST.Split(",");
                     foreach (string s in arrDept)
                     {
                         cmd += " or DEPCODEOL like ' " + s + "%'";

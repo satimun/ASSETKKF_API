@@ -148,25 +148,44 @@ namespace ASSETKKF_ADO.Mssql.Asset
             
          }
 
-        public List<ASSETKKF_MODEL.Response.Asset.DEPTList> getDeptLst(String sqno, String company, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Response.Asset.DEPTList> getDeptLst(AuditCutInfoReq dataReq, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = "Select  DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE,COMPANY  from  FT_ASAUDITCUTDATE() where 1 = 1";
             //cmd += " where SQNO = '" + sqno + "'";
             //cmd += " and COMPANY = '" + company + "'";
-            if (!String.IsNullOrEmpty(company))
+            if (!String.IsNullOrEmpty(dataReq.Company))
             {
                 var comp = "";
-                comp = "'" + company.Replace(",", "','") + "'";
+                comp = "'" + dataReq.Company.Replace(",", "','") + "'";
                 cmd += " and COMPANY in (" + comp + ") ";
             }
 
-            if (!String.IsNullOrEmpty(sqno))
+            if (!String.IsNullOrEmpty(dataReq.sqno))
             {
-                cmd += " and SQNO = '" + sqno + "'";
+                cmd += " and SQNO = '" + dataReq.sqno + "'";
             }
 
-                cmd += " GROUP BY DEPCODEOL,DEPCODE,COMPANY order by  DEPCODEOL";
+            if (!dataReq.Menu3 && ((!String.IsNullOrEmpty(dataReq.DEPCODEOL)) || dataReq.DeptLST != null))
+            {
+                cmd += " and (";
+                if (!String.IsNullOrEmpty(dataReq.DEPCODEOL))
+                {
+                    cmd += " DEPCODEOL like (case when isnull('" + dataReq.DEPCODEOL + "','') <> '' then   SUBSTRING('" + dataReq.DEPCODEOL + "',1,1) else '' end + '%')";
+                }
+                if ((dataReq.DeptLST != null && dataReq.DeptLST.Length > 0) && (dataReq.DeptLST != "null"))
+                {
+                    var arrDept = dataReq.DeptLST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        cmd += " or DEPCODEOL like (case when isnull('" + s + "','') <> '' then   SUBSTRING('" + s + "',1,1) else '' end + '%')";
+                    }
+
+                }
+                cmd += " )";
+            }
+
+            cmd += " GROUP BY DEPCODEOL,DEPCODE,COMPANY order by  DEPCODEOL";
             var obj = Query<ASSETKKF_MODEL.Request.Asset.DEPTList>(cmd, param).ToList();
 
             List<ASSETKKF_MODEL.Response.Asset.DEPTList> res = new List<ASSETKKF_MODEL.Response.Asset.DEPTList>();
@@ -187,28 +206,95 @@ namespace ASSETKKF_ADO.Mssql.Asset
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Response.Asset.LeaderList> getLeaderLst(String DEPCODEOL, String company,string DeptLST = null,bool Menu3 = false, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Response.Asset.LeaderList> getLeaderCentralLst(AuditCutInfoReq dataReq, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = "select distinct [CODEMPID] as OFFICECODE,[NAMEMPT] as OFNAME from  [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where 1 = 1";
+            if (!String.IsNullOrEmpty(dataReq.Company))
+            {
+                sql += " and (  ";
+
+                var arrComp = dataReq.Company.Split(",");
+                var n = arrComp.Length;
+                for(int i =0; i < n ;i++)
+                {
+                    sql += " [CODCOMP] like '" + arrComp[i] + "%'";
+                    if(i < (n - 1))
+                    {
+                        sql += " or ";
+                    }
+                }
+
+
+                sql += " )";
+
+
+            }
+
+            //sql += " and DEPCODEEOL like (case when isnull('" + DEPCODEOL + "','') <> '' then   SUBSTRING('" + DEPCODEOL + "',1,1) else '' end + '%')";
+            if (!dataReq.Menu3 && ((!String.IsNullOrEmpty(dataReq.DEPCODEOL)) || dataReq.DeptLST != null))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(dataReq.DEPCODEOL))
+                {
+                    sql += " DEPCODEOL like (case when isnull('" + dataReq.DEPCODEOL + "','') <> '' then   SUBSTRING('" + dataReq.DEPCODEOL + "',1,1) else '' end + '%')";
+                }
+                if ((dataReq.DeptLST != null && dataReq.DeptLST.Length > 0) && (dataReq.DeptLST != "null"))
+                {
+                    var arrDept = dataReq.DeptLST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or DEPCODEOL like (case when isnull('" + s + "','') <> '' then   SUBSTRING('" + s + "',1,1) else '' end + '%')";
+                    }
+
+                }
+                sql += " )";
+            }
+            sql += " order by CODEMPID";
+
+            var obj = Query<ASSETKKF_MODEL.Request.Asset.Leader>(sql, param).ToList();
+            List<LeaderList> res = new List<LeaderList>();
+
+
+            if (obj != null && obj.Count > 0)
+            {
+                obj.ForEach(x => {
+                    res.Add(new LeaderList
+                    {
+                        id = x.OFFICECODE,
+                        name = x.OFNAME,
+                        descriptions = x.OFFICECODE + " : " + x.OFNAME,
+                    });
+                    
+                });
+            }
+                
+
+            return res;
+        }
+
+        public List<ASSETKKF_MODEL.Response.Asset.LeaderList> getLeaderLst(AuditCutInfoReq dataReq, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "select distinct OFFICECODE,OFNAME from  FT_UserAsset('') where 1 = 1";
-            if (!String.IsNullOrEmpty(company))
+            if (!String.IsNullOrEmpty(dataReq.Company))
             {
                 var comp = "";
-                comp = "'" + company.Replace(",", "','") + "'";
+                comp = "'" + dataReq.Company.Replace(",", "','") + "'";
                 sql += " and COMPANY in (" + comp + ") ";
             }
 
             //sql += " and DEPCODEEOL like (case when isnull('" + DEPCODEOL + "','') <> '' then   SUBSTRING('" + DEPCODEOL + "',1,1) else '' end + '%')";
-            if (!Menu3 && ((!String.IsNullOrEmpty(DEPCODEOL)) || DeptLST != null))
+            if (!dataReq.Menu3 && ((!String.IsNullOrEmpty(dataReq.DEPCODEOL)) || dataReq.DeptLST != null))
             {
                 sql += " and (";
-                if (!String.IsNullOrEmpty(DEPCODEOL))
+                if (!String.IsNullOrEmpty(dataReq.DEPCODEOL))
                 {
-                    sql += " DEPCODEEOL like (case when isnull('" + DEPCODEOL + "','') <> '' then   SUBSTRING('" + DEPCODEOL + "',1,1) else '' end + '%')";
+                    sql += " DEPCODEEOL like (case when isnull('" + dataReq.DEPCODEOL + "','') <> '' then   SUBSTRING('" + dataReq.DEPCODEOL + "',1,1) else '' end + '%')";
                 }
-                if ((DeptLST != null && DeptLST.Length > 0) && (DeptLST != "null"))
+                if ((dataReq.DeptLST != null && dataReq.DeptLST.Length > 0) && (dataReq.DeptLST != "null"))
                 {
-                    var arrDept = DeptLST.Split(",");
+                    var arrDept = dataReq.DeptLST.Split(",");
                     foreach (string s in arrDept)
                     {
                         sql += " or DEPCODEEOL like (case when isnull('" + s + "','') <> '' then   SUBSTRING('" + s + "',1,1) else '' end + '%')";
@@ -232,28 +318,48 @@ namespace ASSETKKF_ADO.Mssql.Asset
                         name = x.OFNAME,
                         descriptions = x.OFFICECODE + " : " + x.OFNAME,
                     });
-                    
+
                 });
             }
-                
+
 
             return res;
         }
 
-        public List<String> getDepLikeList(String sqno, String company, SqlTransaction transac = null)
+        public List<String> getDepLikeList(AuditCutInfoReq dataReq, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " SELECT case when isnull(DEPCODEOL,'') <> '' then   SUBSTRING(DEPCODEOL,1,2) else '' end as DEPLike FROM [dbo].[FT_ASAUDITCUTDATE] () where 1 = 1";
-            if (!String.IsNullOrEmpty(sqno))
+            if (!String.IsNullOrEmpty(dataReq.sqno))
             {
-                sql += " and SQNO = '" + sqno + "'";
+                sql += " and SQNO = '" + dataReq.sqno + "'";
             }
-            if (!String.IsNullOrEmpty(company))
+            if (!String.IsNullOrEmpty(dataReq.Company))
             {
                 var comp = "";
-                comp = "'" + company.Replace(",", "','") + "'";
+                comp = "'" + dataReq.Company.Replace(",", "','") + "'";
                 sql += " and COMPANY in (" + comp + ") ";
             }
+
+            if (!dataReq.Menu3 && ((!String.IsNullOrEmpty(dataReq.DEPCODEOL)) || dataReq.DeptLST != null))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(dataReq.DEPCODEOL))
+                {
+                    sql += " DEPCODEOL like (case when isnull('" + dataReq.DEPCODEOL + "','') <> '' then   SUBSTRING('" + dataReq.DEPCODEOL + "',1,1) else '' end + '%')";
+                }
+                if ((dataReq.DeptLST != null && dataReq.DeptLST.Length > 0) && (dataReq.DeptLST != "null"))
+                {
+                    var arrDept = dataReq.DeptLST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or DEPCODEOL like (case when isnull('" + s + "','') <> '' then   SUBSTRING('" + s + "',1,1) else '' end + '%')";
+                    }
+
+                }
+                sql += " )";
+            }
+
             sql += " group by case when isnull(DEPCODEOL,'') <> '' then   SUBSTRING(DEPCODEOL,1,2) else '' end";
 
             var res = Query<String>(sql, param).ToList();
@@ -328,7 +434,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and POSITCODE = '" + d.AREACODE + "'";
             }
 
-            if(flag == "")
+            if (!String.IsNullOrEmpty(d.ASSETNO))
+            {
+                sql += " and ASSETNO = '" + d.ASSETNO + "'";
+            }
+
+            if (flag == "")
             {
                 sql += " and isnull(PCODE,'') = '' ";
             }
@@ -338,19 +449,42 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and isnull(PCODE,'') <> '' ";
             }
 
+            sql += " order by (case when INPID = '" + d.UCODE + "' then 1 else 0 end) desc, INPDT desc";
             var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
             return res;
         }
 
-        public ASAUDITPOSTMST checkAUDITAssetNo(AuditPostCheckReq d, SqlTransaction transac = null)
+        public List<ASAUDITPOSTMST> getASAUDITPOSTMSTPHONE(AUDITPOSTMSTReq d, string flag = null, SqlTransaction transac = null)
+
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select * from  [FT_ASAUDITPOSTMST] ()  ";
+            sql = " select * from  [FT_ASAUDITPOSTMST_PHONE] ()  ";
             sql += " where SQNO = '" + d.SQNO + "'";
             sql += " and COMPANY = '" + d.COMPANY + "'";
             sql += " and ASSETNO = '" + d.ASSETNO + "'";
+            sql += " and INPID = '" + d.UCODE + "'";
+            
+            sql += " order by (case when INPID = '" + d.UCODE + "' then 1 else 0 end) desc";
+            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
+            return res;
+        }
 
-            var res = Query<ASAUDITPOSTMST>(sql, param).FirstOrDefault();
+        public List<ASAUDITPOSTMST> checkAUDITAssetNo(AuditPostCheckReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " select * from  [FT_ASAUDITPOSTMST] () as a ";
+            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as b";
+            sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO";
+            sql += " where a.SQNO = '" + d.SQNO + "'";
+            sql += " and a.COMPANY = '" + d.COMPANY + "'";
+            sql += " and a.ASSETNO = '" + d.ASSETNO + "'";
+
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
+            }
+
+            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
             return res;
         }
 
@@ -391,6 +525,33 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@AREACODE = '" + d.AREACODE + "'";
             sql += " ,@MEMO1 = '" + d.MEMO1 + "'";
             sql += " ,@USERID = '" + d.UCODE + "'";
+            sql += " ,@DEPCODEOL = '" + d.DEPCODEOL + "'";
+            sql += " ,@MODE = '" + d.MODE + "'";
+
+
+            var res = ExecuteNonQuery(sql, param);
+            return res;
+        }
+
+        public int updateAUDITPOSTMSTPHONE(AUDITPOSTMSTReq d, SqlTransaction transac = null)
+
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " EXEC [dbo].[SP_AUDITPOSTMSTPHONE]  ";
+            sql += " @SQNO  = '" + d.SQNO + "'";
+            sql += " ,@COMPANY = '" + d.COMPANY + "'";
+            sql += " ,@ASSETNO = '" + d.ASSETNO + "'";
+            sql += " ,@FINDY = '" + d.FINDY + "'";
+            sql += " ,@PCODE= '" + d.PCODE + "'";
+            sql += " ,@PNAME= '" + d.PNAME + "'";
+            sql += " ,@LEADERCODE = '" + d.LEADERCODE + "'";
+            sql += " ,@LEADERNAME = '" + d.LEADERNAME + "'";
+            sql += " ,@AREANAME = '" + d.AREANAME + "'";
+            sql += " ,@AREACODE = '" + d.AREACODE + "'";
+            sql += " ,@MEMO1 = '" + d.MEMO1 + "'";
+            sql += " ,@USERID = '" + d.UCODE + "'";
+            sql += " ,@DEPCODEOL = '" + d.DEPCODEOL + "'";
+            sql += " ,@MODE = '" + d.MODE + "'";
 
 
             var res = ExecuteNonQuery(sql, param);
@@ -401,18 +562,22 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select * from  FT_ASAUDITPOSTTRN()  ";
-            sql += " where SQNO = '" + d.SQNO + "'";
-            sql += " and COMPANY = '" + d.COMPANY + "'";
+            sql = " select * from  FT_ASAUDITPOSTTRN() as a ";
+            sql += " left outer join [FT_ASAUDITPOSTTRN_PHONE] () as b";
+            sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO";
+            sql += " where a.SQNO = '" + d.SQNO + "'";
+            sql += " and a.COMPANY = '" + d.COMPANY + "'";
             
             if (!String.IsNullOrEmpty(d.DEPCODEOL))
             {
-                sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
+                sql += " and a.DEPCODEOL = '" + d.DEPCODEOL + "'";
             }
             if (!String.IsNullOrEmpty(d.AREACODE))
             {
-                sql += " and POSITCODE = '" + d.AREACODE + "'";
+                sql += " and a.POSITCODE = '" + d.AREACODE + "'";
             }
+
+            sql += " order by (case when a.INPID = '" + d.UCODE + "' then 1 else 0 end) desc";
 
             var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
             return res;

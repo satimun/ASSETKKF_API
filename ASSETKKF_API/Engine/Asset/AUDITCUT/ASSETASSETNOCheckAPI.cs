@@ -22,12 +22,32 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             try
             {
                 var obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().checkASSETASSETNO(dataReq);
+                if (obj == null)
+                {
+                    if(dataReq.ASSETNO.Trim().Length <= 7)
+                    {
+                        obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETASSETNO(dataReq);
+                        res._result._code = "203";
+                        res._result._message = "";
+                        res._result._status = "Non-Authoritative Information";
+                    }
+                    else
+                    {
+                        res._result._code = "204";
+                        res._result._message = "";
+                        res._result._status = "No Content";
+                    }
+                }
+                else
+                {
+                    res._result._code = "200";
+                    res._result._message = "";
+                    res._result._status = "OK";
+                }
 
                 res.ASSETASSETNO = obj;
 
-                res._result._code = "200";
-                res._result._message = "";
-                res._result._status = "OK";
+                
             }
             catch (Exception ex)
             {

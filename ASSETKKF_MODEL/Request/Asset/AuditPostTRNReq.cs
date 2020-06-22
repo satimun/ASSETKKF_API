@@ -64,6 +64,13 @@ namespace ASSETKKF_MODEL.Request.Asset
     public class ASSETASSETNOReq
     {
         public string COMPANY { get; set; }
+        public string DEPCODEOL { get; set; }
         public string ASSETNO { get; set; }
+        public string SQNO { get; set; }
+        public string LEADERCODE { get; set; }
+        public string LEADERNAME { get; set; }
+        public string AREANAME { get; set; }
+        public string AREACODE { get; set; }
+        public string UCODE { get; set; }
     }
 }

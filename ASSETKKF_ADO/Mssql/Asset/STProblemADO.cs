@@ -36,6 +36,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 comp = "'" + d.Company.Replace(",", "','") + "'";
                 cmd += " WHERE COMPANY in (" + comp + ") ";
             }
+            cmd += "order by Pcode";
 
             var obj = Query<ASSETKKF_MODEL.Data.Mssql.Asset.ASSTProblem>(cmd, param).ToList();
 

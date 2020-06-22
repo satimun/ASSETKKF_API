@@ -10,6 +10,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string SQNO { get; set; }
         public string DEPCODEOL { get; set; }
         public string COMPANY { get; set; }
+        public string ASSETNO { get; set; }
         public string LEADERCODE { get; set; }
         public string LEADERNAME { get; set; }
         public string AREACODE { get; set; }
@@ -23,7 +24,14 @@ namespace ASSETKKF_MODEL.Request.Asset
     {
         public string SQNO { get; set; }
         public string COMPANY { get; set; }
+        public string DEPCODEOL { get; set; }
         public string ASSETNO { get; set; }
+        public string LEADERCODE { get; set; }
+        public string LEADERNAME { get; set; }
+        public string AREANAME { get; set; }
+        public string AREACODE { get; set; }
+        public string UCODE { get; set; }
+        public string MODE { get; set; }
     }
 
     public class AUDITPOSTMSTReq
@@ -42,7 +50,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string MEMO1 { get; set; }
         public string UCODE { get; set; }
         public string IMGPATH { get; set; }
-        
+        public string MODE { get; set; }
+
         public IFormFile FileToUpload { get; set; }
     }
 }

@@ -141,6 +141,28 @@ namespace ASSETKKF_ADO.Mssql.Asset
 				sql += " and ASSETNO = '" + d.ASSETNO + "'";
 			}
 
+			if (!String.IsNullOrEmpty(d.DEPCODEOL))
+			{
+				sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
+			}
+
+			var res = Query<ASSETASSETNO>(sql, param).FirstOrDefault();
+			return res;
+		}
+
+		public ASSETASSETNO getASSETASSETNO(ASSETASSETNOReq d, SqlTransaction transac = null)
+		{
+			DynamicParameters param = new DynamicParameters();
+			sql = " SELECT FORMATMESSAGE('%s%d', '" + d.ASSETNO + "', (COUNT(assetno)+1))  as assetno FROM [dbo].[FT_ASAUDITPOSTTRN] ()   ";
+			sql += " where COMPANY = '" + d.COMPANY + "'";
+			sql += " and not (ASSETNO like (COMPANY + '%'))";
+			if (!String.IsNullOrEmpty(d.ASSETNO))
+			{
+				sql += " and ASSETNO like ( '" + d.ASSETNO + "%')";
+			}
+
+			
+
 			var res = Query<ASSETASSETNO>(sql, param).FirstOrDefault();
 			return res;
 		}
@@ -149,17 +171,19 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
 		{
 			DynamicParameters param = new DynamicParameters();
-			sql = " select * from  FT_ASAUDITPOSTTRN()  ";
-			sql += " where SQNO = '" + d.SQNO + "'";
-			sql += " and COMPANY = '" + d.COMPANY + "'";
-			sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
+			sql = " select * from  FT_ASAUDITPOSTTRN()  as a ";
+			sql += " left outer join [FT_ASAUDITPOSTTRN_PHONE] () as b";
+			sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO";
+			sql += " where a.SQNO = '" + d.SQNO + "'";
+			sql += " and a.COMPANY = '" + d.COMPANY + "'";
+			sql += " and a.DEPCODEOL = '" + d.DEPCODEOL + "'";
 			if (!String.IsNullOrEmpty(d.AREACODE))
 			{
-				sql += " and POSITCODE = '" + d.AREACODE + "'";
+				sql += " and a.POSITCODE = '" + d.AREACODE + "'";
 			}
 			if (!String.IsNullOrEmpty(d.ASSETNO))
 			{
-				sql += " and ASSETNO = '" + d.ASSETNO + "'";
+				sql += " and a.ASSETNO = '" + d.ASSETNO + "'";
 			}
 
 			var obj = Query<ASAUDITPOSTTRN>(sql, param).ToList();

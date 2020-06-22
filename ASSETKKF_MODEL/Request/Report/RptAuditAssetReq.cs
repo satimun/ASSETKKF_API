@@ -16,5 +16,9 @@ namespace ASSETKKF_MODEL.Request.Report
         public string LEADERCODE { get; set; }
         public string PCODE { get; set; }
 
+        public string DeptCode { get; set; }
+        public string DeptLST { get; set; }
+        public bool Menu3 { get; set; }
+
     }
 }

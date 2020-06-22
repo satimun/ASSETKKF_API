@@ -22,9 +22,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
             try
             {
-                var objDEPTList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getDeptLst(dataReq.sqno, dataReq.Company);
-                var objLeaderList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getLeaderLst(dataReq.DEPCODEOL, dataReq.Company, dataReq.DeptLST,dataReq.Menu3);
-                var objDepLikeList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getDepLikeList(dataReq.sqno, dataReq.Company);
+                var objDEPTList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getDeptLst(dataReq);
+                var objLeaderList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getLeaderCentralLst(dataReq);
+                var objDepLikeList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getDepLikeList(dataReq);
                 var objPOSITASSETLst = STPOSITASSETADO.GetInstant().GetSTPOSITASSETLists(objDepLikeList, dataReq.Company);
 
                 res.auditCutDEPTList = objDEPTList;

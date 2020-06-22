@@ -33,6 +33,9 @@ namespace ASSETKKF_MODEL.Response.Asset
     {
         public ASSETASSETNO ASSETASSETNO { get; set; }
         public List<ASSETASSETNO> ASSETASSETNOLST { get; set; }
+        public List<ASAUDITPOSTMST> AUDITPOSTMSTWAITLST { get; set; }
+        public List<ASAUDITPOSTMST> AUDITPOSTMSTCHECKEDLST { get; set; }
+        public List<ASAUDITPOSTTRN> AUDITPOSTTRNLST { get; set; }
         public ResultDataResponse _result = new ResultDataResponse();
     }
 

@@ -93,5 +93,14 @@ namespace ASSETKKF_API.Controllers.Asset
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
+
+        [HttpPost("UpdatePostMST")]
+        public async Task<dynamic> UpdatePostMST([FromBody] dynamic data)
+        {
+            var res = new UpdatePostMSTApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
+
     }
 }
