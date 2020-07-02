@@ -250,6 +250,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 }
                 sql += " )";
             }
+            else if(!String.IsNullOrEmpty(dataReq.DEPCODEOL))
+            {
+                sql += " and (";
+                sql += " DEPCODEOL like (case when isnull('" + dataReq.DEPCODEOL + "','') <> '' then   SUBSTRING('" + dataReq.DEPCODEOL + "',1,1) else '' end + '%')";
+                sql += " )";
+            }
+
             sql += " order by CODEMPID";
 
             var obj = Query<ASSETKKF_MODEL.Request.Asset.Leader>(sql, param).ToList();
