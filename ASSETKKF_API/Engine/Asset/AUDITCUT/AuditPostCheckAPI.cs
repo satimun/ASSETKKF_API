@@ -80,6 +80,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         PCODE = objProblem.Pcode,
                         PNAME = objProblem.Pname,
                         UCODE = dataReq.UCODE,
+                        PFLAG = dataReq.PFLAG
 
 
                     };

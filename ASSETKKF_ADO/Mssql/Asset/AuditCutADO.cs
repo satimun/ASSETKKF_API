@@ -534,6 +534,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@USERID = '" + d.UCODE + "'";
             sql += " ,@DEPCODEOL = '" + d.DEPCODEOL + "'";
             sql += " ,@MODE = '" + d.MODE + "'";
+            sql += " ,@PFLAG = '" + d.PFLAG + "'";
 
 
             var res = ExecuteNonQuery(sql, param);
@@ -559,6 +560,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@USERID = '" + d.UCODE + "'";
             sql += " ,@DEPCODEOL = '" + d.DEPCODEOL + "'";
             sql += " ,@MODE = '" + d.MODE + "'";
+            sql += " ,@PFLAG = '" + d.PFLAG + "'";
 
 
             var res = ExecuteNonQuery(sql, param);

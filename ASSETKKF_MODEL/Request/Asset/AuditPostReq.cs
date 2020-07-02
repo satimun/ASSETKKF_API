@@ -32,6 +32,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string AREACODE { get; set; }
         public string UCODE { get; set; }
         public string MODE { get; set; }
+        public string PFLAG { get; set; }
     }
 
     public class AUDITPOSTMSTReq
@@ -51,6 +52,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string UCODE { get; set; }
         public string IMGPATH { get; set; }
         public string MODE { get; set; }
+        public string PFLAG { get; set; }
 
         public IFormFile FileToUpload { get; set; }
     }

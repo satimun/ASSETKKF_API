@@ -29,7 +29,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.Company);
-            string cmd = "SELECT distinct Pcode,Pname,SACC,FINDY  FROM [dbo].[FT_ASSTProblem] ()";
+            string cmd = "SELECT distinct Pcode,Pname,SACC,FINDY,PFLAG  FROM [dbo].[FT_ASSTProblem] ()";
             if (!String.IsNullOrEmpty(d.Company))
             {
                 var comp = "";
@@ -50,7 +50,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
                         descriptions = x.Pcode + " : " + x.Pname ,
                         Pcode = x.Pcode,
                         Pname = x.Pname,
-                        FINDY = x.FINDY
+                        FINDY = x.FINDY,
+                        PFLAG = x.PFLAG
                     }); ;
                 });
             }

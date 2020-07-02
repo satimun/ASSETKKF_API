@@ -20,5 +20,6 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string IPADDR { get; set; }
         public string FINDY { get; set; }
         public string COMPANY { get; set; }
+        public string PFLAG { get; set; }
     }
 }

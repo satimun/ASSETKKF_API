@@ -21,6 +21,7 @@ namespace ASSETKKF_MODEL.Response.Asset
         public string Pcode { get; set; }
         public string Pname { get; set; }
         public string FINDY { get; set; }
+        public string PFLAG { get; set; }        
     }
     #endregion
 }

@@ -47,10 +47,11 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     PNAME = dataReq.PNAME,
                     MEMO1 = dataReq.MEMO1,
                     IMGPATH = dataReq.IMGPATH,
-                    FileToUpload = dataReq.FileToUpload
+                    FileToUpload = dataReq.FileToUpload,
+                    PFLAG = dataReq.PFLAG
                 };
 
-                var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(req);
+                var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(dataReq);
 
 
 
