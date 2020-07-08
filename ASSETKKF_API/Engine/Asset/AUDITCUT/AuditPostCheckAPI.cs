@@ -113,6 +113,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "Y");
                             res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
 
+                            var lstAUDITAssetNo = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
+                            res.AUDITPOSTMST = lstAUDITAssetNo.FirstOrDefault();
+
                             res._result._code = "201";
                             res._result._message = "";
                             res._result._status = "Created";
@@ -127,6 +130,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                                 res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "");
                                 res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "Y");
                                 res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
+
+                                var lstAUDITAssetNo = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
+                                res.AUDITPOSTMST = lstAUDITAssetNo.FirstOrDefault();
 
                                 res._result._code = "201";
                                 res._result._message = "";
@@ -155,7 +161,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "Y");
                             res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
 
-                            res._result._code = "201";
+                           var lstAUDITAssetNo = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
+                           res.AUDITPOSTMST = lstAUDITAssetNo.FirstOrDefault();
+
+                                res._result._code = "201";
                             res._result._message = "";
                             res._result._status = "Created";
 

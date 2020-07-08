@@ -38,7 +38,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             string cmd = " SELECT M.Company,max(M.SQNO) as SQNO,max(isnull(DEPCODEOL,'')) as DEPCODEOL,max(isnull(M.Audit_NO,'')) as Audit_NO";
             cmd += " ,M.DEPMST as id,DEPNM,M.YR,M.MN,max(M.YRMN) as YRMN,max(D.DEPCODE) as DEPCODE,max(D.CUTDT) as CUTDT,max(D.STNAME) as STNAME";
-            cmd += " ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST + ' ( ' + convert(varchar, max(D.CUTDT),103) + ' ) ') as Descriptions";
+            cmd += "  ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST + ' ( ประจำปี ' + CAST(M.YR AS NVARCHAR) + ' ครั้งที่ ' + CAST(M.MN AS NVARCHAR) + ' ) ') as Descriptions ";
+            //cmd += " ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST + ' ( ' + convert(varchar, max(D.CUTDT),103) + ' ) ') as Descriptions";
             cmd += " from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
             cmd += " where D.SQNO = M.SQNO ";
             cmd += " and D.Company = M.Company ";
@@ -92,7 +93,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             //cmd += ",( M.DEPMST + ' : ' + DEPNM)  as Dept";
             string cmd = " SELECT M.Company,M.SQNO as id,max(isnull(DEPCODEOL,'')) as DEPCODEOL,isnull(M.Audit_NO,'') as Audit_NO";
             cmd += " ,M.DEPMST,DEPNM,M.YR,M.MN,M.YRMN,max(D.DEPCODE) as DEPCODE,max(D.CUTDT) as CUTDT,max(D.STNAME) as STNAME";
-            cmd += " ,(isnull(M.Audit_NO,'') + ' : ' + M.SQNO + ' ( ' + M.Company + ' ) ') as Descriptions";
+            cmd += " ,(isnull(M.Audit_NO,'') + ' : ' + M.SQNO + ' ( ' + CONVERT(varchar,max(D.CUTDT), 103) + ' ) ') as Descriptions";
             cmd += " from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
             cmd += " where D.SQNO = M.SQNO ";
             cmd += " and D.Company = M.Company ";
@@ -379,9 +380,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             sql = " select M.* from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
             sql += " where D.SQNO = M.SQNO ";
-            sql += " and D.Company = M.Company ";
-            sql += " and M.SQNO = '" + d.SQNO + "'";
+            sql += " and D.Company = M.Company ";            
             sql += " and M.COMPANY = '" + d.COMPANY + "'";
+
+            if (!String.IsNullOrEmpty(d.SQNO))
+            {
+                sql += " and M.SQNO = '" + d.SQNO + "'";
+            }
+
             if (!String.IsNullOrEmpty(d.DEPCODEOL))
             {
                 sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";

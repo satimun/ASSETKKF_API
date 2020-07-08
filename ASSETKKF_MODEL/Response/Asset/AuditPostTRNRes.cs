@@ -31,6 +31,7 @@ namespace ASSETKKF_MODEL.Response.Asset
 
     public class ASSETASSETNORes
     {
+        public ASAUDITPOSTMST AUDITPOSTMST { get; set; }
         public ASSETASSETNO ASSETASSETNO { get; set; }
         public List<ASSETASSETNO> ASSETASSETNOLST { get; set; }
         public List<ASAUDITPOSTMST> AUDITPOSTMSTWAITLST { get; set; }

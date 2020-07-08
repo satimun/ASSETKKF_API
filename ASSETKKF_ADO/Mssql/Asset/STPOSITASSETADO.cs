@@ -31,6 +31,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " where company = '" + company + "'";
             if (lstDepLike != null && lstDepLike.Count > 0)
             {
+                //หน่วยงาน
                 sql += " and (";
                 foreach (string s in lstDepLike)
                 {
@@ -42,9 +43,24 @@ namespace ASSETKKF_ADO.Mssql.Asset
                     i++;
                 }
                 sql += " )";
+
+                //พื้นที่
+                sql += " and (";
+                foreach (string s in lstDepLike)
+                {
+                    sql += "( '" + s + "'" + " = case when isnull(POSITCODE,'') <> '' then   SUBSTRING(POSITCODE,1,2) else '' end )";
+                    if (i < lstDepLike.Count - 1)
+                    {
+                        sql += " or";
+                    }
+                    i++;
+                }
+                sql += " )";
             }
 
-            
+            sql += " order by POSITCODE";
+
+
 
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STPOSITASSET>(sql, param).ToList();
             res.ForEach(x => {

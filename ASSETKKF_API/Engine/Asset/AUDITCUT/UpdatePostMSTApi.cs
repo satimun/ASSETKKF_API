@@ -46,6 +46,21 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 };
 
+                var reqPostChk = new AuditPostCheckReq
+                {
+                    SQNO = dataReq.SQNO,
+                    DEPCODEOL = dataReq.DEPCODEOL,
+                    COMPANY = dataReq.COMPANY,
+                    LEADERCODE = dataReq.LEADERCODE,
+                    LEADERNAME = dataReq.LEADERNAME,
+                    AREACODE = dataReq.AREACODE,
+                    AREANAME = dataReq.AREANAME,
+                    ASSETNO = dataReq.ASSETNO,
+                    UCODE = dataReq.UCODE,
+
+
+                };
+
                 var req1 = new ASSETKKF_MODEL.Request.Asset.AuditPostReq()
                 {
                     SQNO = dataReq.SQNO,
@@ -62,6 +77,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "");
                 res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "Y");
                 res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
+
+                var lstAUDITAssetNo = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(reqPostChk);
+                res.AUDITPOSTMST = lstAUDITAssetNo.FirstOrDefault();
+
 
                 res._result._code = "200";
                 res._result._message = "";

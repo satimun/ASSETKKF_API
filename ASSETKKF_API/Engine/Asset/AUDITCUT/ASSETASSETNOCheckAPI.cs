@@ -24,7 +24,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 var obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().checkASSETASSETNO(dataReq);
                 if (obj == null)
                 {
-                    if(dataReq.ASSETNO.Trim().Length <= 7)
+                    if(dataReq.ASSETNO.Trim().Length > 1)
                     {
                         obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETASSETNO(dataReq);
                         res._result._code = "203";

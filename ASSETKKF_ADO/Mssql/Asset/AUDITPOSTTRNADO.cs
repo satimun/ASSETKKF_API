@@ -223,5 +223,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			return res;
 		}
 
+		public List<ASAUDITPOSTTRN> getAuditPostTRN(AUDITPOSTTRNReq d, SqlTransaction transac = null)
+		{
+			DynamicParameters param = new DynamicParameters();
+			
+			sql = " select * from  FT_ASAUDITPOSTTRN ()  ";
+			sql += " where COMPANY = '" + d.COMPANY + "'";
+			sql += " and sqno = '" + d.SQNO + "'";
+			sql += " and INPID = '" + d.UCODE + "'"; 
+			 sql += " and assetno = '" + d.ASSETNO + "'";
+
+			var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+			return res;
+
+		}
+
 	}
 }

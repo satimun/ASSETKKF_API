@@ -28,7 +28,14 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
             try
             {
-
+                if (dataReq.MODE.Trim().ToLower() == "add")
+                {
+                    var objTRN = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getAuditPostTRN(dataReq);
+                    if(objTRN != null && objTRN.Count > 0)
+                    {
+                        throw new Exception("คุณได้บันทึกตรวจสอบรหัสทรัพย์สินนี้แล้ว กรุณาตรวจสอบข้อมูล");
+                    }
+                }
                 var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().addAUDITPOSTTRN(dataReq);
 
                 if (!String.IsNullOrEmpty(dataReq.IMGPATH))
