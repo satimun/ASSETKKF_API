@@ -27,6 +27,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
             int i = 0;
+            int j = 0;
             sql = "Select distinct POSITCODE,POSITDESC from  FR_STPOSITASSET()";
             sql += " where company = '" + company + "'";
             if (lstDepLike != null && lstDepLike.Count > 0)
@@ -49,11 +50,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 foreach (string s in lstDepLike)
                 {
                     sql += "( '" + s + "'" + " = case when isnull(POSITCODE,'') <> '' then   SUBSTRING(POSITCODE,1,2) else '' end )";
-                    if (i < lstDepLike.Count - 1)
+                    if (j < lstDepLike.Count - 1)
                     {
                         sql += " or";
                     }
-                    i++;
+                    j++;
                 }
                 sql += " )";
             }

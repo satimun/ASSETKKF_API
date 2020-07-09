@@ -29,7 +29,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             string cmd = " select sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
-            cmd += "from AuditSummary () where 1 = 1";
+            cmd += "from AuditSummary (" + d.year + "," + d.mn + ") where 1 = 1";
 
             if (!String.IsNullOrEmpty(d.Company))
             {
@@ -65,7 +65,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             string cmd = " select company,depcodeol,max(stname) as stname,max(DEPMST) as DEPMST,max(DEPNM) as DEPNM,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
-            cmd += "from AuditSummary () where 1 = 1";
+            cmd += "from AuditSummary (" + d.year + "," + d.mn + ") where 1 = 1";
 
             if (!String.IsNullOrEmpty(d.Company))
             {
@@ -103,7 +103,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             string cmd = " select company,depcodeol,max(stname) as stname,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
-            cmd += "from AuditSummary () where 1 = 1";
+            cmd += "from AuditSummary (" + d.year + "," + d.mn + ") where 1 = 1";
 
             if (!String.IsNullOrEmpty(d.Company))
             {
@@ -141,7 +141,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             string cmd = " select company,DEPMST ,max(DEPNM) as DEPNM,max(SQNO) as SQNO,max(audit_no) as audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
-            cmd += "from AuditSummary () where 1 = 1";
+            cmd += "from AuditSummary  (" + d.year + "," + d.mn + ") where 1 = 1";
 
             if (!String.IsNullOrEmpty(d.Company))
             {
@@ -180,7 +180,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             string cmd = " select company,depcodeol,max(stname) as stname,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
-            cmd += "from AuditSummary () where 1 = 1";
+            cmd += ",max(yr) as yr,max(mn) as mn,max(yrmn) as yrmn";
+            cmd += " from AuditSummary (" + d.year + "," + d.mn + ") where 1 = 1";
 
             if (!String.IsNullOrEmpty(d.Company))
             {
@@ -219,6 +220,52 @@ namespace ASSETKKF_ADO.Mssql.Asset
             var res = Query<AuditDeptSummary>(cmd, param).ToList();
             return res;
         }
+
+        public List<Multiselect> GetAuditYear(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            string cmd = " SELECT YR as id,YR as description FROM [dbo].[FT_ASAUDITCUTDATEMST] () as M ";
+            cmd += " where M.FLAG not in ('X','C') ";
+
+            if (!String.IsNullOrEmpty(d.Company))
+            {
+                var comp = "";
+                comp = "'" + d.Company.Replace(",", "','") + "'";
+                cmd += " and COMPANY in (" + comp + ") ";
+            }
+
+            cmd += " group by YR ";
+            cmd += " order by YR desc ";
+
+            var res = Query<Multiselect>(cmd, param).ToList();
+            return res;
+        }
+
+        public List<Multiselect> GetAuditMN(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            string cmd = " SELECT MN as id,MN  as description FROM [dbo].[FT_ASAUDITCUTDATEMST] () as M ";
+            cmd += " where M.FLAG not in ('X','C') ";
+
+            if (!String.IsNullOrEmpty(d.Company))
+            {
+                var comp = "";
+                comp = "'" + d.Company.Replace(",", "','") + "'";
+                cmd += " and COMPANY in (" + comp + ") ";
+            }
+
+            if (!String.IsNullOrEmpty(d.year))
+            {
+                cmd += " and YR = '" + d.year + "'";
+            }
+
+            cmd += " group by MN ";
+            cmd += " order by MN desc ";
+
+            var res = Query<Multiselect>(cmd, param).ToList();
+            return res;
+        }
+
 
 
     }

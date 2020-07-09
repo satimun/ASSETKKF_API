@@ -13,6 +13,9 @@ namespace ASSETKKF_MODEL.Request.Asset
         public bool Menu3 { get; set; }
         public string sqno { get; set; }
         public string depmst { get; set; }
+        public string year { get; set; }
+        public string mn { get; set; }
+        public string yrmn { get; set; }
 
     }
 }

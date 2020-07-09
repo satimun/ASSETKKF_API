@@ -33,7 +33,31 @@ namespace ASSETKKF_MODEL.Response.Asset
         public string company { get; set; }
         public string DEPMST { get; set; }
         public string DEPNM { get; set; }
+        public string yr { get; set; }
+        public string mn { get; set; }
+        public string yrmn { get; set; }
 
         public List<AuditDeptSummary> AuditDepSummaryLST { get; set; }
     }
+
+    public class Multiselect
+    {
+        public string id { get; set; }
+        public string description { get; set; }
+    }
+
+    public class AuditYearRes
+    {
+        public List<Multiselect> AuditYearLST { get; set; }
+
+        public ResultDataResponse _result = new ResultDataResponse();
+    }
+
+    public class AuditMNRes
+    {
+        public List<Multiselect> AuditMNLST { get; set; }
+
+        public ResultDataResponse _result = new ResultDataResponse();
+    }
+
 }

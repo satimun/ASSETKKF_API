@@ -38,5 +38,22 @@ namespace ASSETKKF_API.Controllers.Asset
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
+
+        
+        [HttpPost("GetAuditYear")]
+        public async Task<dynamic> GetAuditYear([FromBody] dynamic data)
+        {
+            var res = new GetAuditYearApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
+
+        [HttpPost("GetAuditMN")]
+        public async Task<dynamic> GetAuditMN([FromBody] dynamic data)
+        {
+            var res = new GetAuditMNApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
     }
 }
