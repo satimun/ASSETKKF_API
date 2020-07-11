@@ -27,7 +27,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            string cmd = " select sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
+            string cmd = " select sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT,sum(QTY_TRN) as QTY_TRN ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
             cmd += "from AuditSummary (" + d.year + "," + d.mn + ") where 1 = 1";
 
@@ -139,7 +139,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<AuditDeptSummary> GetDEPMSTSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            string cmd = " select company,DEPMST ,max(DEPNM) as DEPNM,max(SQNO) as SQNO,max(audit_no) as audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
+            string cmd = " select company,DEPMST ,max(DEPNM) as DEPNM,max(SQNO) as SQNO,max(audit_no) as audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT,sum(QTY_TRN) as QTY_TRN ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
             cmd += "from AuditSummary  (" + d.year + "," + d.mn + ") where 1 = 1";
 

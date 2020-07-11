@@ -65,6 +65,8 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string INPNAME { get; set; }
         public string IMGURL { get; set; }
 
+
+
     }
 
 

@@ -21,5 +21,13 @@ namespace ASSETKKF_API.Controllers.Asset
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
+        
+        [HttpPost("GetAuditCUTDT")]
+        public async Task<dynamic> GetAuditCUTDT([FromBody] dynamic data)
+        {
+            var res = new AuditCUTDTApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
     }
 }

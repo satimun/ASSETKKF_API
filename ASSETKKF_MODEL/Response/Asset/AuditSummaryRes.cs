@@ -60,4 +60,11 @@ namespace ASSETKKF_MODEL.Response.Asset
         public ResultDataResponse _result = new ResultDataResponse();
     }
 
+    public class AuditCutDTRes
+    {
+        public List<Multiselect> AuditCutDTLST { get; set; }
+
+        public ResultDataResponse _result = new ResultDataResponse();
+    }
+
 }

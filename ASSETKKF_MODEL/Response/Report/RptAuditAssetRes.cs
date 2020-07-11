@@ -40,6 +40,7 @@ namespace ASSETKKF_MODEL.Response.Report
         public string IMGPATH { get; set; }
         public string POSITCODE { get; set; }
         public string POSITNAME { get; set; }
+
     }
 
 

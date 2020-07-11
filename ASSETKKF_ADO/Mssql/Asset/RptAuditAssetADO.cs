@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
+using ASSETKKF_MODEL.Response.Asset;
 using Dapper;
 
 namespace ASSETKKF_ADO.Mssql.Asset
@@ -33,7 +34,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO";
             sql += " where 1 = 1";
 
-            sql += " and YR = (SELECT YR from(  ";
+            /*sql += " and YR = (SELECT YR from(  ";
             sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTMST()  ";
             sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTMST() )  ";
             sql += " group by YR  ";
@@ -43,11 +44,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTMST() )  ";
             sql += " group by YR  ";
             sql += "  ) as b)  ";
-            //sql += " and YRMN = (SELECT YRMN from(  ";
-            //sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTMST()  ";
-            //sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTMST() )  ";
-            //sql += " group by YR  ";
-            //sql += "   ) as c)   ";
+            sql += " and YRMN = (SELECT YRMN from(  ";
+            sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTMST()  ";
+            sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTMST() )  ";
+            sql += " group by YR  ";
+            sql += "   ) as c)   ";*/
 
 
             if (!String.IsNullOrEmpty(d.company))
@@ -57,16 +58,31 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and P.COMPANY in (" + comp + ") ";
             }
 
-            if(d.cutdt != null)
+            if (!String.IsNullOrEmpty(d.DEPMST))
+            {
+                sql += " and P.DEPMST =" + QuoteStr(d.DEPMST);
+            }
+
+            if (!String.IsNullOrEmpty(d.YEAR))
+            {
+                sql += " and P.YR =" + QuoteStr(d.YEAR);
+            }
+
+            if (!String.IsNullOrEmpty(d.MN))
+            {
+                sql += " and P.MN =" + QuoteStr(d.MN);
+            }
+
+            if (d.cutdt != null)
             {
                 param.Add("@CUTDT", d.cutdt);
-                sql += " and P.cutdt = " + d.cutdt;
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, P.cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
             }
 
             if(d.inpdt != null)
             {
-                param.Add("@INPDT", d.cutdt);
-                sql += " and P.inpdt = " + QuoteStr(d.sqno);
+                param.Add("@INPDT", d.inpdt);
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, P.inpdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.inpdt) + "))";
             }
 
             if (!String.IsNullOrEmpty(d.audit_no))
@@ -128,6 +144,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 }
                 sql += " )";
             }
+
+            sql += " order by P.SQNO desc";
 
 
 
@@ -186,7 +204,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " left outer join [FT_ASAUDITPOSTTRN_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO";
             sql += " where 1 = 1";
 
-            sql += " and YR = (SELECT YR from(  ";
+            /*sql += " and YR = (SELECT YR from(  ";
             sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTTRN()  ";
             sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTTRN() )  ";
             sql += " group by YR  ";
@@ -196,11 +214,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTTRN() )  ";
             sql += " group by YR  ";
             sql += "  ) as b)  ";
-            //sql += " and YRMN = (SELECT YRMN from(  ";
-            //sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTTRN()  ";
-            //sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTTRN() )  ";
-            //sql += " group by YR  ";
-            //sql += "   ) as c)   ";
+            sql += " and YRMN = (SELECT YRMN from(  ";
+            sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTTRN()  ";
+            sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTTRN() )  ";
+            sql += " group by YR  ";
+            sql += "   ) as c)   ";*/
 
 
             if (!String.IsNullOrEmpty(d.company))
@@ -210,16 +228,31 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and P.COMPANY in (" + comp + ") ";
             }
 
+            if (!String.IsNullOrEmpty(d.DEPMST))
+            {
+                sql += " and P.DEPMST =" + QuoteStr(d.DEPMST);
+            }
+
+            if (!String.IsNullOrEmpty(d.YEAR))
+            {
+                sql += " and P.YR =" + QuoteStr(d.YEAR);
+            }
+
+            if (!String.IsNullOrEmpty(d.MN))
+            {
+                sql += " and P.MN =" + QuoteStr(d.MN);
+            }
+
             if (d.cutdt != null)
             {
                 param.Add("@CUTDT", d.cutdt);
-                sql += " and P.cutdt = " + d.cutdt;
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, P.cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
             }
 
             if (d.inpdt != null)
             {
-                param.Add("@INPDT", d.cutdt);
-                sql += " and P.inpdt = " + QuoteStr(d.sqno);
+                param.Add("@INPDT", d.inpdt);
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, P.inpdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.inpdt) + "))";
             }
 
             if (!String.IsNullOrEmpty(d.audit_no))
@@ -281,6 +314,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " )";
             }
 
+            sql += " order by P.SQNO desc";
+
 
             var obj = Query<ASAUDITPOSTTRN>(sql, param).ToList();
 
@@ -324,6 +359,32 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
 
+            return res;
+        }
+
+        public List<Multiselect> GetAuditCUTDT(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            string cmd = " SELECT CUTDT as id,convert(varchar, max(CUTDT),103) as description FROM [dbo].[FT_ASAUDITCUTDATEMST] () ";
+            cmd += " where FLAG not in ('X') ";
+
+            if (!String.IsNullOrEmpty(d.company))
+            {
+                var comp = "";
+                comp = "'" + d.company.Replace(",", "','") + "'";
+                cmd += " and COMPANY in (" + comp + ") ";
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPMST))
+            {
+                cmd += " and DEPMST = '" + d.DEPMST + "'";
+            }
+
+
+            cmd += " group by CUTDT ";
+            cmd += " order by CUTDT desc ";
+
+            var res = Query<Multiselect>(cmd, param).ToList();
             return res;
         }
 

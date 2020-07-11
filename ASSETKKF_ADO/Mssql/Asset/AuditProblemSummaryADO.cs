@@ -38,6 +38,49 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and COMPANY in (" + comp + ") ";
             }
 
+            if (!String.IsNullOrEmpty(d.DEPMST))
+            {
+                cmd += " and DEPMST =" + QuoteStr(d.DEPMST);
+            }
+
+            if (!String.IsNullOrEmpty(d.YEAR))
+            {
+                cmd += " and YR =" + QuoteStr(d.YEAR);
+            }
+
+            if (!String.IsNullOrEmpty(d.MN))
+            {
+                cmd += " and MN =" + QuoteStr(d.MN);
+            }
+
+            if (!String.IsNullOrEmpty(d.audit_no))
+            {
+                //param.Add("@AUDITNO", d.audit_no);
+                //sql += " and audit_no = @AUDITNO";
+
+                param.Add("@AUDITNO", d.audit_no);
+                param.Add("@auditno_lk", $"%{d.audit_no}%");
+                cmd += " AND (audit_no LIKE @auditno_lk OR audit_no = @AUDITNO )";
+            }
+
+            if (!String.IsNullOrEmpty(d.sqno))
+            {
+                param.Add("@SQNO", d.sqno);
+                cmd += " and sqno = " + QuoteStr(d.sqno);
+
+            }
+
+            if (!string.IsNullOrEmpty(d.sqno_copm))
+            {
+                cmd += " and COMPANY = " + QuoteStr(d.sqno_copm);
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                param.Add("@DEPCODEOL", d.DEPCODEOL);
+                cmd += " and DEPCODEOL = " + QuoteStr(d.DEPCODEOL);
+            }
+
             if (!d.Menu3)
             {
                 cmd += " and (";

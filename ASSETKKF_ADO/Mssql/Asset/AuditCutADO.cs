@@ -36,14 +36,23 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASSETKKF_MODEL.Response.Asset.AuditCutList> getAuditDepList(ASSETKKF_MODEL.Request.Asset.AuditCutReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            string cmd = " SELECT M.Company,max(M.SQNO) as SQNO,max(isnull(DEPCODEOL,'')) as DEPCODEOL,max(isnull(M.Audit_NO,'')) as Audit_NO";
-            cmd += " ,M.DEPMST as id,DEPNM,M.YR,M.MN,max(M.YRMN) as YRMN,max(D.DEPCODE) as DEPCODE,max(D.CUTDT) as CUTDT,max(D.STNAME) as STNAME";
-            cmd += "  ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST + ' ( ประจำปี ' + CAST(M.YR AS NVARCHAR) + ' ครั้งที่ ' + CAST(M.MN AS NVARCHAR) + ' ) ') as Descriptions ";
+            string cmd = " SELECT M.Company,max(M.SQNO) as SQNO,min(isnull(DEPCODEOL,'')) as DEPCODEOL,max(isnull(M.Audit_NO,'')) as Audit_NO";
+            cmd += " ,M.DEPMST as id,DEPNM,max(M.YR) as YR,max(M.MN) as MN,max(M.YRMN) as YRMN,max(D.DEPCODE) as DEPCODE,max(D.CUTDT) as CUTDT,max(D.STNAME) as STNAME";
+            cmd += "  ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST ) as Descriptions ";
+            //cmd += "  ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST + ' ( ประจำปี ' + CAST(M.YR AS NVARCHAR) + ' ครั้งที่ ' + CAST(M.MN AS NVARCHAR) + ' ) ') as Descriptions ";
             //cmd += " ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST + ' ( ' + convert(varchar, max(D.CUTDT),103) + ' ) ') as Descriptions";
             cmd += " from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
             cmd += " where D.SQNO = M.SQNO ";
             cmd += " and D.Company = M.Company ";
-            cmd += " and  M.FLAG not in ('X','C')";
+            if (String.IsNullOrEmpty(d.MODE))
+            {
+                cmd += " and  M.FLAG not in ('X','C')";
+            }
+            else
+            {
+                cmd += " and  M.FLAG not in ('X')";
+            }
+            
             if (!String.IsNullOrEmpty(d.Company))
             {
                 var comp = "";
@@ -70,16 +79,21 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " )";
             }
 
-            cmd += " and M.YR = (SELECT YR from(";
-            cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
-            cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
-            cmd += " group by YR    ) as a)";
-            cmd += " and M.MN = (SELECT MN from(";
-            cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
-            cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
-            cmd += " group by YR    ) as b)";
+            if (!String.IsNullOrEmpty(d.MODE))
+            {
+                cmd += " and M.YR = (SELECT YR from(";
+                cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
+                cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
+                cmd += " group by YR    ) as a)";
+                cmd += " and M.MN = (SELECT MN from(";
+                cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
+                cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
+                cmd += " group by YR    ) as b)";
+            }
 
-            cmd += " group by M.Company,M.DEPMST,DEPNM,M.YR,M.MN";
+
+
+            cmd += " group by M.Company,M.DEPMST,DEPNM";
 
             var res = Query<ASSETKKF_MODEL.Response.Asset.AuditCutList>(cmd, param).ToList();
             return res;
@@ -91,13 +105,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             //string cmd = "SELECT M.Company,DEPCODEOL,M.SQNO as ID,(isnull(M.Audit_NO,'') + ' : ' + M.SQNO + ' ( ' + M.Company + ' ) ') as Descriptions";
             //cmd += ",( M.DEPMST + ' : ' + DEPNM)  as Dept";
-            string cmd = " SELECT M.Company,M.SQNO as id,max(isnull(DEPCODEOL,'')) as DEPCODEOL,isnull(M.Audit_NO,'') as Audit_NO";
-            cmd += " ,M.DEPMST,DEPNM,M.YR,M.MN,M.YRMN,max(D.DEPCODE) as DEPCODE,max(D.CUTDT) as CUTDT,max(D.STNAME) as STNAME";
+            string cmd = " SELECT M.Company,M.SQNO as id,min(isnull(DEPCODEOL,'')) as DEPCODEOL,isnull(M.Audit_NO,'') as Audit_NO";
+            cmd += " ,M.DEPMST,DEPNM,M.YR,M.MN,max(M.YRMN) as YRMN,max(D.DEPCODE) as DEPCODE,max(D.CUTDT) as CUTDT,max(D.STNAME) as STNAME";
             cmd += " ,(isnull(M.Audit_NO,'') + ' : ' + M.SQNO + ' ( ' + CONVERT(varchar,max(D.CUTDT), 103) + ' ) ') as Descriptions";
             cmd += " from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
             cmd += " where D.SQNO = M.SQNO ";
             cmd += " and D.Company = M.Company ";
-            cmd += " and  M.FLAG not in ('X','C')";
+            if (String.IsNullOrEmpty(d.MODE))
+            {
+                cmd += " and  M.FLAG not in ('X','C')";
+            }
+            else
+            {
+                cmd += " and  M.FLAG not in ('X')";
+            }
             if (!String.IsNullOrEmpty(d.Company))
             {
                 var comp = "";
@@ -129,20 +150,21 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and M.DEPMST = '" + d.DEPMST + "'";
             }
 
-            cmd += " and M.YR = (SELECT YR from(";
-            cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
-            cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
-            cmd += " group by YR    ) as a)";
-            cmd += " and M.MN = (SELECT MN from(";
-            cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
-            cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
-            cmd += " group by YR    ) as b)";
+            //cmd += " and M.YR = (SELECT YR from(";
+            //cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
+            //cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
+            //cmd += " group by YR    ) as a)";
+            //cmd += " and M.MN = (SELECT MN from(";
+            //cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
+            //cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
+            //cmd += " group by YR    ) as b)";
             //cmd += " and M.YRMN = (SELECT YRMN from(";
             //cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
             //cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
             //cmd += " group by YR    ) as c)";
 
-            cmd += " group by M.Company,M.SQNO,M.Audit_NO,M.DEPMST,DEPNM,M.YR,M.MN,M.YRMN";
+            cmd += " group by M.Company,M.SQNO,M.Audit_NO,M.DEPMST,DEPNM,M.YR,M.MN";
+            cmd += " order by M.SQNO desc";
 
             var res = Query<ASSETKKF_MODEL.Response.Asset.AuditCutList>(cmd, param).ToList();
             return res;
@@ -165,6 +187,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(dataReq.sqno))
             {
                 cmd += " and SQNO = '" + dataReq.sqno + "'";
+            }
+
+            if (!String.IsNullOrEmpty(dataReq.DEPMST))
+            {
+                cmd += " and DEPMST = '" + dataReq.DEPMST + "'";
             }
 
             if (!dataReq.Menu3 && ((!String.IsNullOrEmpty(dataReq.DEPCODEOL)) || dataReq.DeptLST != null))
@@ -256,6 +283,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and (";
                 sql += " DEPCODEOL like (case when isnull('" + dataReq.DEPCODEOL + "','') <> '' then   SUBSTRING('" + dataReq.DEPCODEOL + "',1,1) else '' end + '%')";
                 sql += " )";
+            }
+
+            if (!String.IsNullOrEmpty(dataReq.DEPMST))
+            {
+                sql += " and CODCOMP = '" + dataReq.DEPMST + "'";
             }
 
             sql += " order by CODEMPID";
@@ -366,6 +398,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
                 }
                 sql += " )";
+            }
+
+            if (!String.IsNullOrEmpty(dataReq.DEPMST))
+            {
+                sql += " and DEPMST = '" + dataReq.DEPMST + "'";
             }
 
             sql += " group by case when isnull(DEPCODEOL,'') <> '' then   SUBSTRING(DEPCODEOL,1,2) else '' end";
