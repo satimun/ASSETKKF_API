@@ -34,7 +34,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     Menu3 = dataReq.Menu3
                 };
 
-                var obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAuditDepList(req);
+                var obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAuditDepList(dataReq);
                 if (obj == null)
                 {
                     res._result._code = "404";

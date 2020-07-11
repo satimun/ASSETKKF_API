@@ -79,7 +79,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " )";
             }
 
-            if (!String.IsNullOrEmpty(d.MODE))
+            if (String.IsNullOrEmpty(d.MODE))
             {
                 cmd += " and M.YR = (SELECT YR from(";
                 cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
