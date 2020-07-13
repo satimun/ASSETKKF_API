@@ -28,7 +28,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<AuditProblems> GetSummary(AuditProblemsReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            string cmd = " select sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_NOPROBLEM) as QTY_NOPROBLEM,sum(QTY_PROBLEMS) as QTY_PROBLEMS,sum(QTY_WAIT) as QTY_WAIT ";
+            string cmd = " select sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_NOPROBLEM) as QTY_NOPROBLEM,sum(QTY_PROBLEMS) as QTY_PROBLEMS,sum(QTY_WAIT) as QTY_WAIT,sum(QTY_TRN) as QTY_TRN ";
             cmd += " ,Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_NOPROBLEM)  AS float) / CAST(sum(QTY_TOTAL)  AS float)) * 100) end as PROGRESS_NOPROBLEM   ";
             cmd += " ,Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_PROBLEMS)  AS float) / CAST(sum(QTY_TOTAL)  AS float)) * 100) end as PROGRESS_PROBLEMS   ";
             cmd += ",Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_WAIT)  AS float) / CAST(sum(QTY_TOTAL)   AS float)) * 100) end as PROGRESS_WAIT  ";
@@ -121,7 +121,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<AuditProblems> GetDeptSummary(AuditProblemsReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            string cmd = " select company,depcodeol,max(stname) as stname,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_NOPROBLEM) as QTY_NOPROBLEM,sum(QTY_PROBLEMS) as QTY_PROBLEMS,sum(QTY_WAIT) as QTY_WAIT ";
+            string cmd = " select company,depcodeol,max(stname) as stname,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_NOPROBLEM) as QTY_NOPROBLEM,sum(QTY_PROBLEMS) as QTY_PROBLEMS,sum(QTY_WAIT) as QTY_WAIT,sum(QTY_TRN) as QTY_TRN ";
             cmd += " ,Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_NOPROBLEM)  AS float) / CAST(sum(QTY_TOTAL)  AS float)) * 100) end as PROGRESS_NOPROBLEM   ";
             cmd += " ,Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_PROBLEMS)  AS float) / CAST(sum(QTY_TOTAL)  AS float)) * 100) end as PROGRESS_PROBLEMS   ";
             cmd += " ,Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_WAIT)  AS float) / CAST(sum(QTY_TOTAL)   AS float)) * 100) end as PROGRESS_WAIT  ";

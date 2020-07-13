@@ -13,6 +13,7 @@ namespace ASSETKKF_MODEL.Response.Report
         public int qty_noproblem { get; set; }
         public int qty_problems { get; set; }
         public int qty_wait { get; set; }
+        public int qty_trn { get; set; }
         public float progress_noproblem { get; set; }
         public float progress_problems { get; set; }
         public float progress_wait { get; set; }
