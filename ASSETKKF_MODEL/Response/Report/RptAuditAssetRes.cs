@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
+using ASSETKKF_MODEL.Response.Asset;
 
 namespace ASSETKKF_MODEL.Response.Report
 {
@@ -41,6 +42,27 @@ namespace ASSETKKF_MODEL.Response.Report
         public string POSITCODE { get; set; }
         public string POSITNAME { get; set; }
 
+    }
+
+    public class OfficeASSETRes
+    {
+        public List<Multiselect> OfficeASSETLST { get; set; }
+
+        public ResultDataResponse _result = new ResultDataResponse();
+    }
+
+    public class TYPEASSETRes
+    {
+        public List<Multiselect> TYPEASSETLST { get; set; }
+
+        public ResultDataResponse _result = new ResultDataResponse();
+    }
+
+    public class GROUPASSETRes
+    {
+        public List<Multiselect> GROUPASSETLST { get; set; }
+
+        public ResultDataResponse _result = new ResultDataResponse();
     }
 
 

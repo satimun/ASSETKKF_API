@@ -29,5 +29,31 @@ namespace ASSETKKF_API.Controllers.Asset
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
+
+        [HttpPost("GetOfficeASSET")]
+        public async Task<dynamic> GetOfficeASSET([FromBody] dynamic data)
+        {
+            var res = new GetOFFICEApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
+
+        [HttpPost("GetTYPEASSET")]
+        public async Task<dynamic> GetTYPEASSET([FromBody] dynamic data)
+        {
+            var res = new TYPEASSETApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
+
+        [HttpPost("GetGROUPASSET")]
+        public async Task<dynamic> GetGROUPASSET([FromBody] dynamic data)
+        {
+            var res = new GROUPASSETApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
+
+
     }
 }

@@ -234,7 +234,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and COMPANY in (" + comp + ") ";
             }
 
-            cmd += " group by YR ";
+            if (!String.IsNullOrEmpty(d.depmst))
+            {
+                cmd += " and depmst = '" + d.depmst + "'";
+            }
+
+                cmd += " group by YR ";
             cmd += " order by YR desc ";
 
             var res = Query<Multiselect>(cmd, param).ToList();
@@ -252,6 +257,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 var comp = "";
                 comp = "'" + d.Company.Replace(",", "','") + "'";
                 cmd += " and COMPANY in (" + comp + ") ";
+            }
+
+            if (!String.IsNullOrEmpty(d.depmst))
+            {
+                cmd += " and depmst = '" + d.depmst + "'";
             }
 
             if (!String.IsNullOrEmpty(d.year))
