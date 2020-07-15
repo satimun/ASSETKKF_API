@@ -29,29 +29,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> GetAuditAssetLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "  select P.*    , U.OFNAME as INPNAME    ,MEMO1 as AUDIT_NOTE  ";
-            sql += " ,(case when isnull(P.PCODE,'') = '' then '' else P.PCODE + ' : ' + PNAME end ) as AUDIT_RESULT ";
-            sql += " ,(CAST(P.MN AS varchar) + ' / ' + CAST(P.YR AS varchar) + ' - ' + CAST(P.YRMN AS varchar) ) as AUDIT_AT";
-            sql += "  , (select max(audit_no) from FT_ASAUDITCUTDATEMST() where SQNO = P.SQNO and COMPANY = P.COMPANY) as audit_no ";
-            sql += " from  [FT_ASAUDITPOSTMST] () as P left outer join [FT_UserAsset] ('') as U on U.OFFICECODE = P.INPID and U.COMPANY = P.COMPANY  ";
-            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO";
+            sql = "  select   * from (  ";
+            sql += " select * from (select P.* ,MEMO1 as AUDIT_NOTE, U.OFNAME as INPNAME  ";
+            sql += " , (select max(audit_no) from FT_ASAUDITCUTDATEMST() where SQNO = P.SQNO and COMPANY = P.COMPANY) as audit_no  ";
+            sql += "  ,(case when isnull(P.PCODE,'') = '' then '' else P.PCODE + ' : ' + P.PNAME end ) as AUDIT_RESULT  ";
+            sql += " ,(CAST(P.MN AS varchar) + ' / ' + CAST(P.YR AS varchar) + ' - ' + CAST(P.YRMN AS varchar) ) as AUDIT_AT  ";
+            sql += " from  [FT_ASAUDITPOSTMST] () as P ";
+            sql += " left outer join [FT_UserAsset] ('') as U on U.OFFICECODE = P.INPID and U.COMPANY = P.COMPANY   ";
+            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO ";
             sql += " where 1 = 1";
-
-            /*sql += " and YR = (SELECT YR from(  ";
-            sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTMST()  ";
-            sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTMST() )  ";
-            sql += " group by YR  ";
-            sql += "   ) as a)  ";
-            sql += " and MN = (SELECT MN from(  ";
-            sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTMST()  ";
-            sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTMST() )  ";
-            sql += " group by YR  ";
-            sql += "  ) as b)  ";
-            sql += " and YRMN = (SELECT YRMN from(  ";
-            sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTMST()  ";
-            sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTMST() )  ";
-            sql += " group by YR  ";
-            sql += "   ) as c)   ";*/
 
 
             if (!String.IsNullOrEmpty(d.company))
@@ -82,7 +68,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, P.cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
             }
 
-            if(d.inpdt != null)
+            if (d.inpdt != null)
             {
                 param.Add("@INPDT", d.inpdt);
                 sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, P.inpdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.inpdt) + "))";
@@ -90,8 +76,6 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(d.audit_no))
             {
-                //param.Add("@AUDITNO", d.audit_no);
-                //sql += " and audit_no = @AUDITNO";
 
                 param.Add("@AUDITNO", d.audit_no);
                 param.Add("@auditno_lk", $"%{d.audit_no}%");
@@ -163,12 +147,222 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " )";
             }
 
-            sql += " order by P.SQNO desc";
+
+            sql += "  ) as x";
+            sql += " union";
+            sql += " select * from ((select C.* ,c.MEMO1 as AUDIT_NOTE  , U.OFNAME as INPNAME    , M.AUDIT_NO";
+            sql += " ,(case when isnull(c.PCODE,'') = '' then '' else c.PCODE + ' : ' + c.PNAME end ) as AUDIT_RESULT";
+            sql += " ,(CAST(c.MN AS varchar) + ' / ' + CAST(c.YR AS varchar) + ' - ' + CAST(c.YRMN AS varchar) ) as AUDIT_AT";
+            sql += " from FT_ASAUDITCUTDATE() AS C";
+            sql += " left outer join FT_ASAUDITCUTDATEMST() M on M.SQNO = C.SQNO and M.COMPANY = C.COMPANY";
+            sql += " left outer join [FT_UserAsset] ('') as U on U.OFFICECODE = c.INPID and U.COMPANY = c.COMPANY";
+            sql += " where 1 = 1";
+
+            if (!String.IsNullOrEmpty(d.company))
+            {
+                var comp = "";
+                comp = "'" + d.company.Replace(",", "','") + "'";
+                sql += " and C.COMPANY in (" + comp + ") ";
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPMST))
+            {
+                sql += " and C.DEPMST =" + QuoteStr(d.DEPMST);
+            }
+
+            if (!String.IsNullOrEmpty(d.YEAR))
+            {
+                sql += " and C.YR =" + QuoteStr(d.YEAR);
+            }
+
+            if (!String.IsNullOrEmpty(d.MN))
+            {
+                sql += " and C.MN =" + QuoteStr(d.MN);
+            }
+
+            if (d.cutdt != null)
+            {
+                param.Add("@CUTDT", d.cutdt);
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, C.cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
+            }
+
+            if (!String.IsNullOrEmpty(d.audit_no))
+            {
+
+                param.Add("@AUDITNO", d.audit_no);
+                param.Add("@auditno_lk", $"%{d.audit_no}%");
+                sql += " AND (M.audit_no LIKE @auditno_lk OR M.audit_no = @AUDITNO )";
+            }
+
+            if (!String.IsNullOrEmpty(d.sqno))
+            {
+                param.Add("@SQNO", d.sqno);
+                sql += " and C.sqno = " + QuoteStr(d.sqno);
+
+            }
+
+            if (!string.IsNullOrEmpty(d.sqno_copm))
+            {
+                sql += " and C.COMPANY = " + QuoteStr(d.sqno_copm);
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                param.Add("@DEPCODEOL", d.DEPCODEOL);
+                sql += " and C.DEPCODEOL = " + QuoteStr(d.DEPCODEOL);
+            }
 
 
+            if (!String.IsNullOrEmpty(d.TYPECODE))
+            {
+                sql += " and C.TYPECODE = " + QuoteStr(d.TYPECODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.GASTCODE))
+            {
+                sql += " and C.GASTCODE = " + QuoteStr(d.GASTCODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.OFFICECODE))
+            {
+                sql += " and C.OFFICECODE = " + QuoteStr(d.OFFICECODE);
+            }
 
 
-            //var obj = Query<ASAUDITPOSTMST>(sql, param).ToList();
+            if (!d.Menu3 && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(d.DeptCode))
+                {
+                    sql += " C.DEPCODEOL like (case when isnull('" + d.DeptCode + "','') <> '' then   SUBSTRING('" + d.DeptCode + "',1,1) else '' end + '%')";
+                }
+                if ((d.DeptLST != null && d.DeptLST.Length > 0) && (d.DeptLST != "null"))
+                {
+                    var arrDept = d.DeptLST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or C.DEPCODEOL like (case when isnull('" + s + "','') <> '' then   SUBSTRING('" + s + "',1,1) else '' end + '%')";
+                    }
+
+                }
+                sql += " )";
+            }
+
+            sql += " and ASSETNO not in (select assetno from [FT_ASAUDITPOSTMST]() P where 1 =1";
+
+            if (!String.IsNullOrEmpty(d.company))
+            {
+                var comp = "";
+                comp = "'" + d.company.Replace(",", "','") + "'";
+                sql += " and P.COMPANY in (" + comp + ") ";
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPMST))
+            {
+                sql += " and P.DEPMST =" + QuoteStr(d.DEPMST);
+            }
+
+            if (!String.IsNullOrEmpty(d.YEAR))
+            {
+                sql += " and P.YR =" + QuoteStr(d.YEAR);
+            }
+
+            if (!String.IsNullOrEmpty(d.MN))
+            {
+                sql += " and P.MN =" + QuoteStr(d.MN);
+            }
+
+            if (d.cutdt != null)
+            {
+                param.Add("@CUTDT", d.cutdt);
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, P.cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
+            }
+
+            if (d.inpdt != null)
+            {
+                param.Add("@INPDT", d.inpdt);
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, P.inpdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.inpdt) + "))";
+            }
+
+            if (!String.IsNullOrEmpty(d.audit_no))
+            {
+
+                param.Add("@AUDITNO", d.audit_no);
+                param.Add("@auditno_lk", $"%{d.audit_no}%");
+                sql += " AND (P.audit_no LIKE @auditno_lk OR P.audit_no = @AUDITNO )";
+            }
+
+            if (!String.IsNullOrEmpty(d.sqno))
+            {
+                param.Add("@SQNO", d.sqno);
+                sql += " and P.sqno = " + QuoteStr(d.sqno);
+
+            }
+
+            if (!string.IsNullOrEmpty(d.sqno_copm))
+            {
+                sql += " and P.COMPANY = " + QuoteStr(d.sqno_copm);
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                param.Add("@DEPCODEOL", d.DEPCODEOL);
+                sql += " and P.DEPCODEOL = " + QuoteStr(d.DEPCODEOL);
+            }
+
+            if (!String.IsNullOrEmpty(d.LEADERCODE))
+            {
+                param.Add("@LEADERCODE", d.LEADERCODE);
+                sql += " and P.LEADERCODE = " + QuoteStr(d.LEADERCODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.PCODE))
+            {
+                param.Add("@PCODE", d.PCODE);
+                sql += " and P.PCODE = " + QuoteStr(d.PCODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.TYPECODE))
+            {
+                sql += " and P.TYPECODE = " + QuoteStr(d.TYPECODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.GASTCODE))
+            {
+                sql += " and P.GASTCODE = " + QuoteStr(d.GASTCODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.OFFICECODE))
+            {
+                sql += " and P.OFFICECODE = " + QuoteStr(d.OFFICECODE);
+            }
+
+
+            if (!d.Menu3 && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(d.DeptCode))
+                {
+                    sql += " P.DEPCODEOL like (case when isnull('" + d.DeptCode + "','') <> '' then   SUBSTRING('" + d.DeptCode + "',1,1) else '' end + '%')";
+                }
+                if ((d.DeptLST != null && d.DeptLST.Length > 0) && (d.DeptLST != "null"))
+                {
+                    var arrDept = d.DeptLST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or P.DEPCODEOL like (case when isnull('" + s + "','') <> '' then   SUBSTRING('" + s + "',1,1) else '' end + '%')";
+                    }
+
+                }
+                sql += " )";
+            }
+
+
+            sql += " ) )";
+            sql += " ) as b";
+            sql += " ) as C";
+            sql += " order by AUDIT_RESULT desc, ASSETNO ";
+
             var obj = Query<RptAuditAsset>(sql, param).ToList();
 
 
@@ -215,7 +409,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> GetAuditAssetTRNLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN> GetAuditAssetTRNLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " select P.*    , U.OFNAME as INPNAME    ";
@@ -340,12 +534,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
             var obj = Query<ASAUDITPOSTTRN>(sql, param).ToList();
 
 
-            List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> res = new List<ASSETKKF_MODEL.Response.Report.RptAuditAsset>();
+            List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN> res = new List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN>();
 
             if (obj != null && obj.Count > 0)
             {
                 obj.ForEach(x => {
-                    res.Add(new ASSETKKF_MODEL.Response.Report.RptAuditAsset
+                    res.Add(new ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN
                     {
                         ASSETNO = x.ASSETNO,
                         ASSETNAME = x.ASSETNAME,
