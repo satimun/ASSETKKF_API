@@ -32,8 +32,16 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     UCODE = dataReq.UCODE,
                     LEADERNAME = dataReq.LEADERNAME,
                     AREANAME = dataReq.AREANAME,
-                    IMGPATH = dataReq.IMGPATH
-                    
+                    IMGPATH = dataReq.IMGPATH,
+                    YEAR = dataReq.YEAR,
+                    MN = dataReq.MN,
+                    DEPMST = dataReq.DEPMST,
+                    cutdt = dataReq.cutdt,
+                    OFFICECODE = dataReq.OFFICECODE,
+                    TYPECODE = dataReq.TYPECODE,
+                    GASTCODE = dataReq.GASTCODE
+
+
                 };
 
                 var reqASSETOFFICECODE = new ASSETOFFICECODEReq()

@@ -7,9 +7,21 @@ namespace ASSETKKF_MODEL.Request.Asset
 {
     public class AuditPostReq
     {
-        public string SQNO { get; set; }
-        public string DEPCODEOL { get; set; }
         public string COMPANY { get; set; }
+        public string YEAR { get; set; }
+        public string MN { get; set; }
+               
+
+        public string DEPMST { get; set; }
+        public string SQNO { get; set; }
+        public string cutdt { get; set; }
+
+        public string DEPCODEOL { get; set; }
+        public string OFFICECODE { get; set; }
+        public string TYPECODE { get; set; }
+
+        public string GASTCODE { get; set; }
+
         public string ASSETNO { get; set; }
         public string LEADERCODE { get; set; }
         public string LEADERNAME { get; set; }

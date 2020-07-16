@@ -44,6 +44,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
             cmd += " where D.SQNO = M.SQNO ";
             cmd += " and D.Company = M.Company ";
+            cmd += " and M.Audit_NO is not null";
             if (String.IsNullOrEmpty(d.MODE))
             {
                 cmd += " and  M.FLAG not in ('X','C')";
@@ -112,6 +113,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
             cmd += " where D.SQNO = M.SQNO ";
             cmd += " and D.Company = M.Company ";
+            cmd += " and M.Audit_NO is not null";
             if (String.IsNullOrEmpty(d.MODE))
             {
                 cmd += " and  M.FLAG not in ('X','C')";
@@ -459,6 +461,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " where D.SQNO = M.SQNO ";
             sql += " and D.Company = M.Company ";            
             sql += " and M.COMPANY = '" + d.COMPANY + "'";
+            sql += " and M.Audit_NO is not null";
 
             if (!String.IsNullOrEmpty(d.SQNO))
             {
@@ -469,11 +472,49 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
             }
-                
+
             if (!String.IsNullOrEmpty(d.AREACODE))
             {
                 sql += " and POSITCODE = '" + d.AREACODE + "'";
             }
+
+            if (!String.IsNullOrEmpty(d.YEAR))
+            {
+                sql += " and M.YR = '" + d.YEAR + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.MN))
+            {
+                sql += " and M.MN = '" + d.MN + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPMST))
+            {
+                sql += " and M.DEPMST = '" + d.DEPMST + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.cutdt))
+            {
+                sql += " and M.CUTDT = '" + d.DEPMST + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.OFFICECODE))
+            {
+                sql += " and D.OFFICECODE = '" + d.OFFICECODE + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.TYPECODE))
+            {
+                sql += " and D.TYPECODE = '" + d.TYPECODE + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.GASTCODE))
+            {
+                sql += " and D.GASTCODE = '" + d.GASTCODE + "'";
+            }
+
+
+
             sql += " and  M.FLAG not in ('X','C')";
 
             var res = Query<ASAUDITCUTDATEMST>(sql, param).FirstOrDefault();
@@ -489,7 +530,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " and D.Company = M.Company ";
             sql += " and M.SQNO = '" + d.SQNO + "'";
             sql += " and M.COMPANY = '" + d.COMPANY + "'";
-            
+            sql += " and M.Audit_NO is not null";
+
 
             if (!String.IsNullOrEmpty(d.DEPCODEOL))
             {
@@ -500,6 +542,42 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 sql += " and POSITCODE = '" + d.AREACODE + "'";
             }
+
+            if (!String.IsNullOrEmpty(d.YEAR))
+            {
+                sql += " and M.YR = '" + d.YEAR + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.MN))
+            {
+                sql += " and M.MN = '" + d.MN + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPMST))
+            {
+                sql += " and M.DEPMST = '" + d.DEPMST + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.cutdt))
+            {
+                sql += " and M.CUTDT = '" + d.DEPMST + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.OFFICECODE))
+            {
+                sql += " and D.OFFICECODE = '" + d.OFFICECODE + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.TYPECODE))
+            {
+                sql += " and D.TYPECODE = '" + d.TYPECODE + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.GASTCODE))
+            {
+                sql += " and D.GASTCODE = '" + d.GASTCODE + "'";
+            }
+
             sql += " and  M.FLAG not in ('X','C')";
 
             var res = Query<ASAUDITCUTDATE>(sql, param).ToList();
@@ -537,6 +615,41 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if(!String.IsNullOrEmpty(flag))
             {
                 sql += " and isnull(PCODE,'') <> '' ";
+            }
+
+            if (!String.IsNullOrEmpty(d.YEAR))
+            {
+                sql += " and YR = '" + d.YEAR + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.MN))
+            {
+                sql += " and MN = '" + d.MN + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPMST))
+            {
+                sql += " and DEPMST = '" + d.DEPMST + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.cutdt))
+            {
+                sql += " and CUTDT = '" + d.DEPMST + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.OFFICECODE))
+            {
+                sql += " and OFFICECODE = '" + d.OFFICECODE + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.TYPECODE))
+            {
+                sql += " and TYPECODE = '" + d.TYPECODE + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.GASTCODE))
+            {
+                sql += " and GASTCODE = '" + d.GASTCODE + "'";
             }
 
             sql += " order by (case when INPID = '" + d.UCODE + "' then 1 else 0 end) desc, INPDT desc";
@@ -667,6 +780,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.AREACODE))
             {
                 sql += " and a.POSITCODE = '" + d.AREACODE + "'";
+            }
+            if (!String.IsNullOrEmpty(d.YEAR))
+            {
+                sql += " and YR = '" + d.YEAR + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.MN))
+            {
+                sql += " and MN = '" + d.MN + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPMST))
+            {
+                sql += " and DEPMST = '" + d.DEPMST + "'";
             }
 
             sql += " order by (case when a.INPID = '" + d.UCODE + "' then 1 else 0 end) desc";

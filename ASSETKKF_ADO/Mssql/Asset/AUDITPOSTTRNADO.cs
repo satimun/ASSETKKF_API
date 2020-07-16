@@ -118,13 +118,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			DynamicParameters param = new DynamicParameters();
 			param.Add("@OFFICECODE", d.OFFICECODE);
 			sql = " select OFFICECODE,MAX(OFNAME) AS OFNAME,DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE from  [FT_ASFIXEDASSET] (@OFFICECODE)  ";
-			sql += " where SALEDT IS NULL";
-			sql += " and COMPANY = '" + d.COMPANY + "'";
+			sql += " where 1 = 1";
+			//sql += " and COMPANY = '" + d.COMPANY + "'";
 			
-			if (!String.IsNullOrEmpty(d.OFFICECODE))
-			{
-				sql += " and OFFICECODE = '" + d.OFFICECODE + "'";
-			}
+			//if (!String.IsNullOrEmpty(d.OFFICECODE))
+			//{
+			//	sql += " and OFFICECODE = '" + d.OFFICECODE + "'";
+			//}
 			sql += " GROUP BY OFFICECODE,DEPCODEOL,DEPCODE";
 			var res = Query<ASSETOFFICECODE>(sql, param).FirstOrDefault();
 			return res;

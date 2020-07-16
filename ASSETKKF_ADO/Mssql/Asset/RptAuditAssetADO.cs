@@ -668,6 +668,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and A.COMPANY in (" + comp + ") ";
             }
 
+            if (!String.IsNullOrEmpty(d.TYPECODE))
+            {
+                cmd += " and A.TYPECODE = '" + d.TYPECODE + "'";
+            }
+
+
             cmd += " ) AS X WHERE 1=1 ";
 
 
