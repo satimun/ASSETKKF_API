@@ -31,9 +31,10 @@ namespace ASSETKKF_ADO.Mssql.Asset
             param.Add("@TYPECODE", d.TYPECODE);
             param.Add("@GASTCODE", d.GASTCODE);
             param.Add("@OFFICECODE", d.OFFICECODE);
+            param.Add("@PCODE", d.PCODE);
 
             string cmd = " select pname,sum(QTY) as QTY ";
-            cmd += "from FT_AuditProblemSummary (@TYPECODE,@GASTCODE,@OFFICECODE) where 1 = 1";
+            cmd += "from FT_AuditProblemSummary (@TYPECODE,@GASTCODE,@OFFICECODE,@PCODE) where 1 = 1";
             
 
             if (!String.IsNullOrEmpty(d.Company))
