@@ -90,8 +90,13 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         res._result._message = "";
                         res._result._status = "OK";
 
-                        res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req, "");
-                        res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req, "Y");
+                        //res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req, "");
+                        //res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req, "Y");
+
+                        var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
+                        var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
+                        res.AUDITPOSTMSTWAITLST = lstWait;
+                        res.AUDITPOSTMSTCHECKEDLST = lstChecked;
                     }
 
                     res.AREACODE = dataReq.AREACODE;                   

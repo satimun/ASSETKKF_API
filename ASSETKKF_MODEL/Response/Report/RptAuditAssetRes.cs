@@ -25,6 +25,7 @@ namespace ASSETKKF_MODEL.Response.Report
         public string PNAME { get; set; }
         public string MEMO1 { get; set; }
         public string INPID { get; set; }
+        public string INPNAME { get; set; }
         public DateTime? INPDT { get; set; }
         public DateTime? CUTDT { get; set; }
         public string BRNCODE { get; set; }
@@ -68,7 +69,6 @@ namespace ASSETKKF_MODEL.Response.Report
         public DateTime? ACCEDITDT { get; set; }
         public string COMPANY { get; set; }
         public string AUDIT_NOTE { get; set; }
-        public string INPNAME { get; set; }
         public string AUDIT_NO { get; set; }
 
         public string AUDIT_RESULT { get; set; }      
@@ -95,6 +95,7 @@ namespace ASSETKKF_MODEL.Response.Report
         public string PNAME { get; set; }
         public string MEMO1 { get; set; }
         public string INPID { get; set; }
+        public string INPNAME { get; set; }
         public DateTime? INPDT { get; set; }
         public DateTime? CUTDT { get; set; }
         public string BRNCODE { get; set; }
@@ -138,7 +139,6 @@ namespace ASSETKKF_MODEL.Response.Report
         public DateTime? ACCEDITDT { get; set; }
         public string COMPANY { get; set; }
         public string AUDIT_NOTE { get; set; }
-        public string INPNAME { get; set; }
         public string AUDIT_NO { get; set; }
 
         public string AUDIT_RESULT { get; set; }

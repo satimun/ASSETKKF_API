@@ -610,7 +610,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select * from  [FT_ASAUDITPOSTMST] ()  ";
+            sql = " select * ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME";
+            sql += " from  [FT_ASAUDITPOSTMST] () as P ";
             sql += " where SQNO = '" + d.SQNO + "'";
             sql += " and COMPANY = '" + d.COMPANY + "'";
            
@@ -794,7 +795,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select * from  FT_ASAUDITPOSTTRN() as a ";
+            sql = " select * ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= a.INPID) as INPNAME";
+            sql += " from  FT_ASAUDITPOSTTRN() as a ";
             sql += " left outer join [FT_ASAUDITPOSTTRN_PHONE] () as b";
             sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO";
             sql += " where a.SQNO = '" + d.SQNO + "'";
@@ -821,11 +823,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
                 //sql += " and DEPMST = '" + d.DEPMST + "'";
-                sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
+                sql += "and DEPCODE in (SELECT [DEPCODE] ";
                 sql += " FROM FT_ASAUDITCUTDATE() ";
                 sql += " where DEPMST = '" + d.DEPMST + "'";
                 sql += " and company = '" + d.COMPANY + "'";
-                sql += " group by[DEPCODEOL])";
+                sql += " group by[DEPCODE])";
             }
 
             sql += " order by (case when a.INPID = '" + d.UCODE + "' then 1 else 0 end) desc";
