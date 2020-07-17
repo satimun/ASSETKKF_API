@@ -150,7 +150,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
-                cmd += " and M.DEPMST = '" + d.DEPMST + "'";
+                //cmd += " and M.DEPMST = '" + d.DEPMST + "'";
+                sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
+                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " where DEPMST = '" + d.DEPMST + "'";
+                sql += " and company = '" + d.Company + "'";
+                sql += " group by[DEPCODEOL])";
             }
 
             //cmd += " and M.YR = (SELECT YR from(";
@@ -194,7 +199,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(dataReq.DEPMST))
             {
-                cmd += " and DEPMST = '" + dataReq.DEPMST + "'";
+                //cmd += " and DEPMST = '" + dataReq.DEPMST + "'";
+                sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
+                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " where DEPMST = '" + dataReq.DEPMST + "'";
+                sql += " and company = '" + dataReq.Company + "'";
+                sql += " group by[DEPCODEOL])";
             }
 
             
@@ -297,11 +307,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(dataReq.DEPMST))
             {
-                //sql += " and CODCOMP = '" + dataReq.DEPMST + "'";
-                sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM[assetkkf].[dbo].[ASAUDITCUTDATE] ";
-                sql += " where DEPMST = '" + dataReq.DEPMST + "'";
-                sql += " group by[DEPCODEOL])";
+                sql += " and CODCOMP = '" + dataReq.DEPMST + "'";
             }
 
             if (!String.IsNullOrEmpty(dataReq.sqno))
@@ -444,7 +450,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(dataReq.DEPMST))
             {
-                sql += " and DEPMST = '" + dataReq.DEPMST + "'";
+                // sql += " and DEPMST = '" + dataReq.DEPMST + "'";
+                sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
+                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " where DEPMST = '" + dataReq.DEPMST + "'";
+                sql += " and company = '" + dataReq.Company + "'";
+                sql += " group by[DEPCODEOL])";
             }
 
             sql += " group by case when isnull(DEPCODEOL,'') <> '' then   SUBSTRING(DEPCODEOL,1,2) else '' end";
@@ -457,7 +468,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select M.* from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
+            sql = " select distinct M.* from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
             sql += " where D.SQNO = M.SQNO ";
             sql += " and D.Company = M.Company ";            
             sql += " and M.COMPANY = '" + d.COMPANY + "'";
@@ -490,12 +501,18 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
-                sql += " and M.DEPMST = '" + d.DEPMST + "'";
+                //sql += " and M.DEPMST = '" + d.DEPMST + "'";
+                sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
+                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " where DEPMST = '" + d.DEPMST + "'";
+                sql += " and company = '" + d.COMPANY + "'";
+                sql += " group by[DEPCODEOL])";
             }
 
             if (!String.IsNullOrEmpty(d.cutdt))
             {
-                sql += " and M.CUTDT = '" + d.DEPMST + "'";
+                //sql += " and M.CUTDT = '" + d.cutdt + "'";
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, m.cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
             }
 
             if (!String.IsNullOrEmpty(d.OFFICECODE))
@@ -555,12 +572,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
-                sql += " and M.DEPMST = '" + d.DEPMST + "'";
+                //sql += " and M.DEPMST = '" + d.DEPMST + "'";
+                sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
+                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " where DEPMST = '" + d.DEPMST + "'";
+                sql += " and company = '" + d.COMPANY + "'";
+                sql += " group by[DEPCODEOL])";
             }
 
             if (!String.IsNullOrEmpty(d.cutdt))
             {
-                sql += " and M.CUTDT = '" + d.DEPMST + "'";
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, m.cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
             }
 
             if (!String.IsNullOrEmpty(d.OFFICECODE))
@@ -629,12 +651,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
-                sql += " and DEPMST = '" + d.DEPMST + "'";
+               // sql += " and DEPMST = '" + d.DEPMST + "'";
+                sql += " and DEPCODEOL in (SELECT [DEPCODEOL] ";
+                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " where DEPMST = '" + d.DEPMST + "'";
+                sql += " and company = '" + d.COMPANY + "'";
+                sql += " group by[DEPCODEOL])";
             }
 
             if (!String.IsNullOrEmpty(d.cutdt))
             {
-                sql += " and CUTDT = '" + d.DEPMST + "'";
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
             }
 
             if (!String.IsNullOrEmpty(d.OFFICECODE))
@@ -793,7 +820,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
-                sql += " and DEPMST = '" + d.DEPMST + "'";
+                //sql += " and DEPMST = '" + d.DEPMST + "'";
+                sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
+                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " where DEPMST = '" + d.DEPMST + "'";
+                sql += " and company = '" + d.COMPANY + "'";
+                sql += " group by[DEPCODEOL])";
             }
 
             sql += " order by (case when a.INPID = '" + d.UCODE + "' then 1 else 0 end) desc";
