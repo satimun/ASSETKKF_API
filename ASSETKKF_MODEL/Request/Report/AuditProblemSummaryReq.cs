@@ -21,5 +21,8 @@ namespace ASSETKKF_MODEL.Request.Report
         public string DEPMST { get; set; }
         public string YEAR { get; set; }
         public string MN { get; set; }
+        public string OFFICECODE { get; set; }
+        public string TYPECODE { get; set; }
+        public string GASTCODE { get; set; }
     }
 }

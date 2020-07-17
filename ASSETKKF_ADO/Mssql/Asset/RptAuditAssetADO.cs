@@ -361,7 +361,27 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ) )";
             sql += " ) as b";
             sql += " ) as C";
-            sql += " order by AUDIT_RESULT desc, ASSETNO ";
+            // sql += " order by AUDIT_RESULT desc, ASSETNO ";
+
+            if (String.IsNullOrEmpty(d.orderby) || d.orderby.Equals("1"))
+            {
+                sql += " order by  ASSETNO,OFFICECODE ";
+            }
+
+            if (d.orderby.Equals("2"))
+            {
+                sql += " order by  OFFICECODE,ASSETNO ";
+            }
+
+            if (d.orderby.Equals("3"))
+            {
+                sql += " order by  DEPCODEOL,OFFICECODE,ASSETNO ";
+            }
+
+            if (d.orderby.Equals("4"))
+            {
+                sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
+            }
 
             var obj = Query<RptAuditAsset>(sql, param).ToList();
 
@@ -412,8 +432,10 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN> GetAuditAssetTRNLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select P.*    , U.OFNAME as INPNAME    ";
+            sql = " select P.*    , U.OFNAME as INPNAME,MEMO1 as AUDIT_NOTE    ";
             sql += "  , (select max(audit_no) from FT_ASAUDITCUTDATEMST() where SQNO = P.SQNO and COMPANY = P.COMPANY) as audit_no";
+            sql += "  ,(case when isnull(P.PCODE,'') = '' then '' else P.PCODE + ' : ' + P.PNAME end ) as AUDIT_RESULT  ";
+            sql += " ,(CAST(P.MN AS varchar) + ' / ' + CAST(P.YR AS varchar) + ' - ' + CAST(P.YRMN AS varchar) ) as AUDIT_AT  ";
             sql += " from  [FT_ASAUDITPOSTTRN] ()  as P left outer join [FT_UserAsset] ('') as U on U.OFFICECODE = P.INPID and U.COMPANY = P.COMPANY";
             sql += " left outer join [FT_ASAUDITPOSTTRN_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO";
             sql += " where 1 = 1";
@@ -528,49 +550,70 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " )";
             }
 
-            sql += " order by P.SQNO desc";
+            // sql += " order by P.SQNO desc";
+
+            if (String.IsNullOrEmpty(d.orderby) || d.orderby.Equals("1"))
+            {
+                sql += " order by  ASSETNO,OFFICECODE ";
+            }
+
+            if (d.orderby.Equals("2"))
+            {
+                sql += " order by  OFFICECODE,ASSETNO ";
+            }
+
+            if (d.orderby.Equals("3"))
+            {
+                sql += " order by  DEPCODEOL,OFFICECODE,ASSETNO ";
+            }
+
+            if (d.orderby.Equals("4"))
+            {
+                sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
+            }
 
 
-            var obj = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+            var obj = Query<RptAuditAssetTRN>(sql, param).ToList();
 
 
             List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN> res = new List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN>();
+            res = obj;
 
-            if (obj != null && obj.Count > 0)
-            {
-                obj.ForEach(x => {
-                    res.Add(new ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN
-                    {
-                        ASSETNO = x.ASSETNO,
-                        ASSETNAME = x.ASSETNAME,
-                        TYPECODE = x.TYPECODE,
-                        TYPENAME = x.TYPENAME,
-                        GASTCODE = x.GASTCODE,
-                        GASTNAME = x.GASTNAME,
-                        OFFICECODE = x.OFFICECODE,
-                        OFNAME = x.OFNAME,
-                        DEPCODEOL = x.DEPCODEOL,
-                        STNAME = x.STNAME,
-                        AUDIT_RESULT = !String.IsNullOrEmpty(x.PCODE) ? (x.PCODE + " : " + x.PNAME) : "",
-                        AUDIT_NOTE = x.MEMO1,
-                        AUDIT_NO = x.AUDIT_NO,
-                        SQNO = x.SQNO,
-                        AUDIT_AT = x.MN + "/" + x.YR + " - " + x.YRMN.ToString(),
-                        ACCDT = x.ACCDT,
-                        COMPDT = x.COMPDT,
-                        LEADERCODE = x.LEADERCODE,
-                        LEADERNAME = x.LEADERNAME,
-                        INPID = x.INPID,
-                        INPNAME = x.INPNAME,
-                        INPDT = x.INPDT,
-                        DEPMST = x.DEPMST,
-                        IMGPATH = x.IMGPATH,
-                        POSITCODE = x.POSITCODE,
-                        POSITNAME = x.POSITNAME
+            //if (obj != null && obj.Count > 0)
+            //{
+            //    obj.ForEach(x => {
+            //        res.Add(new ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN
+            //        {
+            //            ASSETNO = x.ASSETNO,
+            //            ASSETNAME = x.ASSETNAME,
+            //            TYPECODE = x.TYPECODE,
+            //            TYPENAME = x.TYPENAME,
+            //            GASTCODE = x.GASTCODE,
+            //            GASTNAME = x.GASTNAME,
+            //            OFFICECODE = x.OFFICECODE,
+            //            OFNAME = x.OFNAME,
+            //            DEPCODEOL = x.DEPCODEOL,
+            //            STNAME = x.STNAME,
+            //            AUDIT_RESULT = !String.IsNullOrEmpty(x.PCODE) ? (x.PCODE + " : " + x.PNAME) : "",
+            //            AUDIT_NOTE = x.MEMO1,
+            //            AUDIT_NO = x.AUDIT_NO,
+            //            SQNO = x.SQNO,
+            //            AUDIT_AT = x.MN + "/" + x.YR + " - " + x.YRMN.ToString(),
+            //            ACCDT = x.ACCDT,
+            //            COMPDT = x.COMPDT,
+            //            LEADERCODE = x.LEADERCODE,
+            //            LEADERNAME = x.LEADERNAME,
+            //            INPID = x.INPID,
+            //            INPNAME = x.INPNAME,
+            //            INPDT = x.INPDT,
+            //            DEPMST = x.DEPMST,
+            //            IMGPATH = x.IMGPATH,
+            //            POSITCODE = x.POSITCODE,
+            //            POSITNAME = x.POSITNAME
 
-                    });
-                });
-            }
+            //        });
+            //    });
+            //}
 
 
             return res;
@@ -658,8 +701,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             string cmd = " Select GASTCODE as id, (GASTCODE + ' : ' + GASTNAME ) as description   ";
             cmd += " FROM (SELECT   A.*,B.ST from FT_STGROUPASSET() A,FT_STTYPEASSET() B ";
-            cmd += " WHERE  A.TYPECODE = B.TYPECODE and A.compANY = B.cOMPANY  AND B.ST = 'N' ";
-            
+            cmd += " WHERE  A.TYPECODE = B.TYPECODE and A.compANY = B.cOMPANY  "; // AND B.ST = 'N'
+
 
             if (!String.IsNullOrEmpty(d.company))
             {

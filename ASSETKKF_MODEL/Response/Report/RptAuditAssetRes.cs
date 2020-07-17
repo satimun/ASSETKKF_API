@@ -151,6 +151,13 @@ namespace ASSETKKF_MODEL.Response.Report
         public string AREACODE { get; set; }
         public string IMGURL { get; set; }
 
+       
+       
+       
+        public string OFFOLD { get; set; }
+        public string OFFNAMOLD { get; set; }
+       
+
     }
 
     public class OfficeASSETRes
