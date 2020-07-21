@@ -11,6 +11,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string DeptCode { get; set; }
         public string DeptLST { get; set; }
         public bool Menu3 { get; set; }
+        public bool Menu4 { get; set; }
         public List<STPOSITASSET> STPOSITASSETLst { get; set; }
     }
 }

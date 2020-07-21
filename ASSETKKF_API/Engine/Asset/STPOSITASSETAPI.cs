@@ -27,7 +27,8 @@ namespace ASSETKKF_API.Engine.Asset
                 Company = dataReq.Company,
                 DeptCode = dataReq.DeptCode,
                 DeptLST = dataReq.DeptLST,
-                Menu3 = dataReq.Menu3
+                Menu3 = dataReq.Menu3,
+                Menu4 = dataReq.Menu4
             };
 
             //var obj = ASSETKKF_ADO.Mssql.Asset.STPOSITASSETADO.GetInstant().GetSTPOSITASSETLists(req);

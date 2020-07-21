@@ -10,6 +10,7 @@ namespace ASSETKKF_MODEL.Request.Report
         public string DeptCode { get; set; }
         public string DeptLST { get; set; }
         public bool Menu3 { get; set; }
+        public bool Menu4 { get; set; }
         public string cutdt { get; set; }
         public string inpdt { get; set; }
         public string audit_no { get; set; }

@@ -103,7 +103,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and DEPCODEOL = " + QuoteStr(d.DEPCODEOL);
             }
 
-            if (!d.Menu3)
+            if ((!d.Menu3 && !d.Menu4))
             {
                 cmd += " and (";
                 if (!String.IsNullOrEmpty(d.DeptCode))
@@ -203,7 +203,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and DEPCODEOL = " + QuoteStr(d.DEPCODEOL);
             }
 
-            if (!d.Menu3)
+            if ((!d.Menu3 && !d.Menu4))
             {
                 cmd += " and (";
                 if (!String.IsNullOrEmpty(d.DeptCode))

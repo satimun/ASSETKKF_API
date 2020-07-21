@@ -128,7 +128,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
 
-            if (!d.Menu3 && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
+            if ((!d.Menu3 && !d.Menu4) && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
             {
                 sql += " and (";
                 if (!String.IsNullOrEmpty(d.DeptCode))
@@ -235,7 +235,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
 
-            if (!d.Menu3 && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
+            if ((!d.Menu3 && !d.Menu4) && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
             {
                 sql += " and (";
                 if (!String.IsNullOrEmpty(d.DeptCode))
@@ -344,7 +344,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
 
-            if (!d.Menu3 && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
+            if ((!d.Menu3 && !d.Menu4) && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
             {
                 sql += " and (";
                 if (!String.IsNullOrEmpty(d.DeptCode))
@@ -538,7 +538,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and P.PCODE = " + QuoteStr(d.PCODE);
             }
 
-            if (!d.Menu3 && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
+            if ((!d.Menu3 && !d.Menu4) && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
             {
                 sql += " and (";
                 if (!String.IsNullOrEmpty(d.DeptCode))

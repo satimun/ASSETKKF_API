@@ -61,7 +61,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and M.COMPANY in (" + comp + ") ";
             }
 
-            if (!d.Menu3 && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
+            if ((!d.Menu3 && !d.Menu4) && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
             {
                 cmd += " and (";
                 if (!String.IsNullOrEmpty(d.DeptCode))
@@ -129,7 +129,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and M.COMPANY in (" + comp + ") ";
             }
 
-            if (!d.Menu3 && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
+            if ((!d.Menu3 && !d.Menu4) && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
             {
                 cmd += " and (";
                 if (!String.IsNullOrEmpty(d.DeptCode))
@@ -151,11 +151,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
                 //cmd += " and M.DEPMST = '" + d.DEPMST + "'";
-                sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM FT_ASAUDITCUTDATE() ";
-                sql += " where DEPMST = '" + d.DEPMST + "'";
-                sql += " and company = '" + d.Company + "'";
-                sql += " group by[DEPCODEOL])";
+                cmd += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
+                cmd += " FROM FT_ASAUDITCUTDATE() ";
+                cmd += " where DEPMST = '" + d.DEPMST + "'";
+                cmd += " and company = '" + d.Company + "'";
+                cmd += " group by[DEPCODEOL])";
             }
 
             //cmd += " and M.YR = (SELECT YR from(";
@@ -200,15 +200,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(dataReq.DEPMST))
             {
                 //cmd += " and DEPMST = '" + dataReq.DEPMST + "'";
-                sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM FT_ASAUDITCUTDATE() ";
-                sql += " where DEPMST = '" + dataReq.DEPMST + "'";
-                sql += " and company = '" + dataReq.Company + "'";
-                sql += " group by[DEPCODEOL])";
+                cmd += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
+                cmd += " FROM FT_ASAUDITCUTDATE() ";
+                cmd += " where DEPMST = '" + dataReq.DEPMST + "'";
+                cmd += " and company = '" + dataReq.Company + "'";
+                cmd += " group by[DEPCODEOL])";
             }
 
             
-            if (!dataReq.Menu3 && ((!String.IsNullOrEmpty(dataReq.DeptCode)) || dataReq.DeptLST != null))
+            if ((!dataReq.Menu3 && !dataReq.Menu4) && ((!String.IsNullOrEmpty(dataReq.DeptCode)) || dataReq.DeptLST != null))
             {
                 cmd += " and (";
                 if (!String.IsNullOrEmpty(dataReq.DeptCode))
@@ -228,9 +228,9 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
             else if (!String.IsNullOrEmpty(dataReq.DEPCODEOL))
             {
-                sql += " and (";
-                sql += " DEPCODEOL like (case when isnull('" + dataReq.DEPCODEOL + "','') <> '' then   SUBSTRING('" + dataReq.DEPCODEOL + "',1,1) else '' end + '%')";
-                sql += " )";
+                cmd += " and (";
+                cmd += " DEPCODEOL like (case when isnull('" + dataReq.DEPCODEOL + "','') <> '' then   SUBSTRING('" + dataReq.DEPCODEOL + "',1,1) else '' end + '%')";
+                cmd += " )";
             }
 
             cmd += " GROUP BY DEPCODEOL,DEPCODE,COMPANY order by  DEPCODEOL";
@@ -280,7 +280,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             //sql += " and DEPCODEEOL like (case when isnull('" + DEPCODEOL + "','') <> '' then   SUBSTRING('" + DEPCODEOL + "',1,1) else '' end + '%')";
-            if (!dataReq.Menu3 && ((!String.IsNullOrEmpty(dataReq.DeptCode)) || dataReq.DeptLST != null))
+            if ((!dataReq.Menu3 && !dataReq.Menu4) && ((!String.IsNullOrEmpty(dataReq.DeptCode)) || dataReq.DeptLST != null))
             {
                 sql += " and (";
                 if (!String.IsNullOrEmpty(dataReq.DeptCode))
@@ -353,7 +353,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             //sql += " and DEPCODEEOL like (case when isnull('" + DEPCODEOL + "','') <> '' then   SUBSTRING('" + DEPCODEOL + "',1,1) else '' end + '%')";
-            if (!dataReq.Menu3 && ((!String.IsNullOrEmpty(dataReq.DeptCode)) || dataReq.DeptLST != null))
+            if ((!dataReq.Menu3 && !dataReq.Menu4) && ((!String.IsNullOrEmpty(dataReq.DeptCode)) || dataReq.DeptLST != null))
             {
                 sql += " and (";
                 if (!String.IsNullOrEmpty(dataReq.DeptCode))
@@ -423,7 +423,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and COMPANY in (" + comp + ") ";
             }
 
-            if (!dataReq.Menu3 && ((!String.IsNullOrEmpty(dataReq.DeptCode)) || dataReq.DeptLST != null))
+            if ((!dataReq.Menu3 && !dataReq.Menu4) && ((!String.IsNullOrEmpty(dataReq.DeptCode)) || dataReq.DeptLST != null))
             {
                 sql += " and (";
                 if (!String.IsNullOrEmpty(dataReq.DeptCode))
@@ -714,6 +714,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
             }
+
+            sql += "  order by a.INPDT desc";
 
             var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
             return res;

@@ -38,7 +38,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and COMPANY in (" + comp + ") ";
             }
 
-            if (!d.Menu3)
+            if ((!d.Menu3 && !d.Menu4))
             {
                 cmd += " and (";
                 if (!String.IsNullOrEmpty(d.DEPCODEOL))
@@ -74,7 +74,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and COMPANY in (" + comp + ") ";
             }
 
-            if (!d.Menu3)
+            if ((!d.Menu3 && !d.Menu4))
             {
                 cmd += " and (";
                 if (!String.IsNullOrEmpty(d.DEPCODEOL))
@@ -112,7 +112,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and COMPANY in (" + comp + ") ";
             }
 
-            if (!d.Menu3)
+            if ((!d.Menu3 && !d.Menu4))
             {
                 cmd += " and (";
                 if (!String.IsNullOrEmpty(d.DEPCODEOL))
@@ -150,7 +150,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and COMPANY in (" + comp + ") ";
             }
 
-            if (!d.Menu3)
+            if ((!d.Menu3 && !d.Menu4))
             {
                 cmd += " and (";
                 if (!String.IsNullOrEmpty(d.DEPCODEOL))
@@ -190,7 +190,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and COMPANY in (" + comp + ") ";
             }
 
-            if (!d.Menu3)
+            if ((!d.Menu3 && !d.Menu4))
             {
                 cmd += " and (";
                 if (!String.IsNullOrEmpty(d.DEPCODEOL))
