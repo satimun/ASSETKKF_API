@@ -84,7 +84,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			DynamicParameters param = new DynamicParameters();
 			param.Add("@OFFICECODE", d.OFFICECODE);
 			sql = " select OFFICECODE,MAX(OFNAME) AS OFNAME,DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE from  [FT_ASFIXEDASSET] (@OFFICECODE)  ";
-			sql += " where SALEDT IS NULL";
+			sql += " where 1 = 1";
 			sql += " and COMPANY = '" + d.COMPANY + "'";
 			if (!String.IsNullOrEmpty(d.DEPCODEOL))
 			{
@@ -173,10 +173,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			DynamicParameters param = new DynamicParameters();
 			sql = " select * from  FT_ASAUDITPOSTTRN()  as a ";
 			sql += " left outer join [FT_ASAUDITPOSTTRN_PHONE] () as b";
-			sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO";
+			sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO  and a.INPID = b.INPID";
 			sql += " where a.SQNO = '" + d.SQNO + "'";
 			sql += " and a.COMPANY = '" + d.COMPANY + "'";
 			sql += " and a.DEPCODEOL = '" + d.DEPCODEOL + "'";
+			sql += " and a.INPID = '" + d.UCODE + "' ";
 			if (!String.IsNullOrEmpty(d.AREACODE))
 			{
 				sql += " and a.POSITCODE = '" + d.AREACODE + "'";

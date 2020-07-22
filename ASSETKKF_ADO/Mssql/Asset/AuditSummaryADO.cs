@@ -178,7 +178,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<AuditDeptSummary> GetSummaryByDepMst(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            string cmd = " select company,depcodeol,max(stname) as stname,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
+            string cmd = " select company,max(DEPMST) as DEPMST,depcodeol,max(stname) as stname,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
             cmd += ",max(yr) as yr,max(mn) as mn,max(yrmn) as yrmn";
             cmd += " from AuditSummary (" + d.year + "," + d.mn + ") where 1 = 1  and audit_no is not null";
