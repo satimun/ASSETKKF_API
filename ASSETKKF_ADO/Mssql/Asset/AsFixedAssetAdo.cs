@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using ASSETKKF_MODEL.Data.Mssql.Asset;
+using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -23,13 +24,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.AsFixedAsset> Search(ASSETKKF_MODEL.Data.Mssql.Asset.AsFixedAsset d, SqlTransaction transac = null)
+        public List<AsFixedAsset> Search(ASSETKKF_MODEL.Data.Mssql.Asset.AsFixedAsset d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@OFFICECODE", d.OFFICECODE);
 
-            string cmd = "SELECT * FROM [dbo].[FT_ASFIXEDASSET] (@OFFICECODE)";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AsFixedAsset>(cmd, param).ToList();
+            //string cmd = "SELECT * FROM [FT_ASFIXEDASSET] (" + QuoteStr(d.OFFICECODE) + ") where 1 = 1";
+            string cmd = "SELECT * FROM [FT_ASFIXEDASSET] (@OFFICECODE) ";
+            cmd += " where 1 = 1";
+
+            if (!String.IsNullOrEmpty(d.ASSETNO))
+            {
+                cmd += " and  assetno = " + QuoteStr(d.ASSETNO);
+            }
+            var res = Query<AsFixedAsset>(cmd, param).ToList();
             return res;
         }
     }

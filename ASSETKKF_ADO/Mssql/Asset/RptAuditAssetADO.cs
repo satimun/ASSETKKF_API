@@ -30,13 +30,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
             sql = "  select   * from (  ";
-            sql += " select * from (select P.* ,MEMO1 as AUDIT_NOTE ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME  ";
+            sql += " select * from (select P.* ,MEMO1 as AUDIT_NOTE ,D.IMGPATH,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME  ";
             sql += " , (select max(audit_no) from FT_ASAUDITCUTDATEMST() where SQNO = P.SQNO and COMPANY = P.COMPANY) as audit_no  ";
             sql += "  ,(case when isnull(P.PCODE,'') = '' then '' else P.PCODE + ' : ' + P.PNAME end ) as AUDIT_RESULT  ";
             sql += " ,(CAST(P.MN AS varchar) + ' / ' + CAST(P.YR AS varchar) + ' - ' + CAST(P.YRMN AS varchar) ) as AUDIT_AT  ";
             sql += " from  [FT_ASAUDITPOSTMST] () as P ";
            // sql += " left outer join [FT_UserAsset] ('') as U on U.OFFICECODE = P.INPID and U.COMPANY = P.COMPANY   ";
-            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO ";
+            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO   and P.INPID = D.INPID";
             sql += " where 1 = 1";
 
 
@@ -150,7 +150,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += "  ) as x";
             sql += " union";
-            sql += " select * from ((select C.* ,c.MEMO1 as AUDIT_NOTE ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= C.INPID) as INPNAME    , M.AUDIT_NO";
+            sql += " select * from ((select C.* ,c.MEMO1 as AUDIT_NOTE,'' as IMGPATH ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= C.INPID) as INPNAME    , M.AUDIT_NO";
             sql += " ,(case when isnull(c.PCODE,'') = '' then '' else c.PCODE + ' : ' + c.PNAME end ) as AUDIT_RESULT";
             sql += " ,(CAST(c.MN AS varchar) + ' / ' + CAST(c.YR AS varchar) + ' - ' + CAST(c.YRMN AS varchar) ) as AUDIT_AT";
             sql += " from FT_ASAUDITCUTDATE() AS C";
@@ -438,13 +438,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN> GetAuditAssetTRNLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select P.*     ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME,MEMO1 as AUDIT_NOTE    ";
+            sql = " select P.*  ,D.IMGPATH   ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME,MEMO1 as AUDIT_NOTE    ";
             sql += "  , (select max(audit_no) from FT_ASAUDITCUTDATEMST() where SQNO = P.SQNO and COMPANY = P.COMPANY) as audit_no";
             sql += "  ,(case when isnull(P.PCODE,'') = '' then '' else P.PCODE + ' : ' + P.PNAME end ) as AUDIT_RESULT  ";
             sql += " ,(CAST(P.MN AS varchar) + ' / ' + CAST(P.YR AS varchar) + ' - ' + CAST(P.YRMN AS varchar) ) as AUDIT_AT  ";
             sql += " from  [FT_ASAUDITPOSTTRN] ()  as P ";
             //sql += " left outer join [FT_UserAsset] ('') as U on U.OFFICECODE = P.INPID and U.COMPANY = P.COMPANY";
-            sql += " left outer join [FT_ASAUDITPOSTTRN_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO";
+            sql += " left outer join [FT_ASAUDITPOSTTRN_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO   and P.INPID = D.INPID";
             sql += " where 1 = 1";
 
             /*sql += " and YR = (SELECT YR from(  ";

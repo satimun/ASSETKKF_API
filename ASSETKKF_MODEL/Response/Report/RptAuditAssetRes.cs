@@ -75,11 +75,11 @@ namespace ASSETKKF_MODEL.Response.Report
         public string AUDIT_AT { get; set; }
 
 
-        //public string LEADERCODE { get; set; }
-        //public string LEADERNAME { get; set; }
-        //public string IMGPATH { get; set; }
-        //public string AREACODE { get; set; }
-        //public string IMGURL { get; set; }
+        public string LEADERCODE { get; set; }
+        public string LEADERNAME { get; set; }
+        public string IMGPATH { get; set; }
+        public string AREACODE { get; set; }
+        public string IMGURL { get; set; }
 
     }
 

@@ -22,13 +22,10 @@ namespace ASSETKKF_API.Engine.Asset.Home
         protected override void ExecuteChild(AsFixedAsset dataReq, ResponseAPI dataRes)
         {
             var res = new AsFixedAsset();
-            var req = new ASSETKKF_MODEL.Data.Mssql.Asset.AsFixedAsset()
-            {
-                OFFICECODE = dataReq.OFFICECODE != null ? dataReq.OFFICECODE.Trim() : null
-            };
+           
 
-            var obj = ASSETKKF_ADO.Mssql.Asset.AsFixedAssetAdo.GetInstant().Search(req);
-            if (obj == null) { throw new Exception("ไม่พบข้อมูล"); }
+            var obj = ASSETKKF_ADO.Mssql.Asset.AsFixedAssetAdo.GetInstant().Search(dataReq);
+            //if (obj == null) { throw new Exception("ไม่พบข้อมูล"); }
 
             res.AsFixedAssetLST = obj;
             dataRes.data = res;

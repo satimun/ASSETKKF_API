@@ -18,7 +18,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
         protected string QuoteStr(string str)
         {
-            return "\'" + str.Replace("'", $"{(char)39}") + "\'";
+            return String.IsNullOrEmpty(str) ?"''": "\'" + str.Replace("'", $"{(char)39}") + "\'";
         }
 
         protected T ExecuteScalar<T>(string cmdTxt, DynamicParameters parameter = null, string conStr = null)
