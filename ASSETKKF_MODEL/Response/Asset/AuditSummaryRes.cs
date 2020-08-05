@@ -12,6 +12,13 @@ namespace ASSETKKF_MODEL.Response.Asset
         public ResultDataResponse _result = new ResultDataResponse();
     }
 
+    public class InspectionRes
+    {
+        public List<DashboardInspection> DashboardInspectionLST { get; set; }
+
+        public ResultDataResponse _result = new ResultDataResponse();
+    }
+
     public class AuditDeptSummaryRes
     {
         public List<AuditDeptSummary> AuditSummaryLST { get; set; }

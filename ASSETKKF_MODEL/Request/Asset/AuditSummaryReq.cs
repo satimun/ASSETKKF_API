@@ -17,6 +17,10 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string year { get; set; }
         public string mn { get; set; }
         public string yrmn { get; set; }
+        public string TYPECODE { get; set; }
+        public string GASTCODE { get; set; }
+        public string OFFICECODE { get; set; }
+        public string inspection { get; set; }
 
     }
 }

@@ -226,13 +226,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             string cmd = " SELECT YR as id,YR as description FROM [dbo].[FT_ASAUDITCUTDATEMST] () as M ";
             cmd += " where M.FLAG not in ('X','C')  and audit_no is not null";
+            cmd += " and COMPANY in (" + QuoteStr(d.Company) + ") ";
 
-            if (!String.IsNullOrEmpty(d.Company))
-            {
-                var comp = "";
-                comp = "'" + d.Company.Replace(",", "','") + "'";
-                cmd += " and COMPANY in (" + comp + ") ";
-            }
+            //if (!String.IsNullOrEmpty(d.Company))
+            //{
+            //    var comp = "";
+            //    comp = "'" + d.Company.Replace(",", "','") + "'";
+            //    cmd += " and COMPANY in (" + comp + ") ";
+            //}
 
             if (!String.IsNullOrEmpty(d.depmst))
             {
@@ -251,13 +252,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             string cmd = " SELECT MN as id,MN  as description FROM [dbo].[FT_ASAUDITCUTDATEMST] () as M ";
             cmd += " where M.FLAG not in ('X','C')  and audit_no is not null";
+            cmd += " and COMPANY in (" + QuoteStr( d.Company) + ") ";
 
-            if (!String.IsNullOrEmpty(d.Company))
-            {
-                var comp = "";
-                comp = "'" + d.Company.Replace(",", "','") + "'";
-                cmd += " and COMPANY in (" + comp + ") ";
-            }
+            //if (!String.IsNullOrEmpty(d.Company))
+            //{
+            //    var comp = "";
+            //    comp = "'" + d.Company.Replace(",", "','") + "'";
+            //    cmd += " and COMPANY in (" + comp + ") ";
+            //}
 
             if (!String.IsNullOrEmpty(d.depmst))
             {

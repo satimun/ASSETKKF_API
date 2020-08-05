@@ -55,5 +55,15 @@ namespace ASSETKKF_API.Controllers.Asset
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
+
+        [HttpPost("GetInspection")]
+        public async Task<dynamic> GetInspection([FromBody] dynamic data)
+        {
+            var res = new InspectionApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
+
+
     }
 }

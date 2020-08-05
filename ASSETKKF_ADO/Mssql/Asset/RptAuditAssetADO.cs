@@ -675,6 +675,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and SQNO = '" + d.sqno + "'";
             }
 
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                cmd += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
+            }
+
 
             cmd += " GROUP BY OFFICECODE,DEPCODEOL,DEPCODE )  ";
             cmd += " AS X   WHERE  1=1 ";
