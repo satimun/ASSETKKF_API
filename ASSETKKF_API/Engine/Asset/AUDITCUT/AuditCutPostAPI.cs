@@ -39,8 +39,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     cutdt = dataReq.cutdt,
                     OFFICECODE = dataReq.OFFICECODE,
                     TYPECODE = dataReq.TYPECODE,
-                    GASTCODE = dataReq.GASTCODE
-
+                    GASTCODE = dataReq.GASTCODE,
+                    AREA = dataReq.AREA,
 
                 };
 

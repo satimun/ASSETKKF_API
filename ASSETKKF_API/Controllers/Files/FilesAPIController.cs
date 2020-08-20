@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Net.Http.Headers;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ASSETKKF_API.Controllers.Files
 {
@@ -81,7 +82,7 @@ namespace ASSETKKF_API.Controllers.Files
 
         }
 
-        
+
         [HttpPost("GetImage")] //download
         public async Task<dynamic> GetImage([FromBody] dynamic data)
         {

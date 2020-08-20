@@ -44,12 +44,16 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
                     case "assetno":
                         lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByASSETNO(dataReq);
                         break;
+                    case "auditofficecode":
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getAuditOFFICECODE(dataReq);
+                        break;
 
 
                     default:
                         lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(dataReq);
                         break;
                 }
+                
 
                 if (lst == null)
                 {
