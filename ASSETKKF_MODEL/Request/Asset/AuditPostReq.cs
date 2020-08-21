@@ -68,5 +68,6 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string PFLAG { get; set; }
 
         public IFormFile FileToUpload { get; set; }
+        public string AREA { get; set; }
     }
 }

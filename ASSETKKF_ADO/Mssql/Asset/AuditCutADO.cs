@@ -716,7 +716,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@AREANAME = '" + d.AREANAME + "'";
             sql += " ,@IMGPATH = '" + d.IMGPATH + "'";
             sql += " ,@USERID = '" + d.UCODE + "'";
-            
+            sql += " ,@AREA = '" + d.AREA + "'";
+
 
             var res = ExecuteNonQuery(sql, param);
             return res;
@@ -768,6 +769,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@DEPCODEOL = '" + d.DEPCODEOL + "'";
             sql += " ,@MODE = '" + d.MODE + "'";
             sql += " ,@PFLAG = '" + d.PFLAG + "'";
+            sql += " ,@AREA = '" + d.AREA + "'";
 
 
             var res = ExecuteNonQuery(sql, param);

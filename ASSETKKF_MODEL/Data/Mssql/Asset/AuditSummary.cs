@@ -54,4 +54,6 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public DateTime? INPDT { get; set; }
 
     }
+
+    
 }
