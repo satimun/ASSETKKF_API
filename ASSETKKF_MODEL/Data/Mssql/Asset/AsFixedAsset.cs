@@ -148,7 +148,7 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public int YR { get; set; }
         public int MN { get; set; }
         public int YRMN { get; set; }
-        public DateTime CUTDT { get; set; }
+        public DateTime? CUTDT { get; set; }
         public string DEPMST { get; set; }
         public string DEPCODEOL { get; set; }
         public int QTY_TOTAL { get; set; }
