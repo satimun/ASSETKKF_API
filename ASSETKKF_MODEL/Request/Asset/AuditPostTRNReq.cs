@@ -18,7 +18,18 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string UCODE { get; set; }
         public IFormFile FileToUpload { get; set; }
         public string ASSETNO { get; set; }
+        public string OFFICECODE { get; set; }
+        public string TYPECODE { get; set; }
 
+        public string GASTCODE { get; set; }
+
+        public string orderby { get; set; }
+        public string YEAR { get; set; }
+        public string MN { get; set; }
+
+
+        public string DEPMST { get; set; }
+        public string cutdt { get; set; }
     }
 
     public class AUDITPOSTTRNReq

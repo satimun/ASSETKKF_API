@@ -8,6 +8,7 @@ namespace ASSETKKF_MODEL.Request.Asset
     {
         public string UCode { get; set; }
         public string Company { get; set; }
+        public string DEPCODE { get; set; }
         public string DEPCODEOL { get; set; }
         public string DEPTCODELST { get; set; }
         public bool Menu3 { get; set; }

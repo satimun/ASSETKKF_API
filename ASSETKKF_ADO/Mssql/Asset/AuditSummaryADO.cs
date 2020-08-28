@@ -41,9 +41,9 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if ((!d.Menu3 && !d.Menu4))
             {
                 cmd += " and (";
-                if (!String.IsNullOrEmpty(d.DEPCODEOL))
+                if (!String.IsNullOrEmpty(d.DEPCODE))
                 {
-                    cmd += " DEPCODEOL = '" + d.DEPCODEOL + "'";
+                    cmd += " DEPCODEOL = '" + d.DEPCODE + "'";
                 }
                 if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
                 {

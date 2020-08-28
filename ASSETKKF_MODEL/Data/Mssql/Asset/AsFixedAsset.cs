@@ -158,10 +158,5 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public float PROGRESS { get; set; }
         public DateTime? STARTDT { get; set; }
         public DateTime? LASTDT { get; set; }
-
-
-
-        //public string INPID { get; set; }
-        //public DateTime? INPDT { get; set; }
     }
 }

@@ -28,6 +28,7 @@ namespace ASSETKKF_MODEL.Response.Oauth
         public bool Menu4 { get; set; }
 
         public string DEPCODELST { get; set; }
+        public string GUCODE { get; set; }
 
 
 

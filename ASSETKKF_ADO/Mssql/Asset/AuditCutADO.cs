@@ -717,6 +717,9 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@IMGPATH = '" + d.IMGPATH + "'";
             sql += " ,@USERID = '" + d.UCODE + "'";
             sql += " ,@AREA = '" + d.AREA + "'";
+            sql += " ,@OFFICECODE = '" + d.OFFICECODE + "'";
+            sql += " ,@TYPECODE = '" + d.TYPECODE + "'";
+            sql += " ,@GASTCODE = '" + d.GASTCODE + "'";
 
 
             var res = ExecuteNonQuery(sql, param);

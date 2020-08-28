@@ -14,7 +14,9 @@ namespace ASSETKKF_MODEL.Response.Asset
         public string AREACODE { get; set; }
         public string IMGPATH { get; set; }
         public string IMGSRC { get; set; }
-        public ASAUDITPOSTMST AUDITPOSTMST { get; set; }
+        public ASAUDITPOSTMST AUDITPOSTMST { get; set; }        
+        public List<ASAUDITPOSTMST> AUDITPOSTMSTNOPROBLEMLST { get; set; }
+        public List<ASAUDITPOSTMST> AUDITPOSTMSTPROBLEMLST { get; set; }
         public List<ASAUDITPOSTMST> AUDITPOSTMSTWAITLST { get; set; }
         public List<ASAUDITPOSTMST> AUDITPOSTMSTCHECKEDLST { get; set; }
         public List<ASAUDITPOSTTRN> AUDITPOSTTRNLST { get; set; }
