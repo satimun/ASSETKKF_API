@@ -128,8 +128,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
                             res.AUDITPOSTMSTWAITLST = lstWait;
                             res.AUDITPOSTMSTCHECKEDLST = lstChecked;
-                            res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.FLAG != "Y").ToList();
-                            res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.FLAG == "Y").ToList();
+                            res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
+                            res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
 
                             res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
 
@@ -152,8 +152,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
                             res.AUDITPOSTMSTWAITLST = lstWait;
                             res.AUDITPOSTMSTCHECKEDLST = lstChecked;
-                            res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.FLAG != "Y").ToList();
-                            res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.FLAG == "Y").ToList();
+                            res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
+                            res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
 
                             res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
 
@@ -176,8 +176,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
                             res.AUDITPOSTMSTWAITLST = lstWait;
                             res.AUDITPOSTMSTCHECKEDLST = lstChecked;
-                            res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.FLAG != "Y").ToList();
-                            res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.FLAG == "Y").ToList();
+                            res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
+                            res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
 
                             res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
 

@@ -64,7 +64,7 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string AUDIT_NO { get; set; }
         public string INPNAME { get; set; }
         public string IMGURL { get; set; }
-
+        public string PFLAG { get; set; }
 
 
     }

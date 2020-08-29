@@ -45,6 +45,8 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public int QTY_CHECKED { get; set; }
         public int QTY_WAIT { get; set; }
         public int QTY_TRN { get; set; }
+        public int QTY_PROBLEM { get; set; }
+        public int QTY_NOPROBLEM { get; set; }
         public float PROGRESS { get; set; }
         public string ASSETNO { get; set; }
         public string ASSETNAME { get; set; }

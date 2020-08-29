@@ -83,6 +83,62 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             sql += " group by ASSETNO ) as P)  as QTY_CHECKED  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.DEPMST = C.DEPMST and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
+                {
+                    sql += " DEPCODEOL = '" + d.DEPCODEOL + "'";
+                }
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
+                {
+                    var arrDept = d.DEPTCODELST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or DEPCODEOL like ' " + s + "%'";
+                    }
+
+                }
+                sql += " )";
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_PROBLEM  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.DEPMST = C.DEPMST and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
+                {
+                    sql += " DEPCODEOL = '" + d.DEPCODEOL + "'";
+                }
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
+                {
+                    var arrDept = d.DEPTCODELST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or DEPCODEOL like ' " + s + "%'";
+                    }
+
+                }
+                sql += " )";
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_NOPROBLEM  ";
+
+
             sql += " ,(select  MAX(P.INPDT) from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and P.DEPMST = C.DEPMST and 'Y' <> ISNULL(SNDST,'')   and YRMN = c.YRMN ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -174,6 +230,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql = " select *, (QTY_TOTAL - QTY_CHECKED) as QTY_WAIT , ";
             sql += " CAST(((CAST(QTY_CHECKED as DECIMAL(9,2))/CAST(QTY_Total as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS from (";
             sql += " SELECT COMPANY,YRMN,DEPMST,SQNO,DEPCODEOL,MAX(STNAME) as STNAME,MIN(INPDT) as StartDT,SUM(QTY) as QTY_TOTAL ";
+            
             sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  )  and P.DEPCODEOL = C.DEPCODEOL and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -198,6 +255,62 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             sql += " group by ASSETNO ) as P)  as QTY_CHECKED  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.DEPCODEOL = C.DEPCODEOL and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
+                {
+                    sql += " DEPCODEOL = '" + d.DEPCODEOL + "'";
+                }
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
+                {
+                    var arrDept = d.DEPTCODELST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or DEPCODEOL like ' " + s + "%'";
+                    }
+
+                }
+                sql += " )";
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_PROBLEM  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.DEPCODEOL = C.DEPCODEOL and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
+                {
+                    sql += " DEPCODEOL = '" + d.DEPCODEOL + "'";
+                }
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
+                {
+                    var arrDept = d.DEPTCODELST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or DEPCODEOL like ' " + s + "%'";
+                    }
+
+                }
+                sql += " )";
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_NOPROBLEM  ";
+
+
             sql += " ,(select  MAX(P.INPDT) from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and P.DEPCODEOL = C.DEPCODEOL and 'Y' <> ISNULL(SNDST,'')   and YRMN = c.YRMN ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -290,6 +403,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql = " select *, (QTY_TOTAL - QTY_CHECKED) as QTY_WAIT , ";
             sql += " CAST(((CAST(QTY_CHECKED as DECIMAL(9,2))/CAST(QTY_Total as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS from (";
             sql += " SELECT COMPANY,DEPMST,SQNO,DEPCODEOL,OFFICECODE,MAX(OFNAME) as OFNAME,MIN(INPDT) as StartDT,SUM(QTY) as QTY_TOTAL ";
+           
             sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  )  and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -300,6 +414,33 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             sql += " group by ASSETNO ) as P)  as QTY_CHECKED  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'') ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                sql += " AND DEPCODEOL =" + QuoteStr(d.DEPCODEOL);
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_PROBLEM  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'') ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                sql += " AND DEPCODEOL =" + QuoteStr(d.DEPCODEOL);
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_NOPROBLEM  ";
+
             sql += " ,(select  MAX(P.INPDT) from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -395,6 +536,62 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             sql += " group by ASSETNO ) as P)  as QTY_CHECKED  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'') ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
+                {
+                    sql += " DEPCODEOL = '" + d.DEPCODEOL + "'";
+                }
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
+                {
+                    var arrDept = d.DEPTCODELST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or DEPCODEOL like ' " + s + "%'";
+                    }
+
+                }
+                sql += " )";
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_PROBLEM  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'') ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
+                {
+                    sql += " DEPCODEOL = '" + d.DEPCODEOL + "'";
+                }
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
+                {
+                    var arrDept = d.DEPTCODELST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or DEPCODEOL like ' " + s + "%'";
+                    }
+
+                }
+                sql += " )";
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_NOPROBLEM  ";
+
+
             sql += " ,(select  MAX(P.INPDT) from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -508,6 +705,61 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             sql += " group by ASSETNO ) as P)  as QTY_CHECKED  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'') ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
+                {
+                    sql += " DEPCODEOL = '" + d.DEPCODEOL + "'";
+                }
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
+                {
+                    var arrDept = d.DEPTCODELST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or DEPCODEOL like ' " + s + "%'";
+                    }
+
+                }
+                sql += " )";
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_PROBLEM  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'') ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                sql += " and (";
+                if (!String.IsNullOrEmpty(d.DEPCODEOL))
+                {
+                    sql += " DEPCODEOL = '" + d.DEPCODEOL + "'";
+                }
+                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
+                {
+                    var arrDept = d.DEPTCODELST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        sql += " or DEPCODEOL like ' " + s + "%'";
+                    }
+
+                }
+                sql += " )";
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_NOPROBLEM  ";
+
             sql += " ,(select  MAX(P.INPDT) from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -637,6 +889,33 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             sql += " group by ASSETNO ) as P)  as QTY_CHECKED  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'') ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                sql += " AND DEPCODEOL =" + QuoteStr(d.DEPCODEOL);
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_PROBLEM  ";
+
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'') ";
+            sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                sql += " AND DEPCODEOL =" + QuoteStr(d.DEPCODEOL);
+            }
+
+            sql += " group by P.ASSETNO ) as P)  as QTY_NOPROBLEM  ";
+
             sql += " ,(select  MAX(P.INPDT) from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);

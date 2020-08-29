@@ -588,26 +588,28 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select * ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME";
+            sql = " select P.*,PM.PFlag ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME";
             sql += " from  [FT_ASAUDITPOSTMST] () as P ";
-            sql += " where SQNO = '" + d.SQNO + "'";
-            sql += " and COMPANY = '" + d.COMPANY + "'";
-            sql += " and  INPID = '" + d.UCODE + "'";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " where P.SQNO = '" + d.SQNO + "'";
+            sql += " and P.COMPANY = '" + d.COMPANY + "'";
+            sql += " and  P.INPID = '" + d.UCODE + "'";
 
 
             if (!String.IsNullOrEmpty(d.DEPCODEOL))
             {
-                sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
+                sql += " and P.DEPCODEOL = '" + d.DEPCODEOL + "'";
             }
 
             if (!String.IsNullOrEmpty(d.AREACODE))
             {
-                sql += " and POSITCODE = '" + d.AREACODE + "'";
+                sql += " and P.POSITCODE = '" + d.AREACODE + "'";
             }
 
             if (!String.IsNullOrEmpty(d.ASSETNO))
             {
-                sql += " and ASSETNO = '" + d.ASSETNO + "'";
+                sql += " and P.ASSETNO = '" + d.ASSETNO + "'";
             }
 
             if (flag == "")
