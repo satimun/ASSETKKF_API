@@ -194,7 +194,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             }
             finally
             {
-                var newList = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = dataReq.MENUCODE });
+                var newList = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = null });
                 res.MENULST = newList;
             }
             return res;

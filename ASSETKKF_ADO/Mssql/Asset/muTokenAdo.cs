@@ -62,7 +62,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@Code", Code);
-            param.Add("@UpdateBy", userCode);
+            param.Add("@UpdateBy",String.IsNullOrEmpty(userCode)?"": userCode);
 
             string cmd = $"UPDATE muToken SET " +
                 "Status='C', " +

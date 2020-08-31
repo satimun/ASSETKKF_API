@@ -145,6 +145,7 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string COMPANY { get; set; }
         public string SQNO { get; set; }
         public string AUDIT_NO { get; set; }
+        public string INPID { get; set; }
         public int YR { get; set; }
         public int MN { get; set; }
         public int YRMN { get; set; }

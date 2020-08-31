@@ -591,7 +591,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql = " select P.*,PM.PFlag ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME";
             sql += " from  [FT_ASAUDITPOSTMST] () as P ";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO   and PM.INPDT = P.INPDT";
             sql += " where P.SQNO = '" + d.SQNO + "'";
             sql += " and P.COMPANY = '" + d.COMPANY + "'";
             sql += " and  P.INPID = '" + d.UCODE + "'";
@@ -662,7 +662,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and GASTCODE = '" + d.GASTCODE + "'";
             }
 
-            sql += " order by (case when INPID = '" + d.UCODE + "' then 1 else 0 end) desc, INPDT desc";
+            sql += " order by (case when P.INPID = '" + d.UCODE + "' then 1 else 0 end) desc, P.INPDT desc";
             var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
             return res;
         }

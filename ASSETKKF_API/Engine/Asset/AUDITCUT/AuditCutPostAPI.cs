@@ -97,6 +97,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
                         res.AUDITPOSTMSTWAITLST = lstWait;
                         res.AUDITPOSTMSTCHECKEDLST = lstChecked;
+
                     }
 
                     res.AREACODE = dataReq.AREACODE;                   
@@ -104,6 +105,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     res.DEPCODEOL = dataReq.DEPCODEOL;
                     res.LEADERCODE = dataReq.LEADERCODE;
                     res.SQNO = dataReq.SQNO;
+
+
                    
                 }
                 else

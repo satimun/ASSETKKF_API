@@ -23,7 +23,13 @@ namespace ASSETKKF_API.Engine.Asset.Home
             try
             {
                 var state = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().AuditCancel(dataReq);
-                var lst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().GetData(dataReq);
+
+                var taskReq = new TaskAudit()
+                {
+                    INPID = dataReq.INPID,
+                    COMPANY = dataReq.COMPANY
+                };
+                var lst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().GetData(taskReq);
 
                 if (lst == null)
                 {

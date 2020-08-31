@@ -9,37 +9,38 @@ using Dapper;
 
 namespace ASSETKKF_ADO.Mssql.Audit
 {
-    public class AUDITPOSTMSTAdo : Base
+    public class AUDITPOSTTRNAdo : Base
     {
-        private static AUDITPOSTMSTAdo instant;
+        private static AUDITPOSTTRNAdo instant;
 
-        public static AUDITPOSTMSTAdo GetInstant()
+        public static AUDITPOSTTRNAdo GetInstant()
         {
-            if (instant == null) instant = new AUDITPOSTMSTAdo();
+            if (instant == null) instant = new AUDITPOSTTRNAdo();
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AUDITPOSTMSTAdo()
+        private AUDITPOSTTRNAdo()
         {
 
         }
 
-        public List<ASAUDITPOSTMST> getPOSTMSTDuplicate(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        public List<ASAUDITPOSTTRN> getPOSTTRNDuplicate(AuditPostReq d, string flag = null, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "SELECT * from  [FT_ASAUDITPOSTMST] () as P";
-            sql += " left outer join  FT_ASAUDITCUTDATEMST() M on M.SQNO = P.SQNO and M.COMPANY = P.COMPANY";            
+            sql = "SELECT * from  [FT_ASAUDITPOSTTRN] () as P";
+            sql += " left outer join  FT_ASAUDITCUTDATEMST() M on M.SQNO = P.SQNO and M.COMPANY = P.COMPANY";
             sql += " where SQNO = " + QuoteStr(d.SQNO);
-            sql += " and COMPANY = " + QuoteStr(d.COMPANY );
+            sql += " and COMPANY = " + QuoteStr(d.COMPANY);
             sql += " and  M.FLAG not in ('X','C')";
-            sql += "  AND  PCODE <> '' AND P.ASSETNO IN ( SELECT  X.ASSETNO  FROM  [FT_ASAUDITPOSTMST] () X  WHERE  X.PCODE <> '' ";           
+
+            sql += " AND  P.ASSETNO IN ( SELECT  X.ASSETNO    FROM   FT_ASAUDITPOSTTRN()  X";
             sql += "  AND  X.SQNO = " + QuoteStr(d.SQNO);
             sql += "  and x.COMPANY = " + QuoteStr(d.COMPANY);
             sql += " GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) >1  )";
 
-            if(!String.IsNullOrEmpty(d.DEPCODEOL))
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
             {
                 sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
             }
@@ -112,42 +113,13 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
             return res;
 
         }
 
-        /// <summary>
-        /// SP_AUDITPOSTMST
-        /// </summary>
-        /// <param name="d"></param>
-        /// <param name="transac"></param>
-        /// <returns></returns>
-        public int deleteAUDITPOSTMST(AUDITPOSTMSTReq d, SqlTransaction transac = null)
-        {
-            DynamicParameters param = new DynamicParameters();
-            sql = " EXEC [dbo].[SP_AUDITPOSTMST]  ";
-            sql += " @SQNO  = '" + d.SQNO + "'";
-            sql += " ,@COMPANY = '" + d.COMPANY + "'";
-            sql += " ,@ASSETNO = '" + d.ASSETNO + "'";
-            sql += " ,@FINDY = '" + d.FINDY + "'";
-            sql += " ,@PCODE= '" + d.PCODE + "'";
-            sql += " ,@PNAME= '" + d.PNAME + "'";
-            sql += " ,@LEADERCODE = '" + d.LEADERCODE + "'";
-            sql += " ,@LEADERNAME = '" + d.LEADERNAME + "'";
-            sql += " ,@AREANAME = '" + d.AREANAME + "'";
-            sql += " ,@AREACODE = '" + d.AREACODE + "'";
-            sql += " ,@MEMO1 = '" + d.MEMO1 + "'";
-            sql += " ,@USERID = '" + d.UCODE + "'";
-            sql += " ,@DEPCODEOL = '" + d.DEPCODEOL + "'";
-            sql += " ,@MODE = '" + d.MODE + "'";
-            sql += " ,@PFLAG = '" + d.PFLAG + "'";
 
 
-            var res = ExecuteNonQuery(sql, param);
-            return res;
-        }
 
-
-    }
+     }
 }

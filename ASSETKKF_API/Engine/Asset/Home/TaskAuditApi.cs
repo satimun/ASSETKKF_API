@@ -8,7 +8,7 @@ using ASSETKKF_MODEL.Response.Home;
 
 namespace ASSETKKF_API.Engine.Asset.Home
 {
-    public class TaskAuditApi : Base<AsFixedAsset>
+    public class TaskAuditApi : Base<TaskAudit>
     {
         public TaskAuditApi()
         {
@@ -16,7 +16,7 @@ namespace ASSETKKF_API.Engine.Asset.Home
             RecaptchaRequire = true;
         }
 
-        protected override void ExecuteChild(AsFixedAsset dataReq, ResponseAPI dataRes)
+        protected override void ExecuteChild(TaskAudit dataReq, ResponseAPI dataRes)
         {
             var res = new TaskAuditRes();
 

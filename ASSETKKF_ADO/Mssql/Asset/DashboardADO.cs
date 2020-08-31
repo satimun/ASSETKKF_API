@@ -86,7 +86,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.DEPMST = C.DEPMST and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -113,7 +113,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.DEPMST = C.DEPMST and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -258,7 +258,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.DEPCODEOL = C.DEPCODEOL and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -285,7 +285,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.DEPCODEOL = C.DEPCODEOL and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -335,7 +335,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             sql += " ) as LastDT";
-            sql += " ,( select COUNT(ASSETNO) from FT_ASAUDITPOSTTRN() as P where P.DEPCODEOL = C.DEPCODEOL and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
+            sql += " ,( select COUNT(ASSETNO) from FT_ASAUDITPOSTTRN() as P where P.DEPCODE = C.DEPCODE and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
             sql += "  ) as QTY_TRN";
             sql += " FROM [dbo].[FT_AUDITCUTDATE] (";
@@ -385,7 +385,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " AND OFFICECODE =" + QuoteStr(d.OFFICECODE);
             }
 
-            sql += " group by COMPANY,YRMN,DEPCODEOL,DEPMST,SQNO ";           
+            sql += " group by COMPANY,YRMN,DEPCODEOL,DEPCODE,DEPMST,SQNO ";           
 
             sql += " ) as D";
             sql += " order by COMPANY,DEPCODEOL,YRMN ";
@@ -417,7 +417,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -430,7 +430,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -539,7 +539,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -566,7 +566,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -708,7 +708,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -735,7 +735,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -892,7 +892,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -905,7 +905,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
