@@ -29,7 +29,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
             param.Add("@USERCODE", d.UCODE);
             param.Add("@UserName", d.OFFICECODE);
 
-            string cmd = "SELECT * FROM [dbo].[FT_UserAsset] (@USERCODE)";
+            string cmd = "SELECT * FROM [dbo].[FT_UserAsset] (@USERCODE) where 1 = 1";
+
+            if (!String.IsNullOrEmpty(d.COMPANY))
+            {
+                cmd += " and COMPANY = " + QuoteStr(d.COMPANY);
+                
+            }
+
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET>(cmd, param).ToList();
             return res;
         }

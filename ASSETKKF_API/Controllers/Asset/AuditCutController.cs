@@ -110,5 +110,13 @@ namespace ASSETKKF_API.Controllers.Asset
 
         }
 
+        [HttpPost("GetCentralOfficer")]
+        public async Task<dynamic> GetCentralOfficer([FromBody] dynamic data)
+        {
+            var res = new CentralOfficerApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
+
     }
 }

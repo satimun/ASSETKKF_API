@@ -56,6 +56,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                 res.codcomp = obj.CODCOMP;
                 res.codposname = obj.CODPOSNAME;
                 res.cospos = obj.COSPOS;
+
                 res.GUCODE = obj.GUCODE;
 
                 res.COMPANYLST = user.Where(s => s.A_Review == "Y")
@@ -117,6 +118,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                     ExpiryTime = DateTime.Now.AddMinutes(480)
 
                 }, obj.UCODE);
+
 
                 /*
                 if (config.TrueForAll(x => x.EmailLogin == true))

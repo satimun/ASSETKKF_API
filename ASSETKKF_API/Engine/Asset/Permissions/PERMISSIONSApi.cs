@@ -548,10 +548,17 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             var res = new PERMISSIONSRes();
             try
             {
+                var userReq = new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET(){
+                    UCODE = dataReq.INPID,
+                    COMPANY = dataReq.COMPANY,
+                };
+                var userLst = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant().Search(userReq);
+                var objUser = userLst != null ? userLst.FirstOrDefault() : null;
+                var gucode = objUser != null ? objUser.GUCODE : null;
                 var req = new STPERMISSIONS()
                 {
                     MENUCODE = dataReq.MENUCODE,
-                    GUCODE = dataReq.GUCODE,
+                    GUCODE = gucode,
                     COMPANY = dataReq.COMPANY,
                     P_ACCESS = dataReq.P_ACCESS,
                     P_MANAGE = dataReq.P_MANAGE,

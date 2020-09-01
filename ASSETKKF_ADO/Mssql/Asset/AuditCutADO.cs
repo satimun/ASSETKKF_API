@@ -5,6 +5,7 @@ using Dapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.Design;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -840,6 +841,21 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
 
             var res = ExecuteNonQuery(sql, param);
+            return res;
+        }
+
+        public List<ASSETKKF_MODEL.Response.Asset.LeaderList> getCentralOfficerLst(AuditCutInfoReq dataReq, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            var depcodeol = String.IsNullOrEmpty(dataReq.DEPCODEOL) ? dataReq.DeptCode : dataReq.DEPCODEOL;
+            param.Add("@COMPANY", dataReq.Company);
+            param.Add("@DEPCODEOL", depcodeol);
+
+            sql = "select OFFICECODE as id,OFFICECODE + ' : ' + OFNAME as descriptions,OFNAME as name from  FT_CentralOfficer(@COMPANY,@DEPCODEOL)";
+   
+
+            var res = Query<ASSETKKF_MODEL.Response.Asset.LeaderList>(sql, param).ToList();            
+
             return res;
         }
 
