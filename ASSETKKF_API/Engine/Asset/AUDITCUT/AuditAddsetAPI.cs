@@ -26,6 +26,11 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
                 res.AUDITPOSTMSTWAITLST = lstWait;
                 res.AUDITPOSTMSTCHECKEDLST = lstChecked;
+                res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
+                res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
+
+                var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(dataReq);
+                res.AUDITCUTDATELST = lstAUDITCUTDATE;
 
                 //res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(dataReq, "");
                 //res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(dataReq, "Y");

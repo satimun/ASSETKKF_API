@@ -111,6 +111,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " where D.SQNO = M.SQNO ";
             cmd += " and D.Company = M.Company ";
             cmd += " and M.Audit_NO is not null";
+
+            if (!String.IsNullOrEmpty(d.SQNO))
+            {
+                cmd += " and  M.SQNO = " + QuoteStr(d.SQNO);
+            }
+
             if (String.IsNullOrEmpty(d.MODE))
             {
                 cmd += " and  M.FLAG not in ('X','C')";
@@ -847,7 +853,23 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASSETKKF_MODEL.Response.Asset.LeaderList> getCentralOfficerLst(AuditCutInfoReq dataReq, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            var depcodeol = String.IsNullOrEmpty(dataReq.DEPCODEOL) ? dataReq.DeptCode : dataReq.DEPCODEOL;
+            
+            var lst = getAuditCutNoList(new ASSETKKF_MODEL.Request.Asset.AuditCutReq() { Company = dataReq.Company , SQNO = dataReq.sqno });
+            var depcodeol = "";
+
+            if (lst != null && lst.Count > 0)
+            {
+                var obj = lst.FirstOrDefault();
+                depcodeol = obj != null ? obj.DEPCODEOL : null;
+            }
+            else
+            {
+                depcodeol = String.IsNullOrEmpty(dataReq.DEPCODEOL) ? dataReq.DeptCode : dataReq.DEPCODEOL;
+            }
+
+            
+
+
             param.Add("@COMPANY", dataReq.Company);
             param.Add("@DEPCODEOL", depcodeol);
 

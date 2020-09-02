@@ -32,6 +32,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public IFormFile FileToUpload { get; set; }
         public string AREA { get; set; }
         public string orderby { get; set; }
+        public string mode { get; set; }
     }
 
     public class AuditPostCheckReq

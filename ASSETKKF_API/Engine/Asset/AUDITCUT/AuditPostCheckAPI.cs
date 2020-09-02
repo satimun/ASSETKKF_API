@@ -121,8 +121,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             }
                             ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone);
 
-                            //res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "");
-                            //res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "Y");
+                            
                             var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1);
                             var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
                             var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
@@ -208,11 +207,19 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "");
                 res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "Y");
                 res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
+                res.AUDITPOSTMSTNOPROBLEMLST = res.AUDITPOSTMSTCHECKEDLST.Where(x => x.PFLAG != "Y").ToList();
+                res.AUDITPOSTMSTPROBLEMLST = res.AUDITPOSTMSTCHECKEDLST.Where(x => x.PFLAG == "Y").ToList();
 
                 res._result._code = "500 ";
                 res._result._message = ex.Message;
                 res._result._status = "Internal Server Error";
             }
+            finally
+            {
+                var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(req1);
+                res.AUDITCUTDATELST = lstAUDITCUTDATE;
+            }
+
             dataRes.data = res;
 
         }

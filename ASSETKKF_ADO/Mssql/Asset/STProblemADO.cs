@@ -29,13 +29,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.Company);
-            string cmd = "SELECT distinct Pcode,Pname,SACC,FINDY,PFLAG  FROM [dbo].[FT_ASSTProblem] ()";
+            string cmd = "SELECT Pcode,Pname,SACC,FINDY,PFLAG  FROM [dbo].[FT_ASSTProblem] ()";
             if (!String.IsNullOrEmpty(d.Company))
             {
                 var comp = "";
                 comp = "'" + d.Company.Replace(",", "','") + "'";
                 cmd += " WHERE COMPANY in (" + comp + ") ";
             }
+            cmd += " group by Pcode,Pname,SACC,FINDY,PFLAG";
             cmd += "order by Pcode";
 
             var obj = Query<ASSETKKF_MODEL.Data.Mssql.Asset.ASSTProblem>(cmd, param).ToList();
