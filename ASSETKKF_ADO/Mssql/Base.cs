@@ -55,6 +55,15 @@ namespace ASSETKKF_ADO.Mssql
             }
         }
 
+        protected IEnumerable<T> ExecQuery<T>(string cmdTxt, string conStr = null)
+        {
+            using (SqlConnection conn = new SqlConnection(getConStr(conStr)))
+            {
+                var res = conn.Query<T>(cmdTxt);
+                return res;
+            }
+        }
+
         protected IEnumerable<T> Query<T>(string cmdTxt, DynamicParameters parameter = null, string conStr = null)
         {
             using (SqlConnection conn = new SqlConnection(getConStr(conStr)))

@@ -9,6 +9,7 @@ namespace ASSETKKF_MODEL.Response.Report
     public class RptAuditAssetRes
     {
         public List<RptAuditAsset> auditAssetLst { get; set; }
+        public List<RptAuditAsset> auditAssetMainLst { get; set; }
         public List<RptAuditAssetTRN> auditAssetTRNLst { get; set; }
         public ResultDataResponse _result = new ResultDataResponse();
     }

@@ -435,6 +435,75 @@ namespace ASSETKKF_ADO.Mssql.Asset
             return res;
         }
 
+        public List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> GetAuditAssetMainLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@COMPANY", d.company);
+            param.Add("@DEPMST", d.DEPMST);
+            param.Add("@YR", d.YEAR);
+            param.Add("@MN", d.MN);
+            param.Add("@SQNO", d.sqno);
+
+            sql = "select * from [dbo].[FT_ASAUDITPOSTMST_MAIN](@COMPANY,@DEPMST,@YR,@MN ,@SQNO) where 1 =1";
+
+            if (d.cutdt != null)
+            {
+                param.Add("@CUTDT", d.cutdt);
+                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, C.cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
+            }
+
+            if (!String.IsNullOrEmpty(d.audit_no))
+            {
+
+                param.Add("@AUDITNO", d.audit_no);
+                param.Add("@auditno_lk", $"%{d.audit_no}%");
+                sql += " AND (audit_no LIKE @auditno_lk OR audit_no = @AUDITNO )";
+            }
+
+            if (!String.IsNullOrEmpty(d.sqno))
+            {
+                param.Add("@SQNO", d.sqno);
+                sql += " and sqno = " + QuoteStr(d.sqno);
+
+            }
+
+            if (!string.IsNullOrEmpty(d.sqno_copm))
+            {
+                sql += " and COMPANY = " + QuoteStr(d.sqno_copm);
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                param.Add("@DEPCODEOL", d.DEPCODEOL);
+                sql += " and DEPCODEOL = " + QuoteStr(d.DEPCODEOL);
+            }
+
+            if (!String.IsNullOrEmpty(d.PCODE))
+            {
+                param.Add("@PCODE", d.PCODE);
+                sql += " and PCODE = " + QuoteStr(d.PCODE);
+            }
+
+
+            if (!String.IsNullOrEmpty(d.TYPECODE))
+            {
+                sql += " and TYPECODE = " + QuoteStr(d.TYPECODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.GASTCODE))
+            {
+                sql += " and GASTCODE = " + QuoteStr(d.GASTCODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.OFFICECODE))
+            {
+                sql += " and OFFICECODE = " + QuoteStr(d.OFFICECODE);
+            }
+
+            var res = Query<RptAuditAsset>(sql, param).ToList();
+            return res;
+        }
+
         public List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN> GetAuditAssetTRNLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();

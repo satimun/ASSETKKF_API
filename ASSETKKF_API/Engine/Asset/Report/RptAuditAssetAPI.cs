@@ -21,8 +21,22 @@ namespace ASSETKKF_API.Engine.Asset.Report
             var res = new RptAuditAssetRes();
             try
             {
-                
-                var obj = ASSETKKF_ADO.Mssql.Asset.RptAuditAssetADO.GetInstant().GetAuditAssetLists(dataReq);
+                List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> obj = new List<RptAuditAsset>();
+
+                var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
+
+                switch (mode)
+                {
+                    case "main":
+                        obj = ASSETKKF_ADO.Mssql.Asset.RptAuditAssetADO.GetInstant().GetAuditAssetMainLists(dataReq);
+                        break;
+
+                    default:
+                        obj = ASSETKKF_ADO.Mssql.Asset.RptAuditAssetADO.GetInstant().GetAuditAssetLists(dataReq);
+                        break;
+                }               
+
+
                 var objTRN = ASSETKKF_ADO.Mssql.Asset.RptAuditAssetADO.GetInstant().GetAuditAssetTRNLists(dataReq);
 
 

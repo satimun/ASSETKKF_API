@@ -30,8 +30,17 @@ namespace ASSETKKF_MODEL.Response.Oauth
         public string DEPCODELST { get; set; }
         public string GUCODE { get; set; }
 
-        List<OauthLoginRes> UserLst { get; set; }
+        public  List<OauthLoginRes> UserLst { get; set; }
+        public List<UserGroup> UserGroupLst { get; set; }
 
         public ResultDataResponse _result = new ResultDataResponse();
+    }
+
+    public class UserGroup
+    {
+        public string company { get; set; }
+        public string companyname { get; set; }
+        public string gucode { get; set; }
+        public string guname { get; set; }
     }
 }

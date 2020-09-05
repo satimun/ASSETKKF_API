@@ -598,7 +598,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql = " select P.*,PM.PFlag ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME";
             sql += " from  [FT_ASAUDITPOSTMST] () as P ";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
-            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO   and PM.INPDT = P.INPDT";
+            sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO   and PM.INPID = P.INPID";
             sql += " where P.SQNO = '" + d.SQNO + "'";
             sql += " and P.COMPANY = '" + d.COMPANY + "'";
             sql += " and  P.INPID = '" + d.UCODE + "'";

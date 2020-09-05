@@ -63,6 +63,15 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                               .Select(s => s.COMPANY)
                               .ToList();
 
+                res.UserGroupLst = user.Where(s => s.A_Review == "Y")
+                                    .Select(s => new UserGroup()
+                                    {
+                                        company = s.COMPANY,
+                                        companyname = s.COMPANAYNAME,
+                                        gucode = s.GUCODE,
+                                        guname = s.GUNAME
+                                    }).ToList();
+
                 var M_Review = user.Where(s => s.M_Review)
                               .Select(s => s)
                               .ToList();

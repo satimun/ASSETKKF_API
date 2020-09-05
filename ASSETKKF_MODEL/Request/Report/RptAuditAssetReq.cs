@@ -32,6 +32,8 @@ namespace ASSETKKF_MODEL.Request.Report
         public string GASTCODE { get; set; }
         public string orderby { get; set; }
 
+        public string MODE { get; set; }
+
 
     }
 }

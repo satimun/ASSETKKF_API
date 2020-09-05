@@ -38,5 +38,13 @@ namespace ASSETKKF_API.Controllers.Asset
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
+
+        [HttpPost("GetTracking")]
+        public async Task<dynamic> GetTracking([FromBody] dynamic data)
+        {
+            var res = new TaskAuditApi();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
     }
 }

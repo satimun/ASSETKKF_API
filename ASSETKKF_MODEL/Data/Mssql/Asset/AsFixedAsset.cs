@@ -159,5 +159,10 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public float PROGRESS { get; set; }
         public DateTime? STARTDT { get; set; }
         public DateTime? LASTDT { get; set; }
+        public string ICONFAFA { get; set; }
+        public string ICONCOLOR { get; set; }
+        public string MODE { get; set; }
+
+        public string DEPNM { get; set; }
     }
 }

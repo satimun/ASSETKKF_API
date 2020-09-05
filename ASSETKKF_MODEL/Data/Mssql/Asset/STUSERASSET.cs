@@ -44,6 +44,8 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public bool Menu4 { get; set; }
 
         public string DEPCODELST { get; set; }
+        public string COMPANAYNAME { get; set; }
+        public string GUNAME { get; set; }
     }
 
 }

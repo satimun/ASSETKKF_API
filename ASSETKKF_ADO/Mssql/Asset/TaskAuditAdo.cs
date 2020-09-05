@@ -50,7 +50,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
             return res;
         }
 
-        
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit> GetTracking(TaskAudit d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+
+            sql = " SELECT * FROM [dbo].[FC_TrackingAudit] (''";
+            sql += " ," + QuoteStr(d.INPID.ToString());
+            sql += " )";
+
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param).ToList();
+            return res;
+        }
 
     }
 }

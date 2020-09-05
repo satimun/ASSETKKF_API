@@ -54,6 +54,14 @@ namespace ASSETKKF_API.Controllers.Asset
 
         }
 
+        [HttpPost("GetMainData")]
+        public async Task<dynamic> GetMainSummary([FromBody] dynamic data)
+        {
+            var res = new RptAuditAssetAPI();
+            return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
+
+        }
+
 
     }
 }

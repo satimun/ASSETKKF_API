@@ -37,7 +37,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " WHERE COMPANY in (" + comp + ") ";
             }
             cmd += " group by Pcode,Pname,SACC,FINDY,PFLAG";
-            cmd += "order by Pcode";
+            cmd += " order by Pcode";
 
             var obj = Query<ASSETKKF_MODEL.Data.Mssql.Asset.ASSTProblem>(cmd, param).ToList();
 

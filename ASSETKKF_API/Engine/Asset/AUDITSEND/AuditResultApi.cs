@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ASSETKKF_ADO.Mssql.Asset;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
+using ASSETKKF_MODEL.Data.Mssql.Audit;
 using ASSETKKF_MODEL.Response;
-using ASSETKKF_MODEL.Response.Home;
+using ASSETKKF_MODEL.Response.Audit;
 
-namespace ASSETKKF_API.Engine.Asset.Home
+namespace ASSETKKF_API.Engine.Asset.AUDITSEND
 {
-    public class TaskAuditApi : Base<TaskAudit>
+    public class AuditResultApi : Base<TaskAudit>
     {
-        public TaskAuditApi()
+        public AuditResultApi()
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
@@ -18,26 +20,24 @@ namespace ASSETKKF_API.Engine.Asset.Home
 
         protected override void ExecuteChild(TaskAudit dataReq, ResponseAPI dataRes)
         {
-            var res = new TaskAuditRes();
+            var res = new AuditDuplicateRes();
 
             try
             {
-                List<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit> auditLst = new List<TaskAudit>();
+                List<AuditResult> auditLst = new List<AuditResult>();
 
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
 
                 switch (mode)
                 {
-                    case "tracking":
-                        auditLst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().GetTracking(dataReq);
-                        break;
+                    
 
                     default:
-                        auditLst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().GetData(dataReq);
+                        auditLst = AuditResultAdo.GetInstant().GetData(dataReq);
                         break;
                 }
 
-                res.TaskAuditLST = auditLst;
+                res.AuditResultLst = auditLst;
 
                 if (auditLst == null)
                 {
@@ -53,9 +53,6 @@ namespace ASSETKKF_API.Engine.Asset.Home
                     res._result._status = "OK";
 
                 }
-
-               
-
             }
             catch (Exception ex)
             {
