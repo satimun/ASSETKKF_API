@@ -7,7 +7,7 @@ using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Data.Mssql.Audit;
 using Dapper;
 
-namespace ASSETKKF_ADO.Mssql.Asset
+namespace ASSETKKF_ADO.Mssql.Audit
 {
     public class AuditResultAdo : Base
     {

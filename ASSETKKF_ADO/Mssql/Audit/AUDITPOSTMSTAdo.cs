@@ -29,10 +29,10 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTMST> getPOSTMSTDuplicate(AuditPostReq d, string flag = null, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "SELECT * from  [FT_ASAUDITPOSTMST] () as P";
+            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME from  [FT_ASAUDITPOSTMST] () as P";
             sql += " left outer join  FT_ASAUDITCUTDATEMST() M on M.SQNO = P.SQNO and M.COMPANY = P.COMPANY";            
-            sql += " where SQNO = " + QuoteStr(d.SQNO);
-            sql += " and COMPANY = " + QuoteStr(d.COMPANY );
+            sql += " where P.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and P.COMPANY = " + QuoteStr(d.COMPANY );
             sql += " and  M.FLAG not in ('X','C')";
             sql += "  AND  PCODE <> '' AND P.ASSETNO IN ( SELECT  X.ASSETNO  FROM  [FT_ASAUDITPOSTMST] () X  WHERE  X.PCODE <> '' ";           
             sql += "  AND  X.SQNO = " + QuoteStr(d.SQNO);
@@ -97,17 +97,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  ASSETNO,OFFICECODE ";
             }
 
-            if (d.orderby.Equals("2"))
+            if (d.orderby != null && d.orderby.Equals("2"))
             {
                 sql += " order by  OFFICECODE,ASSETNO ";
             }
 
-            if (d.orderby.Equals("3"))
+            if (d.orderby != null && d.orderby.Equals("3"))
             {
                 sql += " order by  DEPCODEOL,OFFICECODE,ASSETNO ";
             }
 
-            if (d.orderby.Equals("4"))
+            if (d.orderby != null && d.orderby.Equals("4"))
             {
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
@@ -123,7 +123,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
         /// <param name="d"></param>
         /// <param name="transac"></param>
         /// <returns></returns>
-        public int deleteAUDITPOSTMST(AUDITPOSTMSTReq d, SqlTransaction transac = null)
+        public int saveAUDITPOSTMST(AUDITPOSTMSTReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " EXEC [dbo].[SP_AUDITPOSTMST]  ";
@@ -145,6 +145,39 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
 
             var res = ExecuteNonQuery(sql, param);
+            return res;
+        }
+
+        public List<ASAUDITPOSTMST> getNoDuplicateAll(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " Select * from  [FT_ASAUDITPOSTMST] () as P";
+            sql += " where P.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
+            sql += "  AND P.PCODE <> ''  ";
+            sql += "  AND  P.ASSETNO IN ( SELECT  X.ASSETNO FROM [FT_ASAUDITPOSTMST] () X ";
+            sql += " where P.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
+            sql += "  and  X.PCODE <> ''  GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) = 1 )  ";
+
+            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
+            return res;
+        }
+
+        public List<ASAUDITPOSTMST> getDuplicateAll(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " Select * from  [FT_ASAUDITPOSTMST] () as P";
+            sql += " where P.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
+            sql += "  AND P.PCODE <> ''  ";
+            sql += "  AND SNDST = 'Y'  ";
+            sql += "  AND  P.ASSETNO IN ( SELECT  X.ASSETNO FROM [FT_ASAUDITPOSTMST] () X ";
+            sql += " where P.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
+            sql += "  and  X.PCODE <> ''  GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) > 1 )  ";
+
+            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
             return res;
         }
 

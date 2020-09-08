@@ -29,14 +29,14 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTTRN> getPOSTTRNDuplicate(AuditPostReq d, string flag = null, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "SELECT * from  [FT_ASAUDITPOSTTRN] () as P";
+            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME from  [FT_ASAUDITPOSTTRN] () as P";
             sql += " left outer join  FT_ASAUDITCUTDATEMST() M on M.SQNO = P.SQNO and M.COMPANY = P.COMPANY";
-            sql += " where SQNO = " + QuoteStr(d.SQNO);
-            sql += " and COMPANY = " + QuoteStr(d.COMPANY);
+            sql += " where P.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += " and  M.FLAG not in ('X','C')";
 
             sql += " AND  P.ASSETNO IN ( SELECT  X.ASSETNO    FROM   FT_ASAUDITPOSTTRN()  X";
-            sql += "  AND  X.SQNO = " + QuoteStr(d.SQNO);
+            sql += "  where  X.SQNO = " + QuoteStr(d.SQNO);
             sql += "  and x.COMPANY = " + QuoteStr(d.COMPANY);
             sql += " GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) >1  )";
 
@@ -98,17 +98,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  ASSETNO,OFFICECODE ";
             }
 
-            if (d.orderby.Equals("2"))
+            if (!String.IsNullOrEmpty(d.orderby) && d.orderby.Equals("2"))
             {
                 sql += " order by  OFFICECODE,ASSETNO ";
             }
 
-            if (d.orderby.Equals("3"))
+            if (!String.IsNullOrEmpty(d.orderby) &&  d.orderby.Equals("3"))
             {
                 sql += " order by  DEPCODEOL,OFFICECODE,ASSETNO ";
             }
 
-            if (d.orderby.Equals("4"))
+            if (!String.IsNullOrEmpty(d.orderby) &&  d.orderby.Equals("4"))
             {
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
@@ -118,8 +118,45 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
         }
 
+        public int saveAUDITPOSTTRN(AUDITPOSTTRNReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " EXEC [dbo].[SP_AUDITPOSTTRN]  ";
+            sql += " @SQNO  = '" + d.SQNO + "'";
+            sql += " ,@COMPANY = '" + d.COMPANY + "'";
+            sql += " ,@DEPMST = '" + d.DEPMST + "'";
+            sql += " ,@YR= " + d.YR;
+            sql += " ,@MN = " + d.MN;
+            sql += " ,@YRMN = " + d.YRMN;
+            sql += ", @FINDY = '" + d.FINDY + "'";
+            sql += " ,@PCODE = '" + d.PCODE + "'";
+            sql += " ,@PNAME = '" + d.PNAME + "'";
+            sql += " ,@MEMO1 = '" + d.MEMO1 + "'";
+            sql += " ,@CUTDT = '" + d.CUTDT + "'";
+            sql += " ,@ASSETNO = '" + d.ASSETNO + "'";
+            sql += ", @ASSETNAME = '" + d.ASSETNAME + "'";
+            sql += ", @OFFOLD = '" + d.OFFOLD + "'";
+            sql += " ,@OFFNAMOLD = '" + d.OFFNAMOLD + "'";
+            sql += " ,@OFFICECODE = '" + d.OFFICECODE + "'";
+            sql += " ,@OFNAME = '" + d.OFNAME + "'";
+            sql += " ,@DEPCODE = '" + d.DEPCODE + "'";
+            sql += " ,@DEPCODEOL = '" + d.DEPCODEOL + "'";
+            sql += " ,@STNAME = '" + d.STNAME + "'";
+            sql += " ,@LEADERCODE = '" + d.LEADERCODE + "'";
+            sql += " ,@LEADERNAME = '" + d.LEADERNAME + "'";
+            sql += " ,@AREANAME = '" + d.AREANAME + "'";
+            sql += " ,@AREACODE = '" + d.AREACODE + "'";
+            sql += " ,@USERID = '" + d.UCODE + "'";
+            sql += " ,@MODE = '" + d.MODE + "'";
+            sql += " ,@POSITNAME = '" + d.POSITNAME + "'";
+
+            var res = ExecuteNonQuery(sql, param);
+            return res;
+
+        }
 
 
 
-     }
+
+    }
 }

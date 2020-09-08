@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_ADO.Mssql.Asset;
+using ASSETKKF_ADO.Mssql.Audit;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Data.Mssql.Audit;
 using ASSETKKF_MODEL.Response;

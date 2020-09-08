@@ -33,7 +33,7 @@ namespace ASSETKKF_API.Controllers.Audit
         }
 
         [HttpPost("AuditDuplicate")]
-        public async Task<dynamic> Action([FromBody] dynamic data)
+        public async Task<dynamic> GetAuditDuplicate([FromBody] dynamic data)
         {
             var res = new AuditDuplicateApi();
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
