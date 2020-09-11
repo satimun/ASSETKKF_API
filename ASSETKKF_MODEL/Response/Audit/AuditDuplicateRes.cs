@@ -8,9 +8,13 @@ namespace ASSETKKF_MODEL.Response.Audit
 {
     public class AuditDuplicateRes
     {
+        public ASAUDITPOSTMSTTOTEMP AUDITPOSTMSTTOTEMP { get; set; }
         public List<AuditResult> AuditResultLst { get; set; }
         public List<ASAUDITPOSTMST> POSTMSTDuplicateLST { get; set; }
         public List<ASAUDITPOSTTRN> POSTTRNDuplicateLST { get; set; }
+        public List<ASAUDITCUTDATE> NoAuditLST { get; set; }
+        public List<ASAUDITPOSTMSTTOTEMP> AuditToTEMPLST { get; set; }
+
         public ResultDataResponse _result = new ResultDataResponse();
     }
 }

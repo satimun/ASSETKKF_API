@@ -29,9 +29,9 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             param.Add("@OFFICECODE", d.OFFICECODE);
 
-            //string cmd = "SELECT * FROM [FT_ASFIXEDASSET] (" + QuoteStr(d.OFFICECODE) + ") where 1 = 1";
-            string cmd = "SELECT * FROM [FT_ASFIXEDASSET] (@OFFICECODE) ";
-            cmd += " where 1 = 1";
+            string cmd = "SELECT * FROM [FT_ASFIXEDASSET] (" + QuoteStr(d.OFFICECODE) + ") where 1 = 1";
+            /*string cmd = "SELECT * FROM [FT_ASFIXEDASSET] (@OFFICECODE) ";
+            cmd += " where 1 = 1";*/
 
             if (!String.IsNullOrEmpty(d.ASSETNO))
             {

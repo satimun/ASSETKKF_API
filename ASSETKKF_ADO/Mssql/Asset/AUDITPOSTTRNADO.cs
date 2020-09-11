@@ -83,7 +83,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
 		{
 			DynamicParameters param = new DynamicParameters();
 			param.Add("@OFFICECODE", d.OFFICECODE);
-			sql = " select OFFICECODE,MAX(OFNAME) AS OFNAME,DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE from  [FT_ASFIXEDASSET] (@OFFICECODE)  ";
+			//sql = " select OFFICECODE,MAX(OFNAME) AS OFNAME,DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE from  [FT_ASFIXEDASSET] (@OFFICECODE)  ";
+			sql = " select OFFICECODE,MAX(OFNAME) AS OFNAME,DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE from  [FT_ASFIXEDASSET] (" + QuoteStr(d.OFFICECODE) + ")  ";
 			sql += " where 1 = 1";
 			sql += " and COMPANY = '" + d.COMPANY + "'";
 			if (!String.IsNullOrEmpty(d.DEPCODEOL))
@@ -117,7 +118,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 		{
 			DynamicParameters param = new DynamicParameters();
 			param.Add("@OFFICECODE", d.OFFICECODE);
-			sql = " select OFFICECODE,MAX(OFNAME) AS OFNAME,DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE from  [FT_ASFIXEDASSET] (@OFFICECODE)  ";
+			sql = " select OFFICECODE,MAX(OFNAME) AS OFNAME,DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE from  [FT_ASFIXEDASSET] (" + QuoteStr(d.OFFICECODE) + ")  ";
 			sql += " where 1 = 1";
 			//sql += " and COMPANY = '" + d.COMPANY + "'";
 			
@@ -134,7 +135,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 		{
 			DynamicParameters param = new DynamicParameters();
 			param.Add("@OFFICECODE", "");
-			sql = " select * from  [FT_ASFIXEDASSET] (@OFFICECODE)  ";
+			sql = " select * from  [FT_ASFIXEDASSET] (" + QuoteStr("") + ")  ";
 			sql += " where COMPANY = '" + d.COMPANY + "'";
 			if (!String.IsNullOrEmpty(d.ASSETNO))
 			{

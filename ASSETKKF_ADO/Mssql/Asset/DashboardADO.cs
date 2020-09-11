@@ -846,26 +846,54 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
 
-            sql = " SELECT DISTINCT A.ASSETNO,A.ASSETNAME, A.GASTCODE,A.GASTNAME,A.TYPECODE,A.TYPENAME,P.PCODE,P.PNAME,P.INPID,P.INPDT FROM (  ";
-            sql += " SELECT SQNO, ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME";
-            sql += " FROM [dbo].[FT_ASAUDITCUTDATE] ()  as C";
-            sql += " where FLAG <> 'C' ";
-            sql += " and COMPANY = " + QuoteStr(d.Company) + " and YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
-            if (String.IsNullOrEmpty(d.yrmn))
-            {
-                //sql += " and YRMN = (select max(YRMN) from FT_ASAUDITCUTDATEMST() T where T.COMPANY = " + QuoteStr(d.Company) + " and T.YR = " + QuoteStr(d.year) + " and T.MN = " + QuoteStr(d.mn) + " and T.DEPMST = C.DEPMST  and AUDIT_NO is not null)";
-            }
-            else
-            {
-                sql += " and YRMN =" + QuoteStr(d.yrmn);
-            }
-            
-            sql += " AND OFFICECODE =" + QuoteStr(d.OFFICECODE);
+            sql = @"Select * 
+
+                ,case when PROGRESS =  0 Then 'fa fa-check-square-o' else 'fa fa-check-square-o' end ICONFAFA
+                ,case when PROGRESS =  0 Then '#A93226' else '#138D75' end ICONCOLOR
+
+                from (
+                Select COMPANY,SQNO
+                ,ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME 
+                ,MIN(PCODE) as PCODE,MIN(PNAME) as PNAME
+                ,MIN(INPDT) AS STARTDT ,MAX(INPDT) AS LASTDT
+                ,SUM(QTY) as QTY_TOTAL,SUM(QTY_CHECKED) as QTY_CHECKED
+
+                ,
+                ( select COUNT(AssETNO) from FT_ASAUDITPOSTTRN() where SQNO = t.SQNO and COMPANY = t.COMPANY and ASSETNO = t.ASSETNO) as QTY_TRN
 
 
-            sql += " group by SQNO, ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME ) as A";
-            sql += " LEFT JOIN FT_ASAUDITPOSTMST() as P on P.SQNO = A.SQNO and 'Y' <> ISNULL(SNDST,'') and COMPANY =  " + QuoteStr(d.Company);
-            sql += " AND OFFICECODE =" + QuoteStr(d.OFFICECODE);
+                ,SUM(QTY_WAIT) AS QTY_WAIT
+                , (Case when sum(QTY) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end ) as PROGRESS  
+                FROM (
+                select Z.*
+
+                , m.AUDIT_NO,m.YR,m.MN,m.YRMN,m.CUTDT ,m.DEPMST,m.DEPNM
+                ,p.PCODE,p.PNAME,p.INPID,p.INPDT 
+                , case when isnull(p.PCODE,'') ='' Then 0 else 1 end QTY_CHECKED 
+                , case when isnull(p.PCODE,'')<> '' Then 0 else 1 end QTY_WAIT
+                from (
+                Select d.COMPANY,d.SQNO,d.ASSETNO,d.ASSETNAME,d.DEPCODEOL,d.STNAME,1 As QTY, d.GASTCODE,d.GASTNAME,d.TYPECODE,d.TYPENAME 
+                from FT_ASAUDITCUTDATE() as D ";
+            sql += "   where   d.COMPANY = case when ISNULL(" + QuoteStr(d.Company) + ",'') <> '' THEN    ISNULL(" + QuoteStr(d.Company) + ",'') else d.COMPANY end ";
+            sql += @"   and Exists (select * from FT_ASAUDITCUTDATEMST() as  M where
+                 m.COMPANY = d.COMPANY and m.SQNO = d.SQNO  
+                 and  m.FLAG not in ('C','X') ";
+            sql += @"     and YR = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
+
+            if (!String.IsNullOrEmpty(d.yrmn))
+            {
+                sql += @"     and YRMN = " + QuoteStr(d.yrmn);
+            }
+
+            sql += @"      ) ";
+            sql += @"      and   OFFICECODE = case when ISNULL(" + QuoteStr(d.OFFICECODE) + ",'') <> '' THEN    ISNULL(" + QuoteStr(d.OFFICECODE) + ",'') else INPID end ";
+
+
+            sql += @"    ) Z 
+                left join [dbo].[FT_ASAUDITPOSTMST] () as P  on p.COMPANY = z.COMPANY and p.sqno = z.sqno and p.ASSETNO = z.ASSETNO and isnull(p.PCODE,'') <> ''
+                left join FT_ASAUDITCUTDATEMST() as  M on m.COMPANY = Z.COMPANY and m.SQNO = Z.SQNO  
+                ) t group by COMPANY,SQNO,ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME 
+                ) Z   ";
 
             var res = Query<DashboardInspection>(sql, param).ToList();
             return res;

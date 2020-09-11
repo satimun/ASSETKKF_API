@@ -33,6 +33,15 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string AREA { get; set; }
         public string orderby { get; set; }
         public string mode { get; set; }
+
+        public string poth { get; set; }
+        public string snnstdt { get; set; }
+        public string expstdt { get; set; }
+
+        public string FINDY { get; set; }
+        public string PCODE { get; set; }
+        public string PNAME { get; set; }
+        public string MEMO1 { get; set; }
     }
 
     public class AuditPostCheckReq
@@ -48,6 +57,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string UCODE { get; set; }
         public string MODE { get; set; }
         public string PFLAG { get; set; }
+        public string status { get; set; }
     }
 
     public class AUDITPOSTMSTReq
@@ -71,5 +81,9 @@ namespace ASSETKKF_MODEL.Request.Asset
 
         public IFormFile FileToUpload { get; set; }
         public string AREA { get; set; }
+
+        public string poth { get; set; }
+        public string snnstdt { get; set; }
+        public string expstdt { get; set; }
     }
 }

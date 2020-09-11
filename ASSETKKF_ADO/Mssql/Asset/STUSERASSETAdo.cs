@@ -29,7 +29,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             param.Add("@USERCODE", d.UCODE);
             param.Add("@UserName", d.OFFICECODE);
 
-            string cmd = "SELECT * FROM [dbo].[FT_UserAsset] (@USERCODE) where 1 = 1";
+            string cmd = "SELECT * FROM [dbo].[FT_UserAsset] (" + QuoteStr(d.UCODE) + ") where 1 = 1";
 
             if (!String.IsNullOrEmpty(d.COMPANY))
             {
@@ -66,7 +66,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             param.Add("@USERCODE", d.UCODE);
 
-            string cmd = "SELECT * FROM [dbo].[FT_UserAsset] (@USERCODE)" + 
+            string cmd = "SELECT * FROM [dbo].[FT_UserAsset] (" + QuoteStr(d.UCODE) + ")" + 
                 $" where A_Approv = 'Y'";
 
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET>(cmd, param).ToList();

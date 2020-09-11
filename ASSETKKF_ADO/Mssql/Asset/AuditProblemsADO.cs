@@ -37,7 +37,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " ,Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_NOPROBLEM)  AS float) / CAST(sum(QTY_TOTAL)  AS float)) * 100) end as PROGRESS_NOPROBLEM   ";
             cmd += " ,Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_PROBLEMS)  AS float) / CAST(sum(QTY_TOTAL)  AS float)) * 100) end as PROGRESS_PROBLEMS   ";
             cmd += ",Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_WAIT)  AS float) / CAST(sum(QTY_TOTAL)   AS float)) * 100) end as PROGRESS_WAIT  ";
-            cmd += "from FT_AuditProblems (@TYPECODE,@GASTCODE,@OFFICECODE,@PCODE) where 1 = 1";
+            cmd += "from FT_AuditProblems ("+ QuoteStr(d.TYPECODE) + "," + QuoteStr(d.GASTCODE) + "," + QuoteStr(d.OFFICECODE) + "," + QuoteStr(d.PCODE) + ") where 1 = 1";
 
             
 
@@ -82,7 +82,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
                 param.Add("@AUDITNO", d.audit_no);
                 param.Add("@auditno_lk", $"%{d.audit_no}%");
-                cmd += " AND (audit_no LIKE @auditno_lk OR audit_no = @AUDITNO )";
+                cmd += " AND (audit_no LIKE @auditno_lk OR audit_no = " + QuoteStr(d.audit_no) + " )";
             }
 
             if (!String.IsNullOrEmpty(d.sqno))
@@ -137,7 +137,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " ,Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_NOPROBLEM)  AS float) / CAST(sum(QTY_TOTAL)  AS float)) * 100) end as PROGRESS_NOPROBLEM   ";
             cmd += " ,Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_PROBLEMS)  AS float) / CAST(sum(QTY_TOTAL)  AS float)) * 100) end as PROGRESS_PROBLEMS   ";
             cmd += " ,Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_WAIT)  AS float) / CAST(sum(QTY_TOTAL)   AS float)) * 100) end as PROGRESS_WAIT  ";
-            cmd += "from FT_AuditProblems (@TYPECODE,@GASTCODE,@OFFICECODE,@PCODE) where 1 = 1";
+            cmd += "from FT_AuditProblems (" + QuoteStr(d.TYPECODE) + "," + QuoteStr(d.GASTCODE) + "," + QuoteStr(d.OFFICECODE) + "," + QuoteStr(d.PCODE) + ") where 1 = 1";
 
            
 
@@ -182,7 +182,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
                 param.Add("@AUDITNO", d.audit_no);
                 param.Add("@auditno_lk", $"%{d.audit_no}%");
-                cmd += " AND (audit_no LIKE @auditno_lk OR audit_no = @AUDITNO )";
+                cmd += " AND (audit_no LIKE @auditno_lk OR audit_no = " + QuoteStr(d.audit_no) + " )";
             }
 
             if (!String.IsNullOrEmpty(d.sqno))

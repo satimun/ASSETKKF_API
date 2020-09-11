@@ -692,13 +692,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASAUDITPOSTMST> checkAUDITAssetNo(AuditPostCheckReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select * from  [FT_ASAUDITPOSTMST] () as a ";
+            sql = " select a.*,b.pflag,b.imgpath,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= a.INPID) as INPNAME  ";
+            sql += " from  [FT_ASAUDITPOSTMST] () as a";
             sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as b";
             sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO  and a.INPID = b.INPID";
             sql += " where a.SQNO = '" + d.SQNO + "'";
             sql += " and a.COMPANY = '" + d.COMPANY + "'";
             sql += " and a.ASSETNO = '" + d.ASSETNO + "'";
-            sql += " and a.INPID = '" + d.UCODE + "'";
+            //sql += " and a.INPID = '" + d.UCODE + "'";
 
             if (!String.IsNullOrEmpty(d.DEPCODEOL))
             {
@@ -854,17 +855,31 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
             
-            var lst = getAuditCutNoList(new ASSETKKF_MODEL.Request.Asset.AuditCutReq() { Company = dataReq.Company , SQNO = dataReq.sqno });
+            //var lst = getAuditCutNoList(new ASSETKKF_MODEL.Request.Asset.AuditCutReq() { Company = dataReq.Company , SQNO = dataReq.sqno });
             var depcodeol = "";
 
-            if (lst != null && lst.Count > 0)
+            /* if (lst != null && lst.Count > 0)
+             {
+                 var obj = lst.FirstOrDefault();
+                 depcodeol = obj != null ? obj.DEPCODEOL : null;
+             }
+             else
+             {
+                 depcodeol = String.IsNullOrEmpty(dataReq.DEPCODEOL) ? dataReq.DeptCode : dataReq.DEPCODEOL;
+             }*/
+
+            if (!String.IsNullOrEmpty(dataReq.DEPCODEOL))
             {
-                var obj = lst.FirstOrDefault();
-                depcodeol = obj != null ? obj.DEPCODEOL : null;
+                depcodeol = dataReq.DEPCODEOL;
             }
-            else
+            else if (!String.IsNullOrEmpty(dataReq.DeptCode))
             {
-                depcodeol = String.IsNullOrEmpty(dataReq.DEPCODEOL) ? dataReq.DeptCode : dataReq.DEPCODEOL;
+              var  lst = getAuditCutNoList(new ASSETKKF_MODEL.Request.Asset.AuditCutReq() { Company = dataReq.Company, SQNO = dataReq.sqno });
+                if (lst != null && lst.Count > 0)
+                {
+                    var obj = lst.FirstOrDefault();
+                    depcodeol = obj != null ? obj.DEPCODEOL : null;
+                }
             }
 
             
@@ -873,8 +888,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             param.Add("@COMPANY", dataReq.Company);
             param.Add("@DEPCODEOL", depcodeol);
 
-            sql = "select OFFICECODE as id,OFFICECODE + ' : ' + OFNAME as descriptions,OFNAME as name from  FT_CentralOfficer(@COMPANY,@DEPCODEOL)";
-   
+            // sql = "select OFFICECODE as id,OFFICECODE + ' : ' + OFNAME as descriptions,OFNAME as name from  FT_CentralOfficer(@COMPANY,@DEPCODEOL)";
+            sql = "select OFFICECODE as id,OFFICECODE + ' : ' + OFNAME as descriptions,OFNAME as name from  FT_CentralOfficer(";
+            sql += QuoteStr(dataReq.Company) + "," + QuoteStr(depcodeol) + ")";
+
+
 
             var res = Query<ASSETKKF_MODEL.Response.Asset.LeaderList>(sql, param).ToList();            
 

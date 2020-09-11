@@ -444,7 +444,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             param.Add("@MN", d.MN);
             param.Add("@SQNO", d.sqno);
 
-            sql = "select * from [dbo].[FT_ASAUDITPOSTMST_MAIN](@COMPANY,@DEPMST,@YR,@MN ,@SQNO) where 1 =1";
+            sql = "select * from [dbo].[FT_ASAUDITPOSTMST_MAIN](" + QuoteStr(d.company) + "," + QuoteStr(d.DEPMST) + "," + QuoteStr(d.YEAR) + "," + QuoteStr(d.MN) + " ," + QuoteStr(d.sqno) + ") where 1 =1";
 
             if (d.cutdt != null)
             {
@@ -457,7 +457,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
                 param.Add("@AUDITNO", d.audit_no);
                 param.Add("@auditno_lk", $"%{d.audit_no}%");
-                sql += " AND (audit_no LIKE @auditno_lk OR audit_no = @AUDITNO )";
+                sql += " AND (audit_no LIKE @auditno_lk OR audit_no = " + QuoteStr(d.audit_no) + " )";
             }
 
             if (!String.IsNullOrEmpty(d.sqno))
@@ -574,7 +574,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
                 param.Add("@AUDITNO", d.audit_no);
                 param.Add("@auditno_lk", $"%{d.audit_no}%");
-                sql += " AND (P.audit_no LIKE @auditno_lk OR P.audit_no = @AUDITNO )";
+                sql += " AND (P.audit_no LIKE @auditno_lk OR P.audit_no = " + QuoteStr(d.audit_no) + " )";
             }
 
             if (!String.IsNullOrEmpty(d.sqno))

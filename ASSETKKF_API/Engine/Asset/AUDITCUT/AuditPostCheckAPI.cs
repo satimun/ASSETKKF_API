@@ -1,4 +1,5 @@
-﻿using ASSETKKF_MODEL.Request.Asset;
+﻿using ASSETKKF_MODEL.Data.Mssql.Asset;
+using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Asset;
 using Core.Util;
@@ -90,11 +91,12 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         reqPostMstPhone = reqPostMst;
 
                         //เคยบันทึกแล้ว มาบันทึกซ้ำ
-                        var objDuplicate = lst.Where(x => x.INPID == dataReq.UCODE && !String.IsNullOrEmpty(x.PCODE)).FirstOrDefault();
+                         var objDuplicate = lst.Where(x => x.INPID == dataReq.UCODE && !String.IsNullOrEmpty(x.PCODE)).FirstOrDefault();
                         //บันทึกครั้งแรก เป็นคน Export
                         var objFirstEx = lst.Where(x => x.INPID == dataReq.UCODE && String.IsNullOrEmpty(x.PCODE)).FirstOrDefault();
                         //บันทึกครั้งแรก ไม่ได้เป็นผู้ Export
-                        var objFirst = lst.Where(x => x.INPID != dataReq.UCODE && String.IsNullOrEmpty(x.PCODE)).FirstOrDefault();
+                        //var objFirst = lst.Where(x => x.INPID != dataReq.UCODE && String.IsNullOrEmpty(x.PCODE)).FirstOrDefault();
+                        var objFirst = new ASAUDITPOSTMST();
                         //บันทึกครั้งแรก แต่มีคนมาบันทึกก่อนหน้าแล้ว
                         var objSecound = lst.Where(x => x.INPID != dataReq.UCODE && !String.IsNullOrEmpty(x.PCODE)).FirstOrDefault();
 
@@ -105,6 +107,53 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             res._result._message += " เมื่อ " + objDuplicate.INPDT;
                             res._result._status = "Accepted ";
                             res.AUDITPOSTMST = objDuplicate;
+                        }
+                        else if (objSecound != null)
+                        {
+                            if (!String.IsNullOrEmpty(dataReq.status))
+                            {
+                                //reqPostMst.MODE = "ADD";
+                                //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
+
+                                reqPostMst.MODE = "";
+                                ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
+                                var lstPostMstPhone = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getASAUDITPOSTMSTPHONE(reqPostMst);
+                                if (lstPostMstPhone == null || (lstPostMstPhone != null && lstPostMstPhone.Count == 0))
+                                {
+                                    reqPostMstPhone.MODE = "Add";
+                                }
+                                else
+                                {
+                                    reqPostMstPhone.MODE = "Edit";
+                                }
+                                ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone);
+
+                                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1);
+                                var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
+                                var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
+                                res.AUDITPOSTMSTWAITLST = lstWait;
+                                res.AUDITPOSTMSTCHECKEDLST = lstChecked;
+                                res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
+                                res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
+
+                                res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
+
+                                var lstAUDITAssetNo = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
+                                res.AUDITPOSTMST = lstAUDITAssetNo.FirstOrDefault();
+
+                                res._result._code = "201";
+                                res._result._message = objSecound.INPID + "บันทึกผลการตรวจสอบทรัพย์สิน " + objSecound.ASSETNO + " เรียบร้อยแล้ว";
+                                res._result._status = "Created";
+                            }
+                            else
+                            {
+                                res._result._code = "208";
+                                res._result._message = objSecound.INPID + "บันทึกผลการตรวจสอบทรัพย์สิน " + objSecound.ASSETNO + " เป็น " + objSecound.PCODE + " : " + objSecound.PNAME;
+                                res._result._message += " เมื่อ " + objSecound.INPDT;
+                                res._result._status = "Already Saved ";
+                                res.AUDITPOSTMST = objSecound;
+                            }
+
                         }
                         else if (objFirstEx != null)
                         {
@@ -163,30 +212,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             res._result._message = objFirst.INPNAME + "บันทึกผลการตรวจสอบทรัพย์สิน " + objFirst.ASSETNO + " เรียบร้อยแล้ว";
                             res._result._status = "Created";
                         }
-                        else if (objSecound != null)
-                        {
-                            reqPostMst.MODE = "ADD";
-                            ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
-
-                            //res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "");
-                            //res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "Y");
-                            var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1);
-                            var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
-                            var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
-                            res.AUDITPOSTMSTWAITLST = lstWait;
-                            res.AUDITPOSTMSTCHECKEDLST = lstChecked;
-                            res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
-                            res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
-
-                            res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
-
-                            var lstAUDITAssetNo = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
-                            res.AUDITPOSTMST = lstAUDITAssetNo.FirstOrDefault();
-
-                            res._result._code = "201";
-                            res._result._message = objSecound.INPID + "บันทึกผลการตรวจสอบทรัพย์สิน " + objSecound.ASSETNO + " เรียบร้อยแล้ว";
-                            res._result._status = "Created";
-                        }
+                        
                         else
                         {
                             var obj = lst.FirstOrDefault();
