@@ -56,6 +56,7 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string PNAME { get; set; }
         public string INPID { get; set; }
         public DateTime? INPDT { get; set; }
+        public string flag { get; set; }
 
     }
 

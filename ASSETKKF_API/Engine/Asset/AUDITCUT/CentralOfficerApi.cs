@@ -23,6 +23,22 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 var objLeaderList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getCentralOfficerLst(dataReq);
                 res.auditCutLeaderList = objLeaderList;
 
+                ASSETOFFICECODEReq reqASSETOFFICECODE = new ASSETOFFICECODEReq()
+                {
+                    COMPANY = dataReq.Company
+                };
+
+                ASSETASSETNOReq reqASSETASSETNO = new ASSETASSETNOReq()
+                {
+                    COMPANY = dataReq.Company
+                };
+
+
+                //var lstASSETOFFICECODE = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETOFFICECODELST(reqASSETOFFICECODE);
+                var lstASSETASSETNO = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETASSETNOLST(reqASSETASSETNO);
+
+                res.ASSETASSETNOLST = lstASSETASSETNO;
+
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";

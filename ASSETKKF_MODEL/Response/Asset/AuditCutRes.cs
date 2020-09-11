@@ -30,6 +30,8 @@ namespace ASSETKKF_MODEL.Response.Asset
         public List<LeaderList> auditCutLeaderList { get; set; }
         public List<String> deplkList { get; set; }
         public List<STPOSITASSET> STPOSITASSETLst { get; set; }
+        public List<ASSETASSETNO> ASSETASSETNOLST { get; set; }
+        public List<ASSETOFFICECODE> ASSETOFFICECODELST { get; set; }
 
         public ResultDataResponse _result = new ResultDataResponse();
     }

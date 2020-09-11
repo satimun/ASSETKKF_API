@@ -58,7 +58,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql = " select *, (QTY_Total - QTY_CHECKED) as QTY_WAIT , ";
             sql += " CAST(((CAST(QTY_CHECKED as DECIMAL(9,2))/CAST(QTY_Total as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS from (";
-            sql += " SELECT COMPANY,YRMN,DEPMST,DEPNM,SQNO,MIN(INPDT) as StartDT,SUM(QTY) as QTY_Total ";
+            sql += " SELECT COMPANY,YRMN,DEPMST,DEPNM,SQNO,max(C.flag) as flag,MIN(INPDT) as StartDT,SUM(QTY) as QTY_Total ";
             sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  )  and P.DEPMST = C.DEPMST and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -229,7 +229,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql = " select *, (QTY_TOTAL - QTY_CHECKED) as QTY_WAIT , ";
             sql += " CAST(((CAST(QTY_CHECKED as DECIMAL(9,2))/CAST(QTY_Total as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS from (";
-            sql += " SELECT COMPANY,YRMN,DEPMST,SQNO,DEPCODEOL,MAX(STNAME) as STNAME,MIN(INPDT) as StartDT,SUM(QTY) as QTY_TOTAL ";
+            sql += " SELECT COMPANY,YRMN,DEPMST,SQNO,max(C.flag) as flag,DEPCODEOL,MAX(STNAME) as STNAME,MIN(INPDT) as StartDT,SUM(QTY) as QTY_TOTAL ";
             
             sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  )  and P.DEPCODEOL = C.DEPCODEOL and 'Y' <> ISNULL(SNDST,'')  and YRMN = c.YRMN ";
@@ -402,7 +402,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql = " select *, (QTY_TOTAL - QTY_CHECKED) as QTY_WAIT , ";
             sql += " CAST(((CAST(QTY_CHECKED as DECIMAL(9,2))/CAST(QTY_Total as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS from (";
-            sql += " SELECT COMPANY,DEPMST,SQNO,DEPCODEOL,OFFICECODE,MAX(OFNAME) as OFNAME,MIN(INPDT) as StartDT,SUM(QTY) as QTY_TOTAL ";
+            sql += " SELECT COMPANY,DEPMST,SQNO,max(C.flag) as flag,DEPCODEOL,OFFICECODE,MAX(OFNAME) as OFNAME,MIN(INPDT) as StartDT,SUM(QTY) as QTY_TOTAL ";
            
             sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  )  and P.OFFICECODE = C.OFFICECODE and 'Y' <> ISNULL(SNDST,'')";
@@ -511,7 +511,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql = " select *, (QTY_Total - QTY_CHECKED) as QTY_WAIT , ";
             sql += " CAST(((CAST(QTY_CHECKED as DECIMAL(9,2))/CAST(QTY_Total as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS from (";
-            sql += " SELECT COMPANY,TYPECODE,TYPENAME,MIN(INPDT) as StartDT,SUM(QTY) as QTY_Total ";
+            sql += " SELECT COMPANY,TYPECODE,TYPENAME,max(C.flag) as flag,MIN(INPDT) as StartDT,SUM(QTY) as QTY_Total ";
             sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  )  and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -680,7 +680,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql = " select *, (QTY_Total - QTY_CHECKED) as QTY_WAIT , ";
             sql += " CAST(((CAST(QTY_CHECKED as DECIMAL(9,2))/CAST(QTY_Total as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS from (";
-            sql += " SELECT COMPANY,GASTCODE,GASTNAME,TYPECODE,TYPENAME,MIN(INPDT) as StartDT,SUM(QTY) as QTY_Total ";
+            sql += " SELECT COMPANY,GASTCODE,GASTNAME,TYPECODE,TYPENAME,max(C.flag) as flag,MIN(INPDT) as StartDT,SUM(QTY) as QTY_Total ";
             sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from FT_ASAUDITPOSTMST() P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  )  and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
