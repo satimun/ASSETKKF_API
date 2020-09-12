@@ -42,6 +42,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string PCODE { get; set; }
         public string PNAME { get; set; }
         public string MEMO1 { get; set; }
+        public string INPID { get; set; }
     }
 
     public class AuditPostCheckReq

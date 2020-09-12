@@ -57,40 +57,62 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     res.IMGSRC = FilesUtilSvc.getImageURL(res.IMGPATH);
                 }
 
-                var req1 = new ASSETKKF_MODEL.Request.Asset.AuditPostReq()
+                if (dataReq.MODE.Trim().ToLower() == "editnew")
                 {
-                    SQNO = dataReq.SQNO,
-                    DEPCODEOL = dataReq.DEPCODEOL,
-                    COMPANY = dataReq.COMPANY,
-                    LEADERCODE = dataReq.LEADERCODE,
-                    AREACODE = dataReq.AREACODE,
-                    UCODE = dataReq.UCODE
-                };
-                //res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "");
-                //res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "Y");
-                //res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
+                    AuditPostReq req1 = new AuditPostReq()
+                    {
+                        COMPANY = dataReq.COMPANY,
+                        SQNO = dataReq.SQNO
+                    };
+                    var lstPostMSTToTEMP = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTOTEMPAdo.GetInstant().getDataToSendDep(req1);
+                    res.AuditToTEMPLST = lstPostMSTToTEMP;
 
-                res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
+                    var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRN(req1);
+                    res.POSTTRNDuplicateLST = lstPostTRN;
 
-                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1);
-                var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
-                var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
-                res.AUDITPOSTMSTWAITLST = lstWait;
-                res.AUDITPOSTMSTCHECKEDLST = lstChecked;
-                res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
-                res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
-                var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(req1);
-                res.AUDITCUTDATELST = lstAUDITCUTDATE;
+                    var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(req1);
+                    res.NoAuditLST = lstNoAudit;
 
-                res.AREACODE = dataReq.AREACODE;
-                res.COMPANY = dataReq.COMPANY;
-                res.DEPCODEOL = dataReq.DEPCODEOL;
-                res.LEADERCODE = dataReq.LEADERCODE;
-                res.SQNO = dataReq.SQNO;
+                    res._result._code = "200";
+                    res._result._message = "";
+                    res._result._status = "OK";
+                }
+                else
+                {
+                    var req1 = new ASSETKKF_MODEL.Request.Asset.AuditPostReq()
+                    {
+                        SQNO = dataReq.SQNO,
+                        DEPCODEOL = dataReq.DEPCODEOL,
+                        COMPANY = dataReq.COMPANY,
+                        LEADERCODE = dataReq.LEADERCODE,
+                        AREACODE = dataReq.AREACODE,
+                        UCODE = dataReq.UCODE
+                    };
 
-                res._result._code = "201";
-                res._result._message = "";
-                res._result._status = "Created";
+                    res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
+
+                    var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1);
+                    var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
+                    var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
+                    res.AUDITPOSTMSTWAITLST = lstWait;
+                    res.AUDITPOSTMSTCHECKEDLST = lstChecked;
+                    res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
+                    res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
+                    var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(req1);
+                    res.AUDITCUTDATELST = lstAUDITCUTDATE;
+
+                    res.AREACODE = dataReq.AREACODE;
+                    res.COMPANY = dataReq.COMPANY;
+                    res.DEPCODEOL = dataReq.DEPCODEOL;
+                    res.LEADERCODE = dataReq.LEADERCODE;
+                    res.SQNO = dataReq.SQNO;
+
+                    res._result._code = "201";
+                    res._result._message = "";
+                    res._result._status = "Created";
+                }
+
+                
 
             }
             catch (Exception ex)

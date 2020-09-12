@@ -57,6 +57,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			sql += " ,@USERID = '" + d.UCODE + "'";
 			sql += " ,@MODE = '" + d.MODE + "'";
 			sql += " ,@POSITNAME = '" + d.POSITNAME + "'";
+			sql += " ,@ASSETNONEW = '" + d.ASSETNONEW + "'";
+			sql += " ,@INPID = '" + d.INPID + "'";
 
 			var res = ExecuteNonQuery(sql, param);
 			return res;
@@ -72,7 +74,10 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			sql += " ,@COMPANY = '" + d.COMPANY + "'";
 			sql += " ,@ASSETNO = '" + d.ASSETNO + "'";
 			sql += " ,@IMGPATH = '" + d.IMGPATH + "'";
-			sql += " ,@USERID = '" + d.UCODE + "'"; ;
+			sql += " ,@USERID = '" + d.UCODE + "'";
+			sql += " ,@ASSETNONEW = '" + d.ASSETNONEW + "'";
+			sql += " ,@MODE = '" + d.MODE + "'";
+			sql += " ,@INPID = '" + d.INPID + "'";
 
 
 			var res = ExecuteNonQuery(sql, param);

@@ -149,6 +149,8 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@USERID = '" + d.UCODE + "'";
             sql += " ,@MODE = '" + d.MODE + "'";
             sql += " ,@POSITNAME = '" + d.POSITNAME + "'";
+            sql += " ,@ASSETNONEW = '" + d.ASSETNONEW + "'";
+            sql += " ,@INPID = '" + d.INPID + "'";
 
             var res = ExecuteNonQuery(sql, param);
             return res;
