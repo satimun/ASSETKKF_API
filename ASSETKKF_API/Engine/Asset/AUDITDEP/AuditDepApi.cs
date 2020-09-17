@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ASSETKKF_ADO.Mssql.Asset;
 using ASSETKKF_ADO.Mssql.Audit;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Data.Mssql.Audit;
@@ -10,11 +9,11 @@ using ASSETKKF_MODEL.Request.Audit;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Audit;
 
-namespace ASSETKKF_API.Engine.Asset.AUDITSEND
+namespace ASSETKKF_API.Engine.Asset.AUDITDEP
 {
-    public class AuditResultApi : Base<AuditResultReq>
+    public class AuditDepApi : Base<AuditResultReq>
     {
-        public AuditResultApi()
+        public AuditDepApi()
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
@@ -22,24 +21,22 @@ namespace ASSETKKF_API.Engine.Asset.AUDITSEND
 
         protected override void ExecuteChild(AuditResultReq dataReq, ResponseAPI dataRes)
         {
-            var res = new AuditDuplicateRes();
+            var res = new AuditDepRes();
 
             try
             {
-                List<AuditResult> auditLst = new List<AuditResult>();
+                List<AuditDep> auditLst = new List<AuditDep>();
 
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
 
                 switch (mode)
                 {
-                    
-
                     default:
-                        auditLst = AuditResultAdo.GetInstant().GetData(dataReq);
+                        auditLst = AuditDepAdo.GetInstant().GetData(dataReq);
                         break;
                 }
 
-                res.AuditResultLst = auditLst;
+                res.AuditDepLst = auditLst;
 
                 if (auditLst == null)
                 {

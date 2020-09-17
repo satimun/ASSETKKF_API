@@ -141,7 +141,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			DynamicParameters param = new DynamicParameters();
 			param.Add("@OFFICECODE", "");
 			sql = " select * from  [FT_ASFIXEDASSET] (" + QuoteStr("") + ")  ";
-			sql += " where COMPANY = '" + d.COMPANY + "'";
+			sql += " where 1 = 1 " ;
+
+			if (!String.IsNullOrEmpty(d.COMPANY))
+			{
+				sql += " and COMPANY = '" + d.COMPANY + "'";
+			}
+
 			if (!String.IsNullOrEmpty(d.ASSETNO))
 			{
 				sql += " and ASSETNO = '" + d.ASSETNO + "'";

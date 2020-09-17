@@ -42,5 +42,6 @@ namespace ASSETKKF_MODEL.Response.Oauth
         public string companyname { get; set; }
         public string gucode { get; set; }
         public string guname { get; set; }
+        public string depcodeol { get; set; }
     }
 }

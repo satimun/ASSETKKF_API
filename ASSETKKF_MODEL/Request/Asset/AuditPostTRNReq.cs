@@ -65,6 +65,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public IFormFile FileToUpload { get; set; }
         public string ASSETNONEW { get; set; }
         public string INPID { get; set; }
+        public string FLAG { get; set; }
     }
 
     public class ASSETOFFICECODEReq

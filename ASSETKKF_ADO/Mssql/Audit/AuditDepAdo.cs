@@ -10,30 +10,38 @@ using Dapper;
 
 namespace ASSETKKF_ADO.Mssql.Audit
 {
-    public class AuditResultAdo : Base
+    public class AuditDepAdo : Base
     {
-        private static AuditResultAdo instant;
+        private static AuditDepAdo instant;
 
-        public static AuditResultAdo GetInstant()
+        public static AuditDepAdo GetInstant()
         {
-            if (instant == null) instant = new AuditResultAdo();
+            if (instant == null) instant = new AuditDepAdo();
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AuditResultAdo()
+        private AuditDepAdo()
         {
         }
 
-        public List<AuditResult> GetData(AuditResultReq d, SqlTransaction transac = null)
+        public List<AuditDep> GetData(AuditResultReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
 
-            sql = " SELECT * FROM [dbo].[FC_AuditResults] (";
+            string USERID = null;
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                USERID = d.INPID;
+            }
+
+
+                sql = " SELECT * FROM [dbo].[FC_AuditDep] (";
             sql += " " + QuoteStr(d.COMPANY);
             sql += " ," + QuoteStr(d.YR);
             sql += " ," + QuoteStr(d.MN);
+            sql += " ," + QuoteStr(USERID);
             sql += " ) where 1 = 1";
 
             if (!String.IsNullOrEmpty(d.DEPMST))
@@ -53,7 +61,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
             }
 
-            var res = Query<AuditResult>(sql, param).ToList();
+            var res = Query<AuditDep>(sql, param).ToList();
             return res;
         }
     }

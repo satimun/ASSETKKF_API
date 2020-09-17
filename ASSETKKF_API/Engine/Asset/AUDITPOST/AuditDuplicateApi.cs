@@ -613,6 +613,18 @@ namespace ASSETKKF_API.Engine.Asset.AUDITPOST
                     InSdataToTEMP(dataReq);
                 }
 
+                AUDITPOSTTRNReq req = new AUDITPOSTTRNReq()
+                {
+                    SQNO = dataReq.SQNO,
+                    COMPANY = dataReq.COMPANY,
+                    ASSETNO = dataReq.ASSETNO,
+                    UCODE = dataReq.UCODE,
+                    INPID = dataReq.INPID,
+                    MODE = "update_senddep"
+                };
+
+                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().saveAUDITPOSTTRN(req);
+
                 AUDITPOSTMSTReq req1 = new AUDITPOSTMSTReq()
                 {
                     MODE = "insert_PostTEMP",
@@ -632,17 +644,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITPOST
                 };
                 ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEP(req1);
 
-                AUDITPOSTTRNReq req = new AUDITPOSTTRNReq()
-                {
-                    SQNO = dataReq.SQNO,
-                    COMPANY = dataReq.COMPANY,
-                    ASSETNO = dataReq.ASSETNO,
-                    UCODE = dataReq.UCODE,
-                    INPID = dataReq.INPID,
-                    MODE = "update_senddep"
-                };
-
-                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().saveAUDITPOSTTRN(req);
+                
 
                 res._result._code = "200";
                 res._result._message = "";

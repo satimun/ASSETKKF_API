@@ -244,6 +244,39 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             {
                 var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(req1);
                 res.AUDITCUTDATELST = lstAUDITCUTDATE;
+
+                var req = new ASSETKKF_MODEL.Request.Asset.AuditPostReq()
+                {
+                    SQNO = dataReq.SQNO,
+                    DEPCODEOL = dataReq.DEPCODEOL,
+                    COMPANY = dataReq.COMPANY,
+                    LEADERCODE = dataReq.LEADERCODE,
+                    AREACODE = dataReq.AREACODE,
+                    UCODE = dataReq.UCODE,
+                    LEADERNAME = dataReq.LEADERNAME,
+                    AREANAME = dataReq.AREANAME,
+                    IMGPATH = dataReq.IMGPATH,
+                    YEAR = dataReq.YEAR,
+                    MN = dataReq.MN,
+                    DEPMST = dataReq.DEPMST,
+                    cutdt = dataReq.cutdt,
+                    OFFICECODE = dataReq.OFFICECODE,
+                    TYPECODE = dataReq.TYPECODE,
+                    GASTCODE = dataReq.GASTCODE,
+
+                };
+
+                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
+                var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req);
+
+                res.AUDITPOSTTRNLST = lstAUDITPOSTTRN;
+
+                var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
+                var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
+                res.AUDITPOSTMSTWAITLST = lstWait;
+                res.AUDITPOSTMSTCHECKEDLST = lstChecked;
+                res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
+                res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
             }
 
             dataRes.data = res;

@@ -79,17 +79,26 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " )";
             }
 
-            if (String.IsNullOrEmpty(d.MODE))
+            if ((!d.Menu3 && !d.Menu4))
             {
-                cmd += " and M.YR = (SELECT YR from(";
-                cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
-                cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
-                cmd += " group by YR    ) as a)";
-                cmd += " and M.MN = (SELECT MN from(";
-                cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
-                cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
-                cmd += " group by YR    ) as b)";
+                cmd += " and isnull(M.Audit_NO,'') like 'DU%' ";
             }
+            else if(d.Menu4)
+            {
+                cmd += " and isnull(M.Audit_NO,'') not like 'DU%' ";
+            }
+
+            //if (String.IsNullOrEmpty(d.MODE))
+            //{
+            //    cmd += " and M.YR = (SELECT YR from(";
+            //    cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
+            //    cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
+            //    cmd += " group by YR    ) as a)";
+            //    cmd += " and M.MN = (SELECT MN from(";
+            //    cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
+            //    cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
+            //    cmd += " group by YR    ) as b)";
+            //}
 
 
 
@@ -149,6 +158,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
                 }
                 cmd += " )";
+            }
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                cmd += " and isnull(M.Audit_NO,'') like 'DU%' ";
+            }
+            else if (d.Menu4)
+            {
+                cmd += " and isnull(M.Audit_NO,'') not like 'DU%' ";
             }
 
             if (!String.IsNullOrEmpty(d.DEPMST))

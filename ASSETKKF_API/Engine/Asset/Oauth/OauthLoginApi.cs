@@ -69,7 +69,8 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                                         company = s.COMPANY,
                                         companyname = s.COMPANAYNAME,
                                         gucode = s.GUCODE,
-                                        guname = s.GUNAME
+                                        guname = s.GUNAME,
+                                        depcodeol = s.DEPCODELST
                                     }).ToList();
 
                 var M_Review = user.Where(s => s.M_Review)

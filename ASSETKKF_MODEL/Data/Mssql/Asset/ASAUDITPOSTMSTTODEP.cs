@@ -38,9 +38,11 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string SNDACC { get; set; }
         public string STY { get; set; }
         public string STID { get; set; }
+        public string STIDNAME { get; set; }
         public DateTime? STDT { get; set; }
         public string ACCY { get; set; }
         public string ADDID { get; set; }
+        public string ADDIDNAME { get; set; }
         public DateTime? ACCDT { get; set; }
         public string POTH { get; set; }
         public string STPL { get; set; }
@@ -60,5 +62,19 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string LEADERCODE { get; set; }
         public string AREACODE { get; set; }
         public string IMGPATH { get; set; }
+
+        public string IMGST { get; set; }
+        public string STCY { get; set; }
+        public string STCID { get; set; }
+        public string STCIDNAME { get; set; }
+        public DateTime? STCDT { get; set; }
+        public string MEMSTC { get; set; }
+        public string COMY { get; set; }
+        public string COMID { get; set; }
+        public string COMIDNAME { get; set; }
+        public DateTime? COMDT { get; set; }
+        public string MEMCOM { get; set; }
+
+
     }
 }

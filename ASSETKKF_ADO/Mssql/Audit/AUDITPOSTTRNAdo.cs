@@ -157,12 +157,47 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
         }
 
+        public int SP_AUDITPOSTTRNPHONE(AUDITPOSTMSTReq d, string flag = null, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = "  EXEC  SP_AUDITPOSTTRNPHONE";
+            sql += " @SQNO  = '" + d.SQNO + "'";
+            sql += " ,@COMPANY = '" + d.COMPANY + "'";
+            sql += " ,@ASSETNO = '" + d.ASSETNO + "'";
+            sql += " ,@INPID = '" + d.INPID + "'";
+            sql += " ,@IMGPATH = '" + d.IMGPATH + "'";
+            sql += " ,@USERID = '" + d.UCODE + "'";
+            sql += " ,@FLAG = '" + d.FLAG + "'";
+            sql += " ,@MEMO= '" + d.MEMO1 + "'";
+            sql += " ,@MODE = '" + d.MODE + "'";
+
+            var res = ExecuteNonQuery(sql, param);
+            return res;
+        }
+
         public List<ASAUDITPOSTTRN> getPOSTTRN(AuditPostReq d, string flag = null, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME from  [FT_ASAUDITPOSTTRN] () as P";
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
+
+            var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+            return res;
+
+        }
+
+        public List<ASAUDITPOSTTRN> getPOSTTRNDep(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME ";
+            sql += " from  [FT_ASAUDITPOSTTRN] () as P";
+            sql += " where P.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
+
+            sql += " AND  isnull(STY,'') = '' ";
+            sql += " AND  isnull(SNDST,'') = 'Y' ";
+            sql += " AND  isnull(SNDACC,'') = '' ";
 
             var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
             return res;

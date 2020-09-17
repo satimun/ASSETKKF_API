@@ -59,6 +59,18 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string MODE { get; set; }
         public string PFLAG { get; set; }
         public string status { get; set; }
+
+        public string OFFICECODE { get; set; }
+        public string TYPECODE { get; set; }
+        public string GASTCODE { get; set; }
+        public string IMGPATH { get; set; }
+
+        public string YEAR { get; set; }
+        public string MN { get; set; }
+
+
+        public string DEPMST { get; set; }
+        public string cutdt { get; set; }
     }
 
     public class AUDITPOSTMSTReq
@@ -86,5 +98,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string poth { get; set; }
         public string snnstdt { get; set; }
         public string expstdt { get; set; }
+        public string INPID { get; set; }
+        public string FLAG { get; set; }
     }
 }
