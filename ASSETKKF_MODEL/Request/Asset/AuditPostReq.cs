@@ -10,7 +10,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string COMPANY { get; set; }
         public string YEAR { get; set; }
         public string MN { get; set; }
-               
+
 
         public string DEPMST { get; set; }
         public string SQNO { get; set; }
@@ -43,9 +43,18 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string PNAME { get; set; }
         public string MEMO1 { get; set; }
         public string INPID { get; set; }
+        public string FLAG { get; set; }
+        public string filter { get; set; }
+        public string depy { get; set; }
+
+        public string ASSETNAME { get; set; }
+
+        public string OFNAME { get; set; }
+        public string ASSETNONEW { get; set; }
+
     }
 
-    public class AuditPostCheckReq
+        public class AuditPostCheckReq
     {
         public string SQNO { get; set; }
         public string COMPANY { get; set; }

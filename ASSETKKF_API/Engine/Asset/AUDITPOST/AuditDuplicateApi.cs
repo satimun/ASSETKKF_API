@@ -22,7 +22,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITPOST
 
             try
             {
-                switch (dataReq.mode.Trim().ToLower())
+                var mode = !String.IsNullOrEmpty(dataReq.mode) ? dataReq.mode.Trim().ToLower() : dataReq.mode;
+                switch (mode)
                 {
                     case "getduplicate":
                         res = getDuplicate(dataReq,res);

@@ -38,6 +38,8 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@FINDY = '" + d.FINDY + "'";
             sql += " ,@PCODE= '" + d.PCODE + "'";
             sql += " ,@PNAME= '" + d.PNAME + "'";
+            sql += " ,@MEMO= '" + d.MEMO1 + "'";
+            
             var res = ExecuteNonQuery(sql, param);
             return res;
         }
@@ -51,6 +53,20 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " where B.SQNO = " + QuoteStr(d.SQNO);
             sql += " and B.COMPANY = " + QuoteStr(d.COMPANY);
             sql += " and isnull(STY,'') = '' ";
+
+            if (!String.IsNullOrEmpty(d.filter))
+            {
+                switch (d.filter)
+                {
+                    case "0":
+                        sql += " and isnull(PCOD,'') <> '' ";
+                        break;
+                    case "1":
+                        sql += " and isnull(PCOD,'') = '' ";
+                        break;
+
+                }
+            }
 
             if (!String.IsNullOrEmpty(d.ASSETNO))
             {
@@ -146,6 +162,71 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " and a.COMPANY = '" + d.COMPANY + "'";
             sql += " and a.ASSETNO = '" + d.ASSETNO + "'";
             //sql += " and a.INPID = '" + d.UCODE + "'";
+
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param).ToList();
+            return res;
+        }
+
+        public List<ASAUDITPOSTMSTTODEP> getDataToCompEdit(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME ";
+            sql += "  FROM  FT_ASAUDITPOSTMSTTODEP()  B";
+            sql += " where B.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and B.COMPANY = " + QuoteStr(d.COMPANY);
+
+            sql += " and SNDACCDT IS NULL";
+
+
+
+            if (!String.IsNullOrEmpty(d.depy))
+            {
+                sql += " and isnull(STY,'') = " + QuoteStr(d.depy);
+            }
+
+            if (!String.IsNullOrEmpty(d.filter))
+            {
+                switch (d.filter)
+                {
+                    case "0":
+                        sql += " and isnull(PCOD,'') <> '' ";
+                            break;
+                    case "1":
+                        sql += " and isnull(PCOD,'') = '' ";
+                        break;
+
+                }
+            }
+
+            if (!String.IsNullOrEmpty(d.filter))
+            {
+                sql += " and isnull(STY,'') = " + QuoteStr(d.filter);
+            }
+
+            if (!String.IsNullOrEmpty(d.ASSETNO))
+            {
+                sql += " and B.ASSETNO = " + QuoteStr(d.ASSETNO);
+            }
+
+            if (String.IsNullOrEmpty(d.orderby) || d.orderby.Equals("1"))
+            {
+                sql += " order by  ASSETNO,OFFICECODE ";
+            }
+
+            if (d.orderby != null && d.orderby.Equals("2"))
+            {
+                sql += " order by  OFFICECODE,ASSETNO ";
+            }
+
+            if (d.orderby != null && d.orderby.Equals("3"))
+            {
+                sql += " order by  DEPCODEOL,OFFICECODE,ASSETNO ";
+            }
+
+            if (d.orderby != null && d.orderby.Equals("4"))
+            {
+                sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
+            }
 
             var res = Query<ASAUDITPOSTMSTTODEP>(sql, param).ToList();
             return res;

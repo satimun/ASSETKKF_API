@@ -262,6 +262,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " where M.FLAG not in ('X','C')  and audit_no is not null";
             cmd += " and COMPANY in (" + QuoteStr(d.Company) + ") ";
 
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                cmd += " and isnull(M.Audit_NO,'') like 'DU%' ";
+            }
+            else if (d.Menu4)
+            {
+                cmd += " and isnull(M.Audit_NO,'') not like 'DU%' ";
+            }
+
             //if (!String.IsNullOrEmpty(d.Company))
             //{
             //    var comp = "";
@@ -287,6 +296,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
             string cmd = " SELECT MN as id,MN  as description FROM [dbo].[FT_ASAUDITCUTDATEMST] () as M ";
             cmd += " where M.FLAG not in ('X','C')  and audit_no is not null";
             cmd += " and COMPANY in (" + QuoteStr( d.Company) + ") ";
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                cmd += " and isnull(M.Audit_NO,'') like 'DU%' ";
+            }
+            else if (d.Menu4)
+            {
+                cmd += " and isnull(M.Audit_NO,'') not like 'DU%' ";
+            }
 
             //if (!String.IsNullOrEmpty(d.Company))
             //{

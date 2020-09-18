@@ -21,7 +21,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
             var res = new AuditDepRes();
             try
             {
-                switch (dataReq.mode.Trim().ToLower())
+                var mode = !String.IsNullOrEmpty(dataReq.mode) ? dataReq.mode.Trim().ToLower() : dataReq.mode;
+                switch (mode)
                 {
                     case "getaudittoclear":
                         res = getaudittoclear(dataReq, res);
@@ -141,7 +142,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                     ASSETNO = dataReq.ASSETNO,
                     INPID = dataReq.INPID,
                     UCODE = dataReq.UCODE,
-                    FLAG = "Y",
+                    FLAG = dataReq.FLAG,
                     MODE = "updateDEP_STY"
 
                 };
@@ -173,7 +174,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                     ASSETNO = dataReq.ASSETNO,
                     INPID = dataReq.INPID,
                     UCODE = dataReq.UCODE,
-                    FLAG = "Y",
+                    FLAG = dataReq.FLAG,
                     MODE = "updateTRN_STY"
 
                 };
@@ -230,6 +231,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                 {
                     SQNO = dataReq.SQNO,
                     COMPANY = dataReq.COMPANY,
+                    filter = dataReq.filter
                 };
                 var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToClear(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
@@ -278,6 +280,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                 {
                     SQNO = dataReq.SQNO,
                     COMPANY = dataReq.COMPANY,
+                    filter = dataReq.filter
                 };
                 var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToClear(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
@@ -324,6 +327,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                 {
                     SQNO = dataReq.SQNO,
                     COMPANY = dataReq.COMPANY,
+                    filter = dataReq.filter
                 };
                 var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToClear(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
@@ -372,6 +376,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                 {
                     SQNO = dataReq.SQNO,
                     COMPANY = dataReq.COMPANY,
+                    filter = dataReq.filter
                 };
                 var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToClear(req);
                 res.AUDITPOSTMSTTODEPLST = lst;

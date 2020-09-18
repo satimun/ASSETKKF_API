@@ -199,6 +199,54 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " AND  isnull(SNDST,'') = 'Y' ";
             sql += " AND  isnull(SNDACC,'') = '' ";
 
+            if (!String.IsNullOrEmpty(d.filter))
+            {
+                switch (d.filter)
+                {
+                    case "0":
+                        sql += " and isnull(PCOD,'') <> '' ";
+                        break;
+                    case "1":
+                        sql += " and isnull(PCOD,'') = '' ";
+                        break;
+
+                }
+            }
+
+            var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+            return res;
+
+        }
+
+        public List<ASAUDITPOSTTRN> getPOSTTRNComp(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME ";
+            sql += " from  [FT_ASAUDITPOSTTRN] () as P";
+            sql += " where P.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
+
+            sql += " and SNDACCDT IS NULL";
+
+            if (!String.IsNullOrEmpty(d.depy))
+            {
+                sql += " and isnull(STY,'') = " + QuoteStr(d.depy);
+            }
+
+            if (!String.IsNullOrEmpty(d.filter))
+            {
+                switch (d.filter)
+                {
+                    case "0":
+                        sql += " and isnull(PCOD,'') <> '' ";
+                        break;
+                    case "1":
+                        sql += " and isnull(PCOD,'') = '' ";
+                        break;
+
+                }
+            }
+
             var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
             return res;
 
