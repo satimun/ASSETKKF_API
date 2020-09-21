@@ -30,5 +30,7 @@ namespace ASSETKKF_MODEL.Request.Audit
         public string DEPNM { get; set; }
         public bool Menu3 { get; set; }
         public bool Menu4 { get; set; }
+
+        public string FLAG { get; set; }
     }
 }

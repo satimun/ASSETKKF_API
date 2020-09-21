@@ -112,34 +112,16 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         {
                             if (!String.IsNullOrEmpty(dataReq.status))
                             {
-                                //reqPostMst.MODE = "ADD";
-                                //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
 
                                 reqPostMst.MODE = "";
                                 ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
-                                var lstPostMstPhone = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getASAUDITPOSTMSTPHONE(reqPostMst);
-                                if (lstPostMstPhone == null || (lstPostMstPhone != null && lstPostMstPhone.Count == 0))
-                                {
-                                    reqPostMstPhone.MODE = "Add";
-                                }
-                                else
-                                {
-                                    reqPostMstPhone.MODE = "Edit";
-                                }
+
+                   
+                                reqPostMstPhone.MODE = "Edit";
                                 ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone);
 
-                                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1);
-                                var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
-                                var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
-                                res.AUDITPOSTMSTWAITLST = lstWait;
-                                res.AUDITPOSTMSTCHECKEDLST = lstChecked;
-                                res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
-                                res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
+                                res.AUDITPOSTMST = objSecound;
 
-                                res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
-
-                                var lstAUDITAssetNo = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
-                                res.AUDITPOSTMST = lstAUDITAssetNo.FirstOrDefault();
 
                                 res._result._code = "201";
                                 res._result._message = objSecound.INPID + "บันทึกผลการตรวจสอบทรัพย์สิน " + objSecound.ASSETNO + " เรียบร้อยแล้ว";
@@ -159,30 +141,12 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         {
                             reqPostMst.MODE = "";
                             ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
-                            var lstPostMstPhone = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getASAUDITPOSTMSTPHONE(reqPostMst);
-                            if (lstPostMstPhone == null || (lstPostMstPhone != null && lstPostMstPhone.Count == 0))
-                            {
-                                reqPostMstPhone.MODE = "Add";
-                            }
-                            else
-                            {
-                                reqPostMstPhone.MODE = "Edit";
-                            }
+
+                            reqPostMstPhone.MODE = "Edit";
                             ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone);
 
-                            
-                            var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1);
-                            var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
-                            var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
-                            res.AUDITPOSTMSTWAITLST = lstWait;
-                            res.AUDITPOSTMSTCHECKEDLST = lstChecked;
-                            res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
-                            res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
+                            res.AUDITPOSTMST = objFirstEx;
 
-                            res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
-
-                            var lstAUDITAssetNo = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
-                            res.AUDITPOSTMST = lstAUDITAssetNo.FirstOrDefault();
 
                             res._result._code = "201";
                             res._result._message = objFirstEx.INPID + "บันทึกผลการตรวจสอบทรัพย์สิน " + objFirstEx.ASSETNO + " เรียบร้อยแล้ว";
@@ -193,20 +157,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             reqPostMst.MODE = "ADD";
                             ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
 
-                            //res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "");
-                            //res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "Y");
-                            var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1);
-                            var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
-                            var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
-                            res.AUDITPOSTMSTWAITLST = lstWait;
-                            res.AUDITPOSTMSTCHECKEDLST = lstChecked;
-                            res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
-                            res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
-
-                            res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
-
-                            var lstAUDITAssetNo = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
-                            res.AUDITPOSTMST = lstAUDITAssetNo.FirstOrDefault();
+                            res.AUDITPOSTMST = objFirst;
 
                             res._result._code = "201";
                             res._result._message = objFirst.INPNAME + "บันทึกผลการตรวจสอบทรัพย์สิน " + objFirst.ASSETNO + " เรียบร้อยแล้ว";
@@ -230,12 +181,6 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             }
             catch(Exception ex)
             {
-                res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "");
-                res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "Y");
-                res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
-                res.AUDITPOSTMSTNOPROBLEMLST = res.AUDITPOSTMSTCHECKEDLST.Where(x => x.PFLAG != "Y").ToList();
-                res.AUDITPOSTMSTPROBLEMLST = res.AUDITPOSTMSTCHECKEDLST.Where(x => x.PFLAG == "Y").ToList();
-
                 res._result._code = "500 ";
                 res._result._message = ex.Message;
                 res._result._status = "Internal Server Error";
@@ -277,6 +222,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 res.AUDITPOSTMSTCHECKEDLST = lstChecked;
                 res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
                 res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
+
+                //res.AUDITPOSTMST = lstAUDITPOSTMST.Where(x => x.INPID == dataReq.UCODE && x.ASSETNO == dataReq.ASSETNO && x.SQNO == dataReq.SQNO).FirstOrDefault();
             }
 
             dataRes.data = res;

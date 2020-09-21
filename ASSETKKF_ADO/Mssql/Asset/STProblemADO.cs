@@ -29,7 +29,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.Company);
-            string cmd = "SELECT Pcode,Pname,SACC,FINDY,PFLAG  FROM [dbo].[FT_ASSTProblem] ()";
+            string cmd = "SELECT Pcode,Pname, Pcode as id,(Pcode + ' : '  + Pname) as descriptions ,SACC,FINDY,PFLAG  FROM [dbo].[FT_ASSTProblem] ()";
             if (!String.IsNullOrEmpty(d.Company))
             {
                 var comp = "";
@@ -39,23 +39,25 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " group by Pcode,Pname,SACC,FINDY,PFLAG";
             cmd += " order by Pcode";
 
-            var obj = Query<ASSETKKF_MODEL.Data.Mssql.Asset.ASSTProblem>(cmd, param).ToList();
-
+            var obj = Query<ProblemList>(cmd, param).ToList();
+            //var obj = Query<ASSETKKF_MODEL.Data.Mssql.Asset.ASSTProblem>(cmd, param).ToList();
             List<ProblemList> res = new List<ProblemList>();
-            if (obj != null && obj.Count > 0)
-            {
-                obj.ForEach(x => {
-                    res.Add(new ProblemList
-                    {
-                        id = x.Pcode,
-                        descriptions = x.Pcode + " : " + x.Pname ,
-                        Pcode = x.Pcode,
-                        Pname = x.Pname,
-                        FINDY = x.FINDY,
-                        PFLAG = x.PFLAG
-                    }); ;
-                });
-            }
+            //if (obj != null && obj.Count > 0)
+            //{
+            //    obj.ForEach(x => {
+            //        res.Add(new ProblemList
+            //        {
+            //            id = x.Pcode,
+            //            descriptions = x.Pcode + " : " + x.Pname ,
+            //            Pcode = x.Pcode,
+            //            Pname = x.Pname,
+            //            FINDY = x.FINDY,
+            //            PFLAG = x.PFLAG
+            //        }); ;
+            //    });
+            //}
+
+            res = obj;
 
             return res;
         }

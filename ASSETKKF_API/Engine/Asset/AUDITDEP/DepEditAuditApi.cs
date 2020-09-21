@@ -98,6 +98,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
             {
                 var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToConfirm(dataReq);
                 res.AUDITPOSTMSTTODEPLST = lst;
+
+                res._result._code = "200";
+                res._result._message = "";
+                res._result._status = "OK";
             }
             catch (Exception ex)
             {

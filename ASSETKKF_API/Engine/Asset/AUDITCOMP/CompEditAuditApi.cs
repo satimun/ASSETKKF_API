@@ -4,6 +4,7 @@ using ASSETKKF_MODEL.Response.Audit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
@@ -98,6 +99,27 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                     };
                 var updateDep = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEP(req);
 
+                Thread.Sleep(1000);
+
+                AUDITPOSTMSTReq req1 = new AUDITPOSTMSTReq()
+                {
+                    SQNO = dataReq.SQNO,
+                    COMPANY = dataReq.COMPANY,
+                    ASSETNO = dataReq.ASSETNO,
+                    INPID = dataReq.INPID,
+                    UCODE = dataReq.UCODE,
+                    FLAG = "",
+                    MODE = "updateDEP_STY"
+
+                };
+                var updateSTCY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req1);
+
+                res._result._code = "200";
+                res._result._message = "";
+                res._result._status = "OK";
+
+                
+
             }
             catch (Exception ex)
             {
@@ -107,10 +129,18 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
             }
             finally
             {
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(dataReq);
+                Thread.Sleep(1000);
+                AuditPostReq req = new AuditPostReq()
+                {
+                    SQNO = dataReq.SQNO,
+                    COMPANY = dataReq.COMPANY,
+                    filter = dataReq.filter
+                };
+
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(dataReq);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 
@@ -137,6 +167,23 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                 };
                 var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req);
 
+                Thread.Sleep(1000);
+
+                AUDITPOSTMSTReq req1 = new AUDITPOSTMSTReq()
+                {
+                    SQNO = dataReq.SQNO,
+                    COMPANY = dataReq.COMPANY,
+                    ASSETNO = dataReq.ASSETNO,
+                    INPID = dataReq.INPID,
+                    UCODE = dataReq.UCODE,
+                    FLAG = "",
+                    MODE = "updateTRN_STY"
+
+                };
+
+                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req1);
+                Thread.Sleep(1000);
+
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";
@@ -155,10 +202,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                     COMPANY = dataReq.COMPANY,
                     filter = dataReq.filter
                 };
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(dataReq);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(dataReq);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 
@@ -185,6 +232,23 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
 
                 var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req);
 
+                Thread.Sleep(1000);
+
+                AUDITPOSTMSTReq req1 = new AUDITPOSTMSTReq()
+                {
+                    SQNO = dataReq.SQNO,
+                    COMPANY = dataReq.COMPANY,
+                    ASSETNO = dataReq.ASSETNO,
+                    INPID = dataReq.INPID,
+                    UCODE = dataReq.UCODE,
+                    FLAG = "",
+                    MODE = "updateTRN_STY"
+
+                };
+
+                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req1);
+                Thread.Sleep(1000);
+
 
                 res._result._code = "200";
                 res._result._message = "";
@@ -204,10 +268,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                     COMPANY = dataReq.COMPANY,
                     filter = dataReq.filter
                 };
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(dataReq);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(dataReq);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 
@@ -236,9 +300,25 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
 
                 };
 
-                //var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req);
 
                 var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().addAUDITPOSTTRN(req);
+
+                Thread.Sleep(1000);
+
+                AUDITPOSTMSTReq req1 = new AUDITPOSTMSTReq()
+                {
+                    SQNO = dataReq.SQNO,
+                    COMPANY = dataReq.COMPANY,
+                    ASSETNO = dataReq.ASSETNO,
+                    INPID = dataReq.INPID,
+                    UCODE = dataReq.UCODE,
+                    FLAG = "",
+                    MODE = "updateTRN_STY"
+
+                };
+
+                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req1);
+                Thread.Sleep(1000);
 
 
                 res._result._code = "200";

@@ -892,7 +892,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
             else if (!String.IsNullOrEmpty(dataReq.DeptCode))
             {
-              var  lst = getAuditCutNoList(new ASSETKKF_MODEL.Request.Asset.AuditCutReq() { Company = dataReq.Company, SQNO = dataReq.sqno });
+                AuditCutReq req = new AuditCutReq()
+                {
+                    Company = dataReq.Company,
+                    SQNO = dataReq.sqno,
+                    Menu3 = dataReq.Menu3,
+                    Menu4 = dataReq.Menu4,
+                    DEPMST = dataReq.DEPMST,
+                    DeptCode = dataReq.DeptCode,
+                    DeptLST = dataReq.DeptLST
+                };
+              var  lst = getAuditCutNoList(req);
                 if (lst != null && lst.Count > 0)
                 {
                     var obj = lst.FirstOrDefault();
