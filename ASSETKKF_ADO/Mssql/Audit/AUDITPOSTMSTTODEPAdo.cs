@@ -48,11 +48,14 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTMSTTODEP> getDataToClear(AuditPostReq d, string flag = null, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME ";
-            sql += "  FROM  FT_ASAUDITPOSTMSTTODEP()  B";
+            sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME ,ISNULL(D.FLAG_ACCEPT,'') as FLAG_ACCEPT";
+            sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.stid) as stidname";
+            sql += "  FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B";
+            sql += " left outer join [FT_ASAUDITCUTDATEMST_COMPANY](" + QuoteStr(d.COMPANY) + ") as D on D.sqno = B.sqno";
             sql += " where B.SQNO = " + QuoteStr(d.SQNO);
             sql += " and B.COMPANY = " + QuoteStr(d.COMPANY);
-            sql += " and isnull(STY,'') = '' ";
+            //sql += " and isnull(STY,'') = '' ";
+            sql += " and ISNULL(D.FLAG_ACCEPT,'')  in ('','0') ";
 
             if (!String.IsNullOrEmpty(d.filter))
             {
@@ -119,7 +122,8 @@ namespace ASSETKKF_ADO.Mssql.Audit
         {
             DynamicParameters param = new DynamicParameters();
             sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME ";
-            sql += "  FROM  FT_ASAUDITPOSTMSTTODEP()  B";
+            sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.stid) as stidname";
+            sql += "  FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B";
             sql += " where B.SQNO = " + QuoteStr(d.SQNO);
             sql += " and B.COMPANY = " + QuoteStr(d.COMPANY);
             sql += " and isnull(STY,'') = '' ";
@@ -157,7 +161,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTMSTTODEP> getAuditAssetNo(AuditPostReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select * from  FT_ASAUDITPOSTMSTTODEP() as a ";
+            sql = " select * from  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ") as a ";
             sql += " where a.SQNO = '" + d.SQNO + "'";
             sql += " and a.COMPANY = '" + d.COMPANY + "'";
             sql += " and a.ASSETNO = '" + d.ASSETNO + "'";
@@ -171,7 +175,8 @@ namespace ASSETKKF_ADO.Mssql.Audit
         {
             DynamicParameters param = new DynamicParameters();
             sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME ";
-            sql += "  FROM  FT_ASAUDITPOSTMSTTODEP()  B";
+            sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.stid) as stidname";
+            sql += "  FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B";
             sql += " where B.SQNO = " + QuoteStr(d.SQNO);
             sql += " and B.COMPANY = " + QuoteStr(d.COMPANY);
 
@@ -191,6 +196,73 @@ namespace ASSETKKF_ADO.Mssql.Audit
                     case "0":
                         sql += " and isnull(PCOD,'') <> '' ";
                             break;
+                    case "1":
+                        sql += " and isnull(PCOD,'') = '' ";
+                        break;
+
+                }
+            }
+
+            if (!String.IsNullOrEmpty(d.filter))
+            {
+                sql += " and isnull(STY,'') = " + QuoteStr(d.filter);
+            }
+
+            if (!String.IsNullOrEmpty(d.ASSETNO))
+            {
+                sql += " and B.ASSETNO = " + QuoteStr(d.ASSETNO);
+            }
+
+            if (String.IsNullOrEmpty(d.orderby) || d.orderby.Equals("1"))
+            {
+                sql += " order by  ASSETNO,OFFICECODE ";
+            }
+
+            if (d.orderby != null && d.orderby.Equals("2"))
+            {
+                sql += " order by  OFFICECODE,ASSETNO ";
+            }
+
+            if (d.orderby != null && d.orderby.Equals("3"))
+            {
+                sql += " order by  DEPCODEOL,OFFICECODE,ASSETNO ";
+            }
+
+            if (d.orderby != null && d.orderby.Equals("4"))
+            {
+                sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
+            }
+
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param).ToList();
+            return res;
+        }
+
+        public List<ASAUDITPOSTMSTTODEP> getDataToACCEdit(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME ";
+            sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.stid) as stidname";
+            sql += "  FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B";
+            sql += " where B.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and B.COMPANY = " + QuoteStr(d.COMPANY);
+
+            sql += " and SNDACCDT IS NULL";
+            sql += " AND  B.PCODE IN (SELECT  A.PCODE FROM  FT_ASSTProblem() A  WHERE  A.SACC = 'Y' and COMPANY = " + QuoteStr(d.COMPANY) + ") ";
+
+
+
+            if (!String.IsNullOrEmpty(d.depy))
+            {
+                sql += " and isnull(STY,'') = " + QuoteStr(d.depy);
+            }
+
+            if (!String.IsNullOrEmpty(d.filter))
+            {
+                switch (d.filter)
+                {
+                    case "0":
+                        sql += " and isnull(PCOD,'') <> '' ";
+                        break;
                     case "1":
                         sql += " and isnull(PCOD,'') = '' ";
                         break;

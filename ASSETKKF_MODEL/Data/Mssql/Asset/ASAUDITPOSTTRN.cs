@@ -16,6 +16,7 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string PNAME { get; set; }
         public string MEMO1 { get; set; }
         public string INPID { get; set; }
+        public string INPNAME { get; set; }
         public DateTime? INPDT { get; set; }
         public DateTime? CUTDT { get; set; }
         public string BRNCODE { get; set; }
@@ -66,7 +67,6 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string OFFOLD { get; set; }
         public string OFFNAMOLD { get; set; }
         public string AUDIT_NO { get; set; }
-        public string INPNAME { get; set; }
 
         public string IMGST { get; set; }
         public string STCY { get; set; }
@@ -79,5 +79,6 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string COMIDNAME { get; set; }
         public DateTime? COMDT { get; set; }
         public string MEMCOM { get; set; }
+        public string FLAG_ACCEPT { get; set; }
     }
 }

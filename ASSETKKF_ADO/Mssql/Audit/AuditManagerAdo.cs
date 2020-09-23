@@ -166,5 +166,39 @@ namespace ASSETKKF_ADO.Mssql.Audit
             return res;
         }
 
+        public SummaryAudit GetSummaryAudit(AuditPostReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = @"select *
+, (Case when QTY_ASSET > 0 then CAST(((CAST(QTY_AUDIT as DECIMAL(9,2)) /CAST(QTY_ASSET as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end ) as PROGRESS  
+ from (
+SELECT COUNT(OFFICECODE) AS QTY_HUMAN,SUM(SASSET1)  AS QTY_ASSET,SUM(SAUDIT1) AS QTY_AUDIT  
+FROM ( SELECT MN,YR,OFFICECODE,COUNT(ASSETNO) AS SASSET1,SUM(CASE WHEN  isnull(PCODE,'') = '' THEN 0 ELSE 1 END) AS SAUDIT1    
+FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) +")  B ";
+
+            sql += " WHERE   SQNO = " + QuoteStr(d.SQNO);
+            sql += " and COMPANY =" + QuoteStr(d.COMPANY);
+            sql += " and    SNDST = 'Y'   AND   SNDACCDT IS NULL";
+            sql += " GROUP BY MN,YR,OFFICECODE   )  AS X GROUP BY  MN,YR 	) as Z ";
+
+            var res = Query<SummaryAudit>(sql, param).FirstOrDefault();
+            return res;
+        }
+
+        public List<SummaryResult> GetSummaryResult(AuditPostReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = @" SELECT PCODE,PNAME,DEPCODE,DEPCODEOL,MAX(STNAME) AS STNAME,COUNT(PCODE) AS QTY  FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")   B ";
+            sql += " WHERE   SQNO = " + QuoteStr(d.SQNO);
+            sql += " and COMPANY =" + QuoteStr(d.COMPANY);
+            sql += " and    PCODE <> ''    AND  SNDST = 'Y'  AND  SNDACCDT IS NULL ";
+            sql += " GROUP BY MN,YR,PCODE,PNAME,DEPCODE,DEPCODEOL  ";
+            sql += " order BY DEPCODE,DEPCODEOL, PCODE,PNAME  ";
+
+            var res = Query<SummaryResult>(sql, param).ToList();
+            return res;
+
+        }
+
     }
 }

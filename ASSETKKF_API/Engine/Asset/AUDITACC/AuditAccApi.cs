@@ -8,11 +8,11 @@ using ASSETKKF_MODEL.Request.Audit;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Audit;
 
-namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
+namespace ASSETKKF_API.Engine.Asset.AUDITACC
 {
-    public class AuditManagerApi : Base<AuditResultReq>
+    public class AuditAccApi : Base<AuditResultReq>
     {
-        public AuditManagerApi()
+        public AuditAccApi()
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
@@ -20,30 +20,19 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
 
         protected override void ExecuteChild(AuditResultReq dataReq, ResponseAPI dataRes)
         {
-            var res = new AuditManagerRes();
-
+            var res = new AuditAccRes();
             try
             {
-                List<AuditManager> auditLst = new List<AuditManager>();
-
+                List<AuditAcc> auditLst = new List<AuditAcc>();
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
-
                 switch (mode)
                 {
-                    case "mgr1":
-                        auditLst = AuditManagerAdo.GetInstant().GetData2MGR1(dataReq);
-                        break;
-
-                    case "mgr2":
-                        auditLst = AuditManagerAdo.GetInstant().GetData2MGR2(dataReq);
-                        break;
-
                     default:
-                        auditLst = AuditManagerAdo.GetInstant().GetData2Send(dataReq);
+                        auditLst = AuditAccAdo.GetInstant().GetData(dataReq);
                         break;
                 }
 
-                res.AuditManagerLst = auditLst;
+                res.AuditAccLst = auditLst;
 
                 if (auditLst == null)
                 {
@@ -59,6 +48,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
                     res._result._status = "OK";
 
                 }
+
             }
             catch (Exception ex)
             {
@@ -66,13 +56,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
                 res._result._message = ex.Message;
                 res._result._status = "Internal Server Error";
             }
-            
+
 
             dataRes.data = res;
-
         }
-
-      
-
     }
 }

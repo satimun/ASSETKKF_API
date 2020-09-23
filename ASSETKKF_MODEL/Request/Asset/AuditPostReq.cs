@@ -51,6 +51,7 @@ namespace ASSETKKF_MODEL.Request.Asset
 
         public string OFNAME { get; set; }
         public string ASSETNONEW { get; set; }
+        public string ACTION { get; set; }
 
     }
 

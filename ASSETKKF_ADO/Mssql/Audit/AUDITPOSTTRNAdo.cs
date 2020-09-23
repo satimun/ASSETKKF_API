@@ -29,8 +29,9 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTTRN> getPOSTTRNDuplicate(AuditPostReq d, string flag = null, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME from  [FT_ASAUDITPOSTTRN] () as P";
-            sql += " left outer join  FT_ASAUDITCUTDATEMST() M on M.SQNO = P.SQNO and M.COMPANY = P.COMPANY";
+            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME from  [FT_ASAUDITPOSTTRN_COMPANY](" + QuoteStr(d.COMPANY) + ") as P";
+            sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.stid) as stidname";
+            sql += " left outer join  FT_ASAUDITCUTDATEMST_COMPANY](" + QuoteStr(d.COMPANY) + ") M on M.SQNO = P.SQNO and M.COMPANY = P.COMPANY";
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += " and  M.FLAG not in ('X','C')";
@@ -178,7 +179,8 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTTRN> getPOSTTRN(AuditPostReq d, string flag = null, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME from  [FT_ASAUDITPOSTTRN] () as P";
+            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME from  [FT_ASAUDITPOSTTRN_COMPANY](" + QuoteStr(d.COMPANY) + ") as P";
+            sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.stid) as stidname";
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
 
@@ -190,14 +192,18 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTTRN> getPOSTTRNDep(AuditPostReq d, string flag = null, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME ";
-            sql += " from  [FT_ASAUDITPOSTTRN] () as P";
+            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME ,ISNULL(D.FLAG_ACCEPT,'') as FLAG_ACCEPT";
+            sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.stid) as stidname";
+            sql += " from  [FT_ASAUDITPOSTTRN_COMPANY](" + QuoteStr(d.COMPANY) + ") as P";
+            sql += " left outer join [FT_ASAUDITCUTDATEMST_COMPANY](" + QuoteStr(d.COMPANY) + ") as D on D.sqno = P.sqno";
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
 
-            sql += " AND  isnull(STY,'') = '' ";
+            //sql += " AND  isnull(STY,'') = '' ";
             sql += " AND  isnull(SNDST,'') = 'Y' ";
             sql += " AND  isnull(SNDACC,'') = '' ";
+
+            sql += " and ISNULL(D.FLAG_ACCEPT,'')  in ('','0') ";
 
             if (!String.IsNullOrEmpty(d.filter))
             {
@@ -222,9 +228,47 @@ namespace ASSETKKF_ADO.Mssql.Audit
         {
             DynamicParameters param = new DynamicParameters();
             sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME ";
-            sql += " from  [FT_ASAUDITPOSTTRN] () as P";
+            sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.stid) as stidname";
+            sql += " from  [FT_ASAUDITPOSTTRN_COMPANY](" + QuoteStr(d.COMPANY) + ") as P";
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
+
+            sql += " and SNDACCDT IS NULL";
+
+            if (!String.IsNullOrEmpty(d.depy))
+            {
+                sql += " and isnull(STY,'') = " + QuoteStr(d.depy);
+            }
+
+            if (!String.IsNullOrEmpty(d.filter))
+            {
+                switch (d.filter)
+                {
+                    case "0":
+                        sql += " and isnull(PCOD,'') <> '' ";
+                        break;
+                    case "1":
+                        sql += " and isnull(PCOD,'') = '' ";
+                        break;
+
+                }
+            }
+
+            var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+            return res;
+
+        }
+
+        public List<ASAUDITPOSTTRN> getPOSTTRNACC(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME ";
+            sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.stid) as stidname";
+            sql += " from  [FT_ASAUDITPOSTTRN_COMPANY](" + QuoteStr(d.COMPANY) + ") as P";
+            sql += " where P.SQNO = " + QuoteStr(d.SQNO);
+            sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
+
+            //sql += " AND  P.PCODE IN (SELECT  A.PCODE FROM  FT_ASSTProblem() A  WHERE  A.SACC = 'Y' and COMPANY = " + QuoteStr(d.COMPANY) + ") ";
 
             sql += " and SNDACCDT IS NULL";
 

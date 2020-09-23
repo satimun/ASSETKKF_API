@@ -6,12 +6,12 @@ using ASSETKKF_MODEL.Data.Mssql.Audit;
 
 namespace ASSETKKF_MODEL.Response.Audit
 {
-    public class AuditManagerRes
+    public class AuditAccRes
     {
         public SummaryAudit AuditSummary { get; set; }
         public List<SummaryResult> SummaryResultLst { get; set; }
         public ASAUDITPOSTMSTTODEP AUDITPOSTMSTTODEP { get; set; }
-        public List<AuditManager> AuditManagerLst { get; set; }
+        public List<AuditAcc> AuditAccLst { get; set; }
         public List<ASAUDITPOSTMST> POSTMSTDuplicateLST { get; set; }
         public List<ASAUDITPOSTTRN> POSTTRNDuplicateLST { get; set; }
         public List<ASAUDITCUTDATE> NoAuditLST { get; set; }

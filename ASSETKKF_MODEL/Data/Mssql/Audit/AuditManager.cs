@@ -43,5 +43,9 @@ namespace ASSETKKF_MODEL.Data.Mssql.Audit
         public DateTime? MGR2DT { get; set; }
         public string FLAG_ACCEPT { get; set; }
         public string FLAG_COMPLETE { get; set; }
+        public DateTime? SNNSTDT { get; set; }
+        public DateTime? EXPSTDT { get; set; }
+        public DateTime? ACCDT { get; set; }
+        public DateTime? EXPACCDT { get; set; }
     }
 }

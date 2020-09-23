@@ -28,5 +28,9 @@ namespace ASSETKKF_MODEL.Data.Mssql.Audit
         public string MODE { get; set; }
 
         public string DEPNM { get; set; }
+        public DateTime? SNNSTDT { get; set; }
+        public DateTime? EXPSTDT { get; set; }
+        public DateTime? ACCDT { get; set; }
+        public DateTime? EXPACCDT { get; set; }
     }
 }
