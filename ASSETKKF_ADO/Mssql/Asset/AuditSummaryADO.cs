@@ -265,7 +265,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<Multiselect> GetAuditYear(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            string cmd = " SELECT YR as id,YR as description FROM [dbo].[FT_ASAUDITCUTDATEMST] () as M ";
+            string cmd = " SELECT YR as id,YR as description FROM [dbo].FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") as M ";
             cmd += " where M.FLAG not in ('X','C')  and audit_no is not null";
             cmd += " and COMPANY in (" + QuoteStr(d.Company) + ") ";
 
@@ -300,7 +300,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<Multiselect> GetAuditMN(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            string cmd = " SELECT MN as id,MN  as description FROM [dbo].[FT_ASAUDITCUTDATEMST] () as M ";
+            string cmd = " SELECT MN as id,MN  as description FROM [dbo].FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") as M ";
             cmd += " where M.FLAG not in ('X','C')  and audit_no is not null";
             cmd += " and COMPANY in (" + QuoteStr( d.Company) + ") ";
 

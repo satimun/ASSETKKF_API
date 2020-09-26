@@ -30,7 +30,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
 
             sql = " SELECT * FROM [dbo].[FC_Taskuser] (''";
-            sql += " ," + QuoteStr(d.INPID.ToString());
+            sql += " ," + QuoteStr(d.INPID);
             sql += " )";
 
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param).ToList();
@@ -55,7 +55,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
 
             sql = " SELECT * FROM [dbo].[FC_TrackingAudit] (''";
-            sql += " ," + QuoteStr(d.INPID.ToString());
+            sql += " ," + QuoteStr(d.INPID);
             sql += " )";
 
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param).ToList();

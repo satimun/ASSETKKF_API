@@ -51,7 +51,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     PFLAG = dataReq.PFLAG
                 };
 
-                var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(dataReq);
+                //var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(dataReq);
+                var updateAuditPost = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(dataReq));
+                updateAuditPost.Wait();
 
 
 
@@ -70,10 +72,27 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 if (!String.IsNullOrEmpty(res.IMGPATH))
                 {
-                    ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().UpdateAUDITPOSTMSTImage(dataReq);
+                    //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().UpdateAUDITPOSTMSTImage(dataReq);
+                    var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().UpdateAUDITPOSTMSTImage(dataReq));
+                    task2.Wait();
                     res.IMGSRC = FilesUtilSvc.getImageURL(res.IMGPATH);
                 }
 
+                
+
+                res._result._code = "201";
+                res._result._message = "";
+                res._result._status = "Created";
+
+            }
+            catch(Exception ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Internal Server Error";
+            }
+            finally
+            {
                 var req1 = new ASSETKKF_MODEL.Request.Asset.AuditPostReq()
                 {
                     SQNO = dataReq.SQNO,
@@ -101,17 +120,6 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 res.DEPCODEOL = dataReq.DEPCODEOL;
                 res.LEADERCODE = dataReq.LEADERCODE;
                 res.SQNO = dataReq.SQNO;
-
-                res._result._code = "201";
-                res._result._message = "";
-                res._result._status = "Created";
-
-            }
-            catch(Exception ex)
-            {
-                res._result._code = "500 ";
-                res._result._message = ex.Message;
-                res._result._status = "Internal Server Error";
             }
 
             dataRes.data = res;

@@ -165,7 +165,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 		public ASSETASSETNO getASSETASSETNO(ASSETASSETNOReq d, SqlTransaction transac = null)
 		{
 			DynamicParameters param = new DynamicParameters();
-			sql = " SELECT FORMATMESSAGE('%s%d', '" + d.ASSETNO + "', (COUNT(assetno)+1))  as assetno FROM [dbo].[FT_ASAUDITPOSTTRN] ()   ";
+			sql = " SELECT FORMATMESSAGE('%s%d', '" + d.ASSETNO + "', (COUNT(assetno)+1))  as assetno FROM [dbo].[FT_ASAUDITPOSTTRN_COMPANY] (" + QuoteStr(d.COMPANY) + ")   ";
 			sql += " where COMPANY = '" + d.COMPANY + "'";
 			sql += " and not (ASSETNO like (COMPANY + '%'))";
 			if (!String.IsNullOrEmpty(d.ASSETNO))
@@ -183,7 +183,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
 		{
 			DynamicParameters param = new DynamicParameters();
-			sql = " select * from  FT_ASAUDITPOSTTRN()  as a ";
+			sql = " select * from  [FT_ASAUDITPOSTTRN_COMPANY] (" + QuoteStr(d.COMPANY) + ")  as a ";
 			sql += " left outer join [FT_ASAUDITPOSTTRN_PHONE] () as b";
 			sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO  and a.INPID = b.INPID";
 			sql += " where a.SQNO = '" + d.SQNO + "'";
@@ -199,39 +199,41 @@ namespace ASSETKKF_ADO.Mssql.Asset
 				sql += " and a.ASSETNO = '" + d.ASSETNO + "'";
 			}
 
-			var obj = Query<ASAUDITPOSTTRN>(sql, param).ToList();
-			List<AuditPostTRN> res = new List<AuditPostTRN>();
+			var res = Query<AuditPostTRN>(sql, param).ToList();
+
+			//var obj = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+			//List<AuditPostTRN> res = new List<AuditPostTRN>();
 
 
-			if (obj != null && obj.Count > 0)
-			{
-				obj.ForEach(x => {
-					res.Add(new AuditPostTRN
-					{
-						YR = x.YR,
-						MN = x.MN,
-						YRMN = x.YRMN,
-						SQNO = x.SQNO,
-						DEPMST = x.DEPMST,
-						FINDY = x.FINDY,
-						PCODE = x.PCODE,
-						PNAME = x.PNAME,
-						MEMO1 = x.MEMO1,
-						ASSETNO = x.ASSETNO,
-						ASSETNAME = x.ASSETNAME,
-						OFFICECODE = x.OFFICECODE,
-						OFNAME = x.OFNAME,
-						DEPCODE = x.DEPCODE,
+			//if (obj != null && obj.Count > 0)
+			//{
+			//	obj.ForEach(x => {
+			//		res.Add(new AuditPostTRN
+			//		{
+			//			YR = x.YR,
+			//			MN = x.MN,
+			//			YRMN = x.YRMN,
+			//			SQNO = x.SQNO,
+			//			DEPMST = x.DEPMST,
+			//			FINDY = x.FINDY,
+			//			PCODE = x.PCODE,
+			//			PNAME = x.PNAME,
+			//			MEMO1 = x.MEMO1,
+			//			ASSETNO = x.ASSETNO,
+			//			ASSETNAME = x.ASSETNAME,
+			//			OFFICECODE = x.OFFICECODE,
+			//			OFNAME = x.OFNAME,
+			//			DEPCODE = x.DEPCODE,
 
-						DEPCODEOL = x.DEPCODEOL,
-						STNAME = x.STNAME,
-						LEADERCODE = x.LEADERCODE,
-						IMGPATH = x.IMGPATH,
+			//			DEPCODEOL = x.DEPCODEOL,
+			//			STNAME = x.STNAME,
+			//			LEADERCODE = x.LEADERCODE,
+			//			IMGPATH = x.IMGPATH,
 
-					});
+			//		});
 
-				});
-			}
+			//	});
+			//}
 
 			return res;
 		}
@@ -240,7 +242,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 		{
 			DynamicParameters param = new DynamicParameters();
 			
-			sql = " select * from  FT_ASAUDITPOSTTRN ()  ";
+			sql = " select * from  [FT_ASAUDITPOSTTRN_COMPANY] (" + QuoteStr(d.COMPANY) + ")  ";
 			sql += " where COMPANY = '" + d.COMPANY + "'";
 			sql += " and sqno = '" + d.SQNO + "'";
 			sql += " and INPID = '" + d.UCODE + "'"; 
@@ -254,10 +256,10 @@ namespace ASSETKKF_ADO.Mssql.Asset
 		public List<ASAUDITPOSTTRN> getPOSTTRNDuplicate(AuditPostTRNReq d, SqlTransaction transac = null)
         {
 			DynamicParameters param = new DynamicParameters();
-			sql = " select * from  FT_ASAUDITPOSTTRN () as  B ";
+			sql = " select * from   [FT_ASAUDITPOSTTRN_COMPANY] (" + QuoteStr(d.COMPANY) + ") as  B ";
 			sql += " where SQNO = " + QuoteStr(d.SQNO);
 			sql += " and COMPANY = " + QuoteStr(d.COMPANY);
-			sql += " AND  B.ASSETNO IN ( SELECT  X.ASSETNO    FROM    FT_ASAUDITPOSTTRN ()  X ";
+			sql += " AND  B.ASSETNO IN ( SELECT  X.ASSETNO    FROM     [FT_ASAUDITPOSTTRN_COMPANY] (" + QuoteStr(d.COMPANY) + ")  X ";
 			sql += " where X.SQNO = " + QuoteStr(d.SQNO);
 			sql += " and X.COMPANY = " + QuoteStr(d.COMPANY);
 			sql += " GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) >1  ) ";

@@ -280,7 +280,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql = " select *, (QTY_Total - QTY_CHECKED) as QTY_WAIT , ";
             sql += " CAST(((CAST(QTY_CHECKED as DECIMAL(9,2))/CAST(QTY_Total as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS from (";
             sql += " SELECT COMPANY,YR,MN,TYPECODE,TYPENAME,max(C.flag) as flag,MIN(INPDT) as StartDT,SUM(QTY) as QTY_Total ";
-            sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  )  and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -305,7 +305,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by ASSETNO ) as P)  as QTY_CHECKED  ";
 
-            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
             sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'') ";
@@ -332,7 +332,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by P.ASSETNO ) as P)  as QTY_PROBLEM  ";
 
-            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
             sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'') ";
@@ -360,7 +360,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " group by P.ASSETNO ) as P)  as QTY_NOPROBLEM  ";
 
 
-            sql += " ,(select  MAX(P.INPDT) from FT_ASAUDITPOSTMST() P";
+            sql += " ,(select  MAX(P.INPDT) from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -384,7 +384,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             sql += " ) as LastDT";
-            sql += " ,( select COUNT(ASSETNO) from FT_ASAUDITPOSTTRN() as P where P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'')";
+            sql += " ,( select COUNT(ASSETNO) from [FT_ASAUDITPOSTTRN_COMPANY] (" + QuoteStr(d.Company) + ") as P where P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
             sql += "  ) as QTY_TRN";
             sql += " FROM [dbo].[FT_AUDITCUTDATE] (";
@@ -449,7 +449,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql = " select *, (QTY_Total - QTY_CHECKED) as QTY_WAIT , ";
             sql += " CAST(((CAST(QTY_CHECKED as DECIMAL(9,2))/CAST(QTY_Total as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS from (";
             sql += " SELECT COMPANY,YR,MN,GASTCODE,GASTNAME,TYPECODE,TYPENAME,max(C.flag) as flag,MIN(INPDT) as StartDT,SUM(QTY) as QTY_Total ";
-            sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " ,(	select  COUNT(ASSETNO) from ( select  ASSETNO from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  )  and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -474,7 +474,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by ASSETNO ) as P)  as QTY_CHECKED  ";
 
-            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
             sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'') ";
@@ -501,7 +501,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by P.ASSETNO ) as P)  as QTY_PROBLEM  ";
 
-            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from FT_ASAUDITPOSTMST() P";
+            sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
             sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
             sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'') ";
@@ -528,7 +528,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by P.ASSETNO ) as P)  as QTY_NOPROBLEM  ";
 
-            sql += " ,(select  MAX(P.INPDT) from FT_ASAUDITPOSTMST() P";
+            sql += " ,(select  MAX(P.INPDT) from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
             sql += " where  FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 
@@ -552,7 +552,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             sql += " ) as LastDT";
-            sql += " ,( select COUNT(ASSETNO) from FT_ASAUDITPOSTTRN() as P where P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'')";
+            sql += " ,( select COUNT(ASSETNO) from [FT_ASAUDITPOSTTRN_COMPANY] (" + QuoteStr(d.Company) + ") as P where P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'')";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
             sql += "  ) as QTY_TRN";
             sql += " FROM [dbo].[FT_AUDITCUTDATE] (";
@@ -658,9 +658,9 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
 
             sql += @"    ) Z 
-                left join [dbo].[FT_ASAUDITPOSTMST] () as P  on p.COMPANY = z.COMPANY and p.sqno = z.sqno and p.ASSETNO = z.ASSETNO and isnull(p.PCODE,'') <> ''
-                left join FT_ASAUDITCUTDATEMST() as  M on m.COMPANY = Z.COMPANY and m.SQNO = Z.SQNO  
-                ) t group by COMPANY,YR,MN,SQNO,ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME 
+                left join [dbo].[FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") as P  on p.COMPANY = z.COMPANY and p.sqno = z.sqno and p.ASSETNO = z.ASSETNO and isnull(p.PCODE,'') <> '' ";
+            sql += @"        left join FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") as  M on m.COMPANY = Z.COMPANY and m.SQNO = Z.SQNO  ";
+            sql += @"    ) t group by COMPANY,YR,MN,SQNO,ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME 
                 ) Z   ";
 
             var res = Query<DashboardInspection>(sql, param).ToList();

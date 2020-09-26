@@ -114,11 +114,15 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             {
 
                                 reqPostMst.MODE = "";
-                                ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
+                                //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
+                                var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst));
+                                task1.Wait();
 
-                   
+
                                 reqPostMstPhone.MODE = "Edit";
-                                ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone);
+                                //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone);
+                                var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone));
+                                task2.Wait();
 
                                 res.AUDITPOSTMST = objSecound;
 
@@ -140,10 +144,14 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         else if (objFirstEx != null)
                         {
                             reqPostMst.MODE = "";
-                            ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
+                            //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
+                            var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst));
+                            task1.Wait();
 
                             reqPostMstPhone.MODE = "Edit";
-                            ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone);
+                            //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone);
+                            var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone));
+                            task2.Wait();
 
                             res.AUDITPOSTMST = objFirstEx;
 
@@ -155,7 +163,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         else if (objFirst != null)
                         {
                             reqPostMst.MODE = "ADD";
-                            ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
+                            //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
+                            var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst));
+                            task1.Wait();
 
                             res.AUDITPOSTMST = objFirst;
 

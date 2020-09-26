@@ -17,6 +17,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string DEPMST { get; set; }
         public string MODE { get; set; }
         public string SQNO { get; set; }
+        public string YR { get; set; }
+        public string MN { get; set; }
 
     }
 
@@ -31,6 +33,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public bool Menu3 { get; set; }
         public bool Menu4 { get; set; }
         public string DEPMST { get; set; }
+        public string YR { get; set; }
+        public string MN { get; set; }
     }
 
     public class AuditCutPostReq
@@ -40,6 +44,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string COMPANY { get; set; }
         public string LEADERCODE { get; set; }
         public string AREACODE { get; set; }
+        public string YR { get; set; }
+        public string MN { get; set; }
     }
 
     #endregion

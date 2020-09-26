@@ -34,15 +34,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
             param.Add("@PCODE", d.PCODE);
 
             string cmd = " select pname,sum(QTY) as QTY ";
-            cmd += "from FT_AuditProblemSummary (" + QuoteStr(d.TYPECODE) + "," + QuoteStr(d.GASTCODE) + "," + QuoteStr(d.OFFICECODE) + "," + QuoteStr(d.PCODE) + ") where 1 = 1";
+            cmd += "from FT_AuditProblemSummary (" + QuoteStr(d.TYPECODE) + "," + QuoteStr(d.GASTCODE) + "," + QuoteStr(d.OFFICECODE) + "," + QuoteStr(d.PCODE) + "," + QuoteStr(d.Company) + ") where 1 = 1";
             
 
-            if (!String.IsNullOrEmpty(d.Company))
-            {
-                var comp = "";
-                comp = "'" + d.Company.Replace(",", "','") + "'";
-                cmd += " and COMPANY in (" + comp + ") ";
-            }
+            //if (!String.IsNullOrEmpty(d.Company))
+            //{
+            //    var comp = "";
+            //    comp = "'" + d.Company.Replace(",", "','") + "'";
+            //    cmd += " and COMPANY in (" + comp + ") ";
+            //}
 
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
