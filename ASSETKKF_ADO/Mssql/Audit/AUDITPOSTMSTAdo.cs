@@ -29,12 +29,12 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTMST> getPOSTMSTDuplicate(AuditPostReq d, string flag = null, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME from  [FT_ASAUDITPOSTMST] () as P";
-            sql += " left outer join  FT_ASAUDITCUTDATEMST() M on M.SQNO = P.SQNO and M.COMPANY = P.COMPANY";            
+            sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME from  FT_ASAUDITPOSTMST_COMPANY(" + QuoteStr(d.COMPANY) + ") as P";
+            sql += " left outer join  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.COMPANY) + ") M on M.SQNO = P.SQNO and M.COMPANY = P.COMPANY";            
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY );
             sql += " and  M.FLAG not in ('X','C')";
-            sql += "  AND  PCODE <> '' AND P.ASSETNO IN ( SELECT  X.ASSETNO  FROM  [FT_ASAUDITPOSTMST] () X  WHERE  X.PCODE <> '' ";           
+            sql += "  AND  PCODE <> '' AND P.ASSETNO IN ( SELECT  X.ASSETNO  FROM  FT_ASAUDITPOSTMST_COMPANY(" + QuoteStr(d.COMPANY) + ") X  WHERE  X.PCODE <> '' ";           
             sql += "  AND  X.SQNO = " + QuoteStr(d.SQNO);
             sql += "  and x.COMPANY = " + QuoteStr(d.COMPANY);
             sql += " GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) >1  )";
@@ -66,7 +66,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
                 sql += " and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
                 sql += " where DEPMST = '" + d.DEPMST + "'";
                 sql += " and company = '" + d.COMPANY + "'";
                 sql += " group by[DEPCODEOL])";

@@ -68,7 +68,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
                 sql += " and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
                 sql += " where DEPMST = '" + d.DEPMST + "'";
                 sql += " and company = '" + d.COMPANY + "'";
                 sql += " group by[DEPCODEOL])";

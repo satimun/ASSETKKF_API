@@ -41,7 +41,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " ,M.DEPMST as id,DEPNM,max(M.YR) as YR,max(M.MN) as MN,max(M.YRMN) as YRMN,max(D.DEPCODE) as DEPCODE,max(D.CUTDT) as CUTDT,max(D.STNAME) as STNAME";
             cmd += "  ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST ) as Descriptions ";
             //cmd += " from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
-            cmd += " FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") M ,FT_ASAUDITCUTDATE() D";
+            cmd += " FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") M ,FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.Company) + ") D";
             cmd += " where D.SQNO = M.SQNO ";
             cmd += " and D.Company = M.Company ";
             cmd += " and M.Audit_NO is not null";
@@ -89,18 +89,6 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and isnull(M.Audit_NO,'') not like 'DU%' ";
             }
 
-            //if (String.IsNullOrEmpty(d.MODE))
-            //{
-            //    cmd += " and M.YR = (SELECT YR from(";
-            //    cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
-            //    cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
-            //    cmd += " group by YR    ) as a)";
-            //    cmd += " and M.MN = (SELECT MN from(";
-            //    cmd += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITCUTDATEMST()";
-            //    cmd += " where YR = (SELECT max(YR) FROM FT_ASAUDITCUTDATEMST() )";
-            //    cmd += " group by YR    ) as b)";
-            //}
-
             if (!String.IsNullOrEmpty(d.YR))
             {
                 cmd += " and M.YR = " + QuoteStr(d.YR);
@@ -128,7 +116,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " ,M.DEPMST,DEPNM,M.YR,M.MN,max(M.YRMN) as YRMN,max(D.DEPCODE) as DEPCODE,max(D.CUTDT) as CUTDT,max(D.STNAME) as STNAME";
             cmd += " ,(isnull(M.Audit_NO,'') + ' : ' + M.SQNO + ' ( ' + CONVERT(varchar,max(D.CUTDT), 103) + ' ) ') as Descriptions";
             //cmd += " from  FT_ASAUDITCUTDATE() D, FT_ASAUDITCUTDATEMST() M ";
-            cmd += " FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") M ,FT_ASAUDITCUTDATE() D";
+            cmd += " FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") M ,FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.Company) + ") D";
             cmd += " where D.SQNO = M.SQNO ";
             cmd += " and D.Company = M.Company ";
             cmd += " and M.Audit_NO is not null";
@@ -184,9 +172,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
                 cmd += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                cmd += " FROM FT_ASAUDITCUTDATE() ";
+                cmd += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.Company) + ") ";
                 cmd += " where DEPMST = '" + d.DEPMST + "'";
                 cmd += " and company = '" + d.Company + "'";
+                cmd += " and assetno = d.assetno";
+                if (!String.IsNullOrEmpty(d.SQNO))
+                {
+                    cmd += " and  SQNO = " + QuoteStr(d.SQNO);
+                }
                 cmd += " group by[DEPCODEOL])";
             }
 
@@ -213,7 +206,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = "Select  DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE,M.COMPANY  ";
-            cmd += " FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(dataReq.Company) + ") M ,FT_ASAUDITCUTDATE() D";
+            cmd += " FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(dataReq.Company) + ") M ,FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(dataReq.Company) + ") D";
             cmd += " where D.SQNO = M.SQNO ";
             cmd += " and D.Company = M.Company ";
             cmd += " and M.Audit_NO is not null";
@@ -233,9 +226,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(dataReq.DEPMST))
             {
                 cmd += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                cmd += " FROM FT_ASAUDITCUTDATE() ";
+                cmd += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(dataReq.Company) + ") ";
                 cmd += " where DEPMST = '" + dataReq.DEPMST + "'";
                 cmd += " and company = '" + dataReq.Company + "'";
+                cmd += " and assetno = d.assetno";
+                if (!String.IsNullOrEmpty(dataReq.sqno))
+                {
+                    cmd += " and SQNO = '" + dataReq.sqno + "'";
+                }
                 cmd += " group by[DEPCODEOL])";
             }
 
@@ -354,7 +352,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(dataReq.sqno))
             {
                 sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM[assetkkf].[dbo].[ASAUDITCUTDATE] ";
+                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(dataReq.Company) + ") ";
                 sql += " where SQNO = '" + dataReq.sqno + "'";
                 sql += " group by[DEPCODEOL])";
             }
@@ -429,23 +427,6 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             var res = Query<LeaderList>(sql, param).ToList();
 
-            //var obj = Query<ASSETKKF_MODEL.Request.Asset.Leader>(sql, param).ToList();
-            //List<LeaderList> res = new List<LeaderList>();
-
-
-            //if (obj != null && obj.Count > 0)
-            //{
-            //    obj.ForEach(x => {
-            //        res.Add(new LeaderList
-            //        {
-            //            id = x.OFFICECODE,
-            //            name = x.OFNAME,
-            //            descriptions = x.OFFICECODE + " : " + x.OFNAME,
-            //        });
-
-            //    });
-            //}
-
 
             return res;
         }
@@ -453,7 +434,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<String> getDepLikeList(AuditCutInfoReq dataReq, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " SELECT case when isnull(DEPCODEOL,'') <> '' then   SUBSTRING(DEPCODEOL,1,2) else '' end as DEPLike FROM [dbo].[FT_ASAUDITCUTDATE] () where 1 = 1";
+            sql = " SELECT case when isnull(DEPCODEOL,'') <> '' then   SUBSTRING(DEPCODEOL,1,2) else '' end as DEPLike FROM [dbo].FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(dataReq.Company) + ") D  where 1 = 1";
             if (!String.IsNullOrEmpty(dataReq.sqno))
             {
                 sql += " and SQNO = '" + dataReq.sqno + "'";
@@ -494,9 +475,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 // sql += " and DEPMST = '" + dataReq.DEPMST + "'";
                 sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(dataReq.Company) + ") ";
                 sql += " where DEPMST = '" + dataReq.DEPMST + "'";
                 sql += " and company = '" + dataReq.Company + "'";
+                if (!String.IsNullOrEmpty(dataReq.sqno))
+                {
+                    sql += " and SQNO = '" + dataReq.sqno + "'";
+                }
+                sql += " and assetno = d.assetno";
                 sql += " group by[DEPCODEOL])";
             }
 
@@ -510,7 +496,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select distinct M.* FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.COMPANY) + ") M ,FT_ASAUDITCUTDATE() D ";
+            sql = " select distinct M.* FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.COMPANY) + ") M ,FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") D ";
             sql += " where D.SQNO = M.SQNO ";
             sql += " and D.Company = M.Company ";            
             sql += " and M.COMPANY = '" + d.COMPANY + "'";
@@ -545,9 +531,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 //sql += " and M.DEPMST = '" + d.DEPMST + "'";
                 sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
                 sql += " where DEPMST = '" + d.DEPMST + "'";
                 sql += " and company = '" + d.COMPANY + "'";
+                if (!String.IsNullOrEmpty(d.SQNO))
+                {
+                    sql += " and SQNO = '" + d.SQNO + "'";
+                }
+                sql += " and assetno = d.assetno";
                 sql += " group by[DEPCODEOL])";
             }
 
@@ -584,7 +575,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " select D.* FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.COMPANY) + ") M ,FT_ASAUDITCUTDATE() D ";
+            sql = " select D.* FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.COMPANY) + ") M ,FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") D ";
             sql += " where D.SQNO = M.SQNO ";
             sql += " and D.Company = M.Company ";
             sql += " and M.SQNO = '" + d.SQNO + "'";
@@ -616,9 +607,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 //sql += " and M.DEPMST = '" + d.DEPMST + "'";
                 sql += "and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
                 sql += " where DEPMST = '" + d.DEPMST + "'";
                 sql += " and company = '" + d.COMPANY + "'";
+                sql += " and SQNO = '" + d.SQNO + "'";
+                sql += " and assetno = d.assetno";
                 sql += " group by[DEPCODEOL])";
             }
 
@@ -700,9 +693,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                // sql += " and DEPMST = '" + d.DEPMST + "'";
                 sql += " and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
                 sql += " where DEPMST = '" + d.DEPMST + "'";
                 sql += " and company = '" + d.COMPANY + "'";
+                sql += " and SQNO = '" + d.SQNO + "'";
+                sql += " and assetno = p.assetno";
                 sql += " group by[DEPCODEOL])";
             }
 
@@ -880,9 +875,10 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 //sql += " and DEPMST = '" + d.DEPMST + "'";
                 sql += "and DEPCODE in (SELECT [DEPCODE] ";
-                sql += " FROM FT_ASAUDITCUTDATE() ";
+                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
                 sql += " where DEPMST = '" + d.DEPMST + "'";
                 sql += " and company = '" + d.COMPANY + "'";
+                sql += " and SQNO = '" + d.SQNO + "'";
                 sql += " group by[DEPCODE])";
             }
 

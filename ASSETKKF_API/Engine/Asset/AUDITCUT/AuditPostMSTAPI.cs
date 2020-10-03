@@ -114,6 +114,18 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(req1);
                 res.AUDITCUTDATELST = lstAUDITCUTDATE;
 
+                res.AUDITPOSTMST = lstAUDITPOSTMST.Where(x => x.INPID == dataReq.UCODE && x.ASSETNO == dataReq.ASSETNO && x.SQNO == dataReq.SQNO).FirstOrDefault();
+
+                AuditSummaryReq reqSum = new AuditSummaryReq()
+                {
+                    Company = dataReq.COMPANY,
+                    year = res.AUDITPOSTMST.YR.ToString(),
+                    mn = res.AUDITPOSTMST.MN.ToString(),
+                    sqno = dataReq.SQNO
+                };
+                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(reqSum);
+                res.DashboardInspectionLST = lstSum;
+
 
                 res.AREACODE = dataReq.AREACODE;
                 res.COMPANY = dataReq.COMPANY;

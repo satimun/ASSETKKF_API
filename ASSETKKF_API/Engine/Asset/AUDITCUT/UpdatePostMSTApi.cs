@@ -95,6 +95,16 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 res.AUDITPOSTMST = lstAUDITPOSTMST.Where(x => x.INPID == dataReq.UCODE).FirstOrDefault();
 
+                AuditSummaryReq reqSum = new AuditSummaryReq()
+                {
+                    Company = dataReq.COMPANY,
+                    year = res.AUDITPOSTMST.YR.ToString(),
+                    mn = res.AUDITPOSTMST.MN.ToString(),
+                    sqno = dataReq.SQNO
+                };
+                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(reqSum);
+                res.DashboardInspectionLST = lstSum;
+
 
                 res._result._code = "200";
                 res._result._message = "";

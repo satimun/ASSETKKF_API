@@ -55,6 +55,7 @@ namespace ASSETKKF_MODEL.Response.Asset
         public List<ASAUDITPOSTTRN> AUDITPOSTTRNLST { get; set; }
         public List<ASAUDITPOSTMST> AUDITPOSTMSTNOPROBLEMLST { get; set; }
         public List<ASAUDITPOSTMST> AUDITPOSTMSTPROBLEMLST { get; set; }
+        public List<DashboardInspection> DashboardInspectionLST { get; set; }
 
         public ResultDataResponse _result = new ResultDataResponse();
     }

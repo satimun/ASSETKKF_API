@@ -71,8 +71,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 if (!String.IsNullOrEmpty(d.DEPCODEOL))
                 {
                     sql += " DEPCODEOL = '" + d.DEPCODEOL + "'";
-                }
-                if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
+                }else if (d.DEPTCODELST != null && d.DEPTCODELST.Length > 0)
                 {
                     var arrDept = d.DEPTCODELST.Split(",");
                     foreach (string s in arrDept)
@@ -80,6 +79,10 @@ namespace ASSETKKF_ADO.Mssql.Asset
                         sql += " or DEPCODEOL like ' " + s + "%'";
                     }
 
+                }
+                else
+                {
+                    sql += " 1 = 1";
                 }
                 sql += " )";
             }
@@ -240,6 +243,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.depmst))
             {
                 sql += " and DEPMST =" + QuoteStr(d.depmst);
+            }
+
+            if (!String.IsNullOrEmpty(d.DEPCODEOL))
+            {
+                sql += " and DEPCODEOL =" + QuoteStr(d.DEPCODEOL);
             }
 
             if (!String.IsNullOrEmpty(d.sqno))
@@ -641,10 +649,10 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 , case when isnull(p.PCODE,'')<> '' Then 0 else 1 end QTY_WAIT
                 from (
                 Select d.COMPANY,d.SQNO,d.ASSETNO,d.ASSETNAME,d.DEPCODEOL,d.STNAME,1 As QTY, d.GASTCODE,d.GASTNAME,d.TYPECODE,d.TYPENAME 
-                from FT_ASAUDITCUTDATE() as D ";
+                from FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.Company) + ") as D ";
             sql += "   where   d.COMPANY = case when ISNULL(" + QuoteStr(d.Company) + ",'') <> '' THEN    ISNULL(" + QuoteStr(d.Company) + ",'') else d.COMPANY end ";
-            sql += @"   and Exists (select * from FT_ASAUDITCUTDATEMST() as  M where
-                 m.COMPANY = d.COMPANY and m.SQNO = d.SQNO  
+            sql += @"   and Exists (select * from FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") as  M where";
+            sql += @"   m.COMPANY = d.COMPANY and m.SQNO = d.SQNO  
                  and  m.FLAG not in ('C','X') ";
             sql += @"     and YR = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
 

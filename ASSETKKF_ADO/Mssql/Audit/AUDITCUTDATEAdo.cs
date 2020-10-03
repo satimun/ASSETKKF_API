@@ -29,7 +29,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITCUTDATE> getNoAudit(AuditPostReq d, string flag = null, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "SELECT  *    FROM   FT_ASAUDITCUTDATE() as C";
+            sql = "SELECT  *    FROM   FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") as C";
             sql += " where C.SQNO = " + QuoteStr(d.SQNO);
             sql += " and C.COMPANY = " + QuoteStr(d.COMPANY);
             sql += " AND  ASSETNO NOT IN  ( SELECT  X.ASSETNO  FROM  FT_ASAUDITPOSTMST() X  ";

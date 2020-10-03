@@ -19,30 +19,31 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
         protected override void ExecuteChild(AuditPostReq dataReq, ResponseAPI dataRes)
         {
             var res = new AuditPostRes();
+            var req = new ASSETKKF_MODEL.Request.Asset.AuditPostReq()
+            {
+                SQNO = dataReq.SQNO,
+                DEPCODEOL = dataReq.DEPCODEOL,
+                COMPANY = dataReq.COMPANY,
+                LEADERCODE = dataReq.LEADERCODE,
+                AREACODE = dataReq.AREACODE,
+                UCODE = dataReq.UCODE,
+                LEADERNAME = dataReq.LEADERNAME,
+                AREANAME = dataReq.AREANAME,
+                IMGPATH = dataReq.IMGPATH,
+                YEAR = dataReq.YEAR,
+                MN = dataReq.MN,
+                DEPMST = dataReq.DEPMST,
+                cutdt = dataReq.cutdt,
+                OFFICECODE = dataReq.OFFICECODE,
+                TYPECODE = dataReq.TYPECODE,
+                GASTCODE = dataReq.GASTCODE,
+                AREA = dataReq.AREA,
+
+            };
 
             try
             {
-                var req = new ASSETKKF_MODEL.Request.Asset.AuditPostReq()
-                {
-                    SQNO = dataReq.SQNO,
-                    DEPCODEOL = dataReq.DEPCODEOL,
-                    COMPANY = dataReq.COMPANY,
-                    LEADERCODE = dataReq.LEADERCODE,
-                    AREACODE = dataReq.AREACODE,
-                    UCODE = dataReq.UCODE,
-                    LEADERNAME = dataReq.LEADERNAME,
-                    AREANAME = dataReq.AREANAME,
-                    IMGPATH = dataReq.IMGPATH,
-                    YEAR = dataReq.YEAR,
-                    MN = dataReq.MN,
-                    DEPMST = dataReq.DEPMST,
-                    cutdt = dataReq.cutdt,
-                    OFFICECODE = dataReq.OFFICECODE,
-                    TYPECODE = dataReq.TYPECODE,
-                    GASTCODE = dataReq.GASTCODE,
-                    AREA = dataReq.AREA,
-
-                };
+                
 
                 var reqASSETOFFICECODE = new ASSETOFFICECODEReq()
                 {
@@ -55,14 +56,14 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     COMPANY = dataReq.COMPANY,
                 };
 
-                var objAUDITCUTDATEMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATEMST(req);
+                //var objAUDITCUTDATEMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATEMST(req);
                 var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(req);
-                var validAUDITCUTDATEMST = objAUDITCUTDATEMST != null;
+               // var validAUDITCUTDATEMST = objAUDITCUTDATEMST != null;
                 var validAUDITCUTDATE = lstAUDITCUTDATE != null && lstAUDITCUTDATE.Count > 0;
 
                 res.AUDITCUTDATELST = lstAUDITCUTDATE;
 
-                if (validAUDITCUTDATEMST && validAUDITCUTDATE)
+                if (validAUDITCUTDATE)
                 {
                     var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
                     var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req);
@@ -79,7 +80,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         //var addAuditPost = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().addAUDITPOSTMST(req);
                         var addAuditPost = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().addAUDITPOSTMST(req));
                         addAuditPost.Wait();
-                        lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
+                        //lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
                     }
 
                     if(lstAUDITPOSTMST == null || ((lstAUDITPOSTMST != null) && (lstAUDITPOSTMST.Count == 0)))
@@ -94,15 +95,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         res._result._message = "";
                         res._result._status = "OK";
 
-                        //res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req, "");
-                        //res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req, "Y");
 
-                        var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
-                        var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
-                        res.AUDITPOSTMSTWAITLST = lstWait;
-                        res.AUDITPOSTMSTCHECKEDLST = lstChecked;
-                        res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
-                        res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
+                        
 
                     }
 
@@ -127,6 +121,31 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 res._result._code = "500 ";
                 res._result._message = ex.Message;
                 res._result._status = "Internal Server Error";
+            }
+            finally
+            {
+                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
+                var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req);
+                res.AUDITPOSTTRNLST = lstAUDITPOSTTRN;
+
+                var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
+                var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
+                res.AUDITPOSTMSTWAITLST = lstWait;
+                res.AUDITPOSTMSTCHECKEDLST = lstChecked;
+                res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
+                res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
+
+                AuditSummaryReq reqSum = new AuditSummaryReq()
+                {
+                    Company = dataReq.COMPANY,
+                    year = dataReq.YEAR,
+                    mn = dataReq.MN,
+                    sqno = dataReq.SQNO
+                };
+
+                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(reqSum);
+                res.DashboardInspectionLST = lstSum;
+
             }
             
 

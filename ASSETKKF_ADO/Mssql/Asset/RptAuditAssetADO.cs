@@ -31,7 +31,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             DynamicParameters param = new DynamicParameters();
             sql = "  select   * from (  ";
             sql += " select * from (select P.* ,MEMO1 as AUDIT_NOTE ,D.IMGPATH,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME  ";
-            sql += " , (select max(audit_no) from FT_ASAUDITCUTDATEMST() where SQNO = P.SQNO and COMPANY = P.COMPANY) as audit_no  ";
+            sql += " , (select max(audit_no) from FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.company) + ") where SQNO = P.SQNO and COMPANY = P.COMPANY) as audit_no  ";
             sql += "  ,(case when isnull(P.PCODE,'') = '' then '' else P.PCODE + ' : ' + P.PNAME end ) as AUDIT_RESULT  ";
             sql += " ,(CAST(P.MN AS varchar) + ' / ' + CAST(P.YR AS varchar) + ' - ' + CAST(P.YRMN AS varchar) ) as AUDIT_AT  ";
             sql += " from  [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.company) + ") as P ";
@@ -153,7 +153,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " select * from ((select C.* ,c.MEMO1 as AUDIT_NOTE,'' as IMGPATH ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= C.INPID) as INPNAME    , M.AUDIT_NO";
             sql += " ,(case when isnull(c.PCODE,'') = '' then '' else c.PCODE + ' : ' + c.PNAME end ) as AUDIT_RESULT";
             sql += " ,(CAST(c.MN AS varchar) + ' / ' + CAST(c.YR AS varchar) + ' - ' + CAST(c.YRMN AS varchar) ) as AUDIT_AT";
-            sql += " from FT_ASAUDITCUTDATE() AS C";
+            sql += " from FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.company) + ") AS C";
             sql += " left outer join FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.company) + ") M on M.SQNO = C.SQNO and M.COMPANY = C.COMPANY";
             //sql += " left outer join [FT_UserAsset] ('') as U on U.OFFICECODE = c.INPID and U.COMPANY = c.COMPANY";
             sql += " where 1 = 1";
@@ -542,7 +542,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
-                sql += " and P.DEPMST =" + QuoteStr(d.DEPMST);
+                //sql += " and P.DEPMST =" + QuoteStr(d.DEPMST);
+                sql += "and DEPCODE in (SELECT [DEPCODE] ";
+                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.company) + ") ";
+                sql += " where DEPMST = '" + d.DEPMST + "'";
+                sql += " and company = '" + d.company + "'";
+                sql += " group by[DEPCODE])";
             }
 
             if (!String.IsNullOrEmpty(d.YEAR))
@@ -725,7 +730,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " SELECT  OFFICECODE as id,(OFFICECODE + ' : ' + OFNAME) as description   FROM  ( ";
-            cmd += " Select    OFFICECODE,MAX(OFNAME) AS OFNAME,DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE  from  FT_ASAUDITCUTDATE() D where 1 = 1 ";
+            cmd += " Select    OFFICECODE,MAX(OFNAME) AS OFNAME,DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE  from  FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.company) + ") D where 1 = 1 ";
 
             if (!String.IsNullOrEmpty(d.company))
             {
