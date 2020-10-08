@@ -111,6 +111,15 @@ namespace ASSETKKF_MODEL.Response.Asset
         public string ASSETNAME { get; set; }
         public string OFFICECODE { get; set; }
         public string OFNAME { get; set; }
+        public string TYPECODE { get; set; }
+        public string TYPENAME { get; set; }
+        public string GASTCODE { get; set; }
+        public string GASTNAME { get; set; }
+        public DateTime? ASSETDT { get; set; }
+        public string STNAME { get; set; }
+        public string STCODE { get; set; }
+        public string POSITCODE { get; set; }
+        public string POSITNAME { get; set; }
     }
 
     #endregion

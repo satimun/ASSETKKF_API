@@ -16,6 +16,7 @@ namespace ASSETKKF_MODEL.Response.Asset
         public string IMGSRC { get; set; }
         public string AREA { get; set; }
         public ASAUDITPOSTMST AUDITPOSTMST { get; set; }
+        public ASSETASSETNO ASSETASSETNO { get; set; }
         public List<ASAUDITCUTDATE> AUDITCUTDATELST { get; set; }
         public List<ASAUDITPOSTMST> AUDITPOSTMSTNOPROBLEMLST { get; set; }
         public List<ASAUDITPOSTMST> AUDITPOSTMSTPROBLEMLST { get; set; }

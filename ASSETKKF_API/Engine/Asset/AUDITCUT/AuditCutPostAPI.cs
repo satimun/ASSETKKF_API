@@ -1,4 +1,5 @@
-﻿using ASSETKKF_MODEL.Request.Asset;
+﻿using ASSETKKF_MODEL.Data.Mssql.Asset;
+using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Asset;
 using System;
@@ -41,8 +42,12 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
             };
 
+            List<ASAUDITPOSTMST> lstAUDITPOSTMST = new List<ASAUDITPOSTMST>();
+            var stadd = 0;
+
             try
             {
+                
                 
 
                 var reqASSETOFFICECODE = new ASSETOFFICECODEReq()
@@ -65,14 +70,14 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 if (validAUDITCUTDATE)
                 {
-                    var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
-                    var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req);
+                    lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
+                    //var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req);
                     var lstASSETOFFICECODE = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETOFFICECODELST(reqASSETOFFICECODE);
                     var lstASSETASSETNO = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETASSETNOLST(reqASSETASSETNO);
 
                     res.ASSETOFFICECODELST = lstASSETOFFICECODE;
                     res.ASSETASSETNOLST = lstASSETASSETNO;
-                    res.AUDITPOSTTRNLST = lstAUDITPOSTTRN;
+                    //res.AUDITPOSTTRNLST = lstAUDITPOSTTRN;
 
 
                     if (lstAUDITPOSTMST == null || ((lstAUDITPOSTMST != null) && (lstAUDITPOSTMST.Count == 0)))
@@ -80,6 +85,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         //var addAuditPost = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().addAUDITPOSTMST(req);
                         var addAuditPost = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().addAUDITPOSTMST(req));
                         addAuditPost.Wait();
+                        stadd = 1;
                         //lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
                     }
 
@@ -124,7 +130,11 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             }
             finally
             {
-                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
+                if(stadd > 0)
+                {
+                    lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
+                }
+                
                 var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req);
                 res.AUDITPOSTTRNLST = lstAUDITPOSTTRN;
 

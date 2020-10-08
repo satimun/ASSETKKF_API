@@ -134,13 +134,24 @@ namespace ASSETKKF_API.Engine.Asset
         private TRequest MappingRequest(dynamic dataReq)
         {
             string json = dataReq is string ? (string)dataReq : JsonConvert.SerializeObject(dataReq);
-            return JsonConvert.DeserializeObject<TRequest>(json);
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            return JsonConvert.DeserializeObject<TRequest>(json, settings);
         }
 
         private List<TRequest> MappingRequestArr(dynamic dataReq)
         {
             string json = dataReq is string ? (string)dataReq : JsonConvert.SerializeObject(dataReq);
-            return JsonConvert.DeserializeObject<List<TRequest>>(json);
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+            return JsonConvert.DeserializeObject<List<TRequest>>(json, settings);
         }
 
         private void ValidatePermission()

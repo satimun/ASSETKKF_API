@@ -29,9 +29,24 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
 
-            sql = " SELECT * FROM [dbo].[FC_Taskuser] (''";
+            sql = " SELECT * FROM [dbo].[FC_Taskuser] (" + QuoteStr(d.COMPANY);
             sql += " ," + QuoteStr(d.INPID);
-            sql += " )";
+            sql += " ) where 1 = 1";
+
+            if (!String.IsNullOrEmpty(d.COMPANY))
+            {
+                sql += " and COMPANY = '" + d.COMPANY + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.YR.ToString()))
+            {
+                sql += " and YR = '" + d.YR + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.MN.ToString()))
+            {
+                sql += " and MN = '" + d.MN + "'";
+            }
 
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param).ToList();
             return res;
@@ -54,9 +69,24 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
 
-            sql = " SELECT * FROM [dbo].[FC_TrackingAudit] (''";
+            sql = " SELECT * FROM [dbo].[FC_TrackingAudit] (" + QuoteStr(d.COMPANY);
             sql += " ," + QuoteStr(d.INPID);
-            sql += " )";
+            sql += " )  where 1 = 1";
+
+            if (!String.IsNullOrEmpty(d.COMPANY))
+            {
+                sql += " and COMPANY = '" + d.COMPANY + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.YR.ToString()))
+            {
+                sql += " and YR = '" + d.YR + "'";
+            }
+
+            if (!String.IsNullOrEmpty(d.MN.ToString()))
+            {
+                sql += " and MN = '" + d.MN + "'";
+            }
 
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param).ToList();
             return res;

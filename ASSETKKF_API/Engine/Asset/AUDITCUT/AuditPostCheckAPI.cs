@@ -43,6 +43,15 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     res._result._code = "404";
                     res._result._message = "ไม่พบข้อมูล";
                     res._result._status = "Bad Request";
+
+                    ASSETASSETNOReq req = new ASSETASSETNOReq()
+                    {
+                        ASSETNO = dataReq.ASSETNO
+                    };
+                    ASSETASSETNO obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().checkASSETASSETNO(req);
+
+                    res.ASSETASSETNO = obj;
+
                 }
                 else
                 {
