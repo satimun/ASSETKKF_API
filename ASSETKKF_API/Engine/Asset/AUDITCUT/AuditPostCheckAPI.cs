@@ -35,8 +35,11 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
-                
+                List<ASAUDITPOSTMST> lst = new List<ASAUDITPOSTMST>();
+                //var lst = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
+                var t1 = System.Threading.Tasks.Task.Factory.StartNew(() =>  lst = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq));
+                t1.Wait();
+
 
                 if (lst == null || (lst != null && lst.Count == 0))
                 {
@@ -93,7 +96,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             PCODE = objProblem.Pcode,
                             PNAME = objProblem.Pname,
                             UCODE = dataReq.UCODE,
-                            PFLAG = dataReq.PFLAG
+                            PFLAG = objProblem.PFLAG
 
                         };
                         var reqPostMstPhone = new AUDITPOSTMSTReq();

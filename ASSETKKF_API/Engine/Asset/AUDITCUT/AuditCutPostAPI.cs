@@ -72,11 +72,11 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 {
                     lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
                     //var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req);
-                    var lstASSETOFFICECODE = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETOFFICECODELST(reqASSETOFFICECODE);
+                    /*var lstASSETOFFICECODE = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETOFFICECODELST(reqASSETOFFICECODE);
                     var lstASSETASSETNO = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETASSETNOLST(reqASSETASSETNO);
 
                     res.ASSETOFFICECODELST = lstASSETOFFICECODE;
-                    res.ASSETASSETNOLST = lstASSETASSETNO;
+                    res.ASSETASSETNOLST = lstASSETASSETNO;*/
                     //res.AUDITPOSTTRNLST = lstAUDITPOSTTRN;
 
 

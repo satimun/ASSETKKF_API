@@ -113,20 +113,20 @@ namespace ASSETKKF_API.Engine.Asset
             }
             finally
             {
-                ASSETKKF_ADO.Mssql.Asset.muAPILogAdo.GetInstant().Insert(new ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog()
-                {
-                    Token = Token,
-                    APIName = this.GetType().Name,
-                    //RefID = this.Logger.RefID,
-                    ServerName = Environment.MachineName,
-                    StartDate = StartTime,
-                    EndDate = DateTime.Now,
-                    Status = res.status,
-                    StatusMessage = res.message,
-                    Input = this.GetType().Name.Equals("OauthLogin") ? "" : JsonConvert.SerializeObject(dataReq),
-                    Output = JsonConvert.SerializeObject(res),
-                    Remark = StackTraceMsg
-                });
+                //ASSETKKF_ADO.Mssql.Asset.muAPILogAdo.GetInstant().Insert(new ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog()
+                //{
+                //    Token = Token,
+                //    APIName = this.GetType().Name,
+                //    //RefID = this.Logger.RefID,
+                //    ServerName = Environment.MachineName,
+                //    StartDate = StartTime,
+                //    EndDate = DateTime.Now,
+                //    Status = res.status,
+                //    StatusMessage = res.message,
+                //    Input = this.GetType().Name.Equals("OauthLogin") ? "" : JsonConvert.SerializeObject(dataReq),
+                //    Output = JsonConvert.SerializeObject(res),
+                //    Remark = StackTraceMsg
+                //});
             }
             return res;
         }

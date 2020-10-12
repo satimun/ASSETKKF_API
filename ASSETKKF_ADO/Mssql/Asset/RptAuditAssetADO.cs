@@ -512,25 +512,9 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += "  ,(case when isnull(P.PCODE,'') = '' then '' else P.PCODE + ' : ' + P.PNAME end ) as AUDIT_RESULT  ";
             sql += " ,(CAST(P.MN AS varchar) + ' / ' + CAST(P.YR AS varchar) + ' - ' + CAST(P.YRMN AS varchar) ) as AUDIT_AT  ";
             sql += " from  FT_ASAUDITPOSTTRN_COMPANY(" + QuoteStr(d.company) + ")  as P ";
-            //sql += " left outer join [FT_UserAsset] ('') as U on U.OFFICECODE = P.INPID and U.COMPANY = P.COMPANY";
             sql += " left outer join [FT_ASAUDITPOSTTRN_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO   and P.INPID = D.INPID";
             sql += " where 1 = 1";
 
-            /*sql += " and YR = (SELECT YR from(  ";
-            sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTTRN()  ";
-            sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTTRN() )  ";
-            sql += " group by YR  ";
-            sql += "   ) as a)  ";
-            sql += " and MN = (SELECT MN from(  ";
-            sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTTRN()  ";
-            sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTTRN() )  ";
-            sql += " group by YR  ";
-            sql += "  ) as b)  ";
-            sql += " and YRMN = (SELECT YRMN from(  ";
-            sql += " SELECT YR, max(MN) as MN, max(YRMN) as YRMN  FROM FT_ASAUDITPOSTTRN()  ";
-            sql += " where YR = (SELECT max(YR) FROM FT_ASAUDITPOSTTRN() )  ";
-            sql += " group by YR  ";
-            sql += "   ) as c)   ";*/
 
 
             if (!String.IsNullOrEmpty(d.company))
@@ -574,9 +558,6 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             if (!String.IsNullOrEmpty(d.audit_no))
             {
-                //param.Add("@AUDITNO", d.audit_no);
-                //sql += " and audit_no = @AUDITNO";
-
                 param.Add("@AUDITNO", d.audit_no);
                 param.Add("@auditno_lk", $"%{d.audit_no}%");
                 sql += " AND (P.audit_no LIKE @auditno_lk OR P.audit_no = " + QuoteStr(d.audit_no) + " )";
@@ -610,6 +591,21 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 param.Add("@PCODE", d.PCODE);
                 sql += " and P.PCODE = " + QuoteStr(d.PCODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.OFFICECODE))
+            {
+                sql += " and P.OFFICECODE = " + QuoteStr(d.OFFICECODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.TYPECODE))
+            {
+                sql += " and  P.TYPECODE = " + QuoteStr(d.TYPECODE);
+            }
+
+            if (!String.IsNullOrEmpty(d.GASTCODE))
+            {
+                sql += " and  P.GASTCODE = " + QuoteStr(d.GASTCODE);
             }
 
             if ((!d.Menu3 && !d.Menu4) && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))

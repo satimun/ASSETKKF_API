@@ -1,5 +1,6 @@
 ﻿using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Request.Asset;
+using ASSETKKF_MODEL.Request.Track;
 using ASSETKKF_MODEL.Response.Asset;
 using Dapper;
 using System;
@@ -9,6 +10,8 @@ using System.ComponentModel.Design;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+
 namespace ASSETKKF_ADO.Mssql.Asset
 {
     public class AuditCutADO : Base
@@ -741,12 +744,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
             return res;
         }
 
-        public List<ASAUDITPOSTMST> checkAUDITAssetNo(AuditPostCheckReq d, SqlTransaction transac = null)
+        public  List<ASAUDITPOSTMST> checkAUDITAssetNo(AuditPostCheckReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " select a.*,b.pflag,b.imgpath,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= a.INPID) as INPNAME  ";
             sql += " from  [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.COMPANY) + ") as a";
-            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as b";
+            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE_COMPANY] (" + QuoteStr(d.COMPANY) + ") as b";
             sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO  and a.INPID = b.INPID";
             sql += " where a.SQNO = '" + d.SQNO + "'";
             sql += " and a.COMPANY = '" + d.COMPANY + "'";
@@ -761,7 +764,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += "  order by a.INPDT desc";
 
             var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
-            return res;
+             return res;
         }
 
         public int addAUDITPOSTMST(AuditPostReq d, SqlTransaction transac = null)
@@ -962,6 +965,41 @@ namespace ASSETKKF_ADO.Mssql.Asset
             return res;
         }
 
+        public ASAUDITCUTDATEMST getASAUDITCUTDATEMST(TrackOfflineReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " select * from FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.company) + ")";
+            sql += " where Audit_NO = " + QuoteStr(d.audit_no);
+            sql += " and Audit_NO is not null";
+            sql += " and FLAG not in ('X')";
+            var res = Query<ASAUDITCUTDATEMST>(sql, param).FirstOrDefault();
+
+            return res;
+        }
+
+        public ASAUDITPOSTMST getASAUDITPOSTMST(TrackOfflineReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " select * from FT_ASAUDITPOSTMST_COMPANY(" + QuoteStr(d.company) + ")";
+            sql += " where sqno = " + QuoteStr(d.sqno);
+            sql += " and inpid = " + QuoteStr(d.inpid);
+            sql += " and assetno = " + QuoteStr(d.assetno);
+            var res = Query<ASAUDITPOSTMST>(sql, param).FirstOrDefault();
+
+            return res;
+        }
+
+        public ASAUDITPOSTTRN getASAUDITPOSTTRN(TrackOfflineReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " select * from FT_ASAUDITPOSTTRN_COMPANY(" + QuoteStr(d.company) + ")";
+            sql += " where sqno = " + QuoteStr(d.sqno);
+            sql += " and inpid = " + QuoteStr(d.inpid);
+            sql += " and assetno = " + QuoteStr(d.assetno);
+            var res = Query<ASAUDITPOSTTRN>(sql, param).FirstOrDefault();
+
+            return res;
+        }
 
 
     }

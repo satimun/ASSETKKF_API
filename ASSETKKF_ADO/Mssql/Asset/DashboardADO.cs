@@ -59,7 +59,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql = @"Select COMPANY,YR,MN,YRMN,DEPMST,DEPNM,SQNO,Flag,SUM(QTY_TOTAL) as QTY_TOTAL,SUM(QTY_CHECKED) as QTY_CHECKED
 ,SUM(QTY_PROBLEM) as QTY_PROBLEM,SUM(QTY_NOPROBLEM) as QTY_NOPROBLEM,SUM(QTY_TRN) as QTY_TRN,SUM(QTY_WAIT) as QTY_WAIT,MIN(MIN_INPDT) as StartDT
 ,MAX(MAX_INPDT) as LastDT
- ,  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS";
+ ,case when SUM(QTY_Total) > 0 then  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) else 0 end as PROGRESS ";
 
             sql += " from [AuditSummary_company](" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ")";
 
@@ -136,7 +136,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql = @"Select COMPANY,YR,MN,YRMN,DEPMST,SQNO,Flag,DEPCODEOL,STNAME,SUM(QTY_TOTAL) as QTY_TOTAL,SUM(QTY_CHECKED) as QTY_CHECKED
 ,SUM(QTY_PROBLEM) as QTY_PROBLEM,SUM(QTY_NOPROBLEM) as QTY_NOPROBLEM,SUM(QTY_TRN) as QTY_TRN,SUM(QTY_WAIT) as QTY_WAIT,MIN(MIN_INPDT) as StartDT
 ,MAX(MAX_INPDT) as LastDT
- ,  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS";
+ ,case when SUM(QTY_Total) > 0 then  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) else 0 end as PROGRESS ";
 
             sql += " from [AuditSummary_company](" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ")";
 
@@ -210,7 +210,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql = @"Select COMPANY,YR,MN,DEPMST,SQNO,Flag,DEPCODEOL,OFFICECODE,OFNAME,SUM(QTY_TOTAL) as QTY_TOTAL,SUM(QTY_CHECKED) as QTY_CHECKED
 ,SUM(QTY_PROBLEM) as QTY_PROBLEM,SUM(QTY_NOPROBLEM) as QTY_NOPROBLEM,SUM(QTY_TRN) as QTY_TRN,SUM(QTY_WAIT) as QTY_WAIT,MIN(MIN_INPDT) as StartDT
 ,MAX(MAX_INPDT) as LastDT
- ,  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS";
+,case when SUM(QTY_Total) > 0 then  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) else 0 end as PROGRESS ";
 
             sql += " from [AuditSummary_company](" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ")";
 
@@ -683,7 +683,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql = @"Select COMPANY,YR,MN,DEPMST,SQNO,Flag,DEPCODEOL,OFFICECODE,OFNAME,SUM(QTY_TOTAL) as QTY_TOTAL,SUM(QTY_CHECKED) as QTY_CHECKED
 ,SUM(QTY_PROBLEM) as QTY_PROBLEM,SUM(QTY_NOPROBLEM) as QTY_NOPROBLEM,SUM(QTY_TRN) as QTY_TRN,SUM(QTY_WAIT) as QTY_WAIT,MIN(MIN_INPDT) as StartDT
 ,MAX(MAX_INPDT) as LastDT
- ,  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) as PROGRESS";
+ ,case when SUM(QTY_Total) > 0 then  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) else 0 end as PROGRESS ";
 
             sql += " from [AuditSummary_company](" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ")";
 
