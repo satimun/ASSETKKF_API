@@ -28,6 +28,6 @@ namespace ASSETKKF_MODEL.Response.Track
         public string positcode { get; set; }
         public string positname { get; set; }
 
-        
+        public int trackseq { get; set; }
     }
 }

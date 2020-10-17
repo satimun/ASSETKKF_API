@@ -41,10 +41,17 @@ namespace ASSETKKF_ADO.Mssql.Track
                 sql += " and sqno = " + QuoteStr(d.sqno);
             }
 
+            if (!String.IsNullOrEmpty(d.audit_no))
+            {
+                sql += " and audit_no = " + QuoteStr(d.audit_no);
+            }
+
             if (!String.IsNullOrEmpty(d.inpid))
             {
                 sql += " and inpid = " + QuoteStr(d.inpid);
             }
+
+            sql += " order by flag,assetno";
 
             var res = Query<TrackPostMSTRes>(sql, param).ToList();
             return res;
@@ -84,6 +91,7 @@ namespace ASSETKKF_ADO.Mssql.Track
             param.Add("@AUDIT_NO", d.audit_no);
             param.Add("@INPID", d.inpid);
             param.Add("@ASSETNO", d.assetno);
+            param.Add("@SQNO", d.sqno);
 
             param.Add("@UCODE", d.ucode);
             param.Add("@FLAG", d.flag);
@@ -111,6 +119,7 @@ namespace ASSETKKF_ADO.Mssql.Track
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.company);
             param.Add("@AUDIT_NO", d.audit_no);
+            param.Add("@SQNO", d.sqno);
             param.Add("@INPID", d.inpid);
             param.Add("@ASSETNO", d.assetno);
 

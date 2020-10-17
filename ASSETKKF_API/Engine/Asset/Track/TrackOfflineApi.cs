@@ -52,6 +52,14 @@ namespace ASSETKKF_API.Engine.Asset.Track
                         auditPostTRN(dataReq, res);
                         break;
 
+                    case "gettrackhd":
+                        GetTrackOfflineHD(dataReq, res);
+                        break;
+
+                    case "setauditpostmst":
+                        SetAuditPostMST(dataReq, res);
+                        break;
+
                     default:
                         getTrackOffline(dataReq, res);
                         break;
@@ -66,6 +74,66 @@ namespace ASSETKKF_API.Engine.Asset.Track
 
 
             dataRes.data = res;
+        }
+
+        private TrackOfflineRes SetAuditPostMST(TrackOfflineReq dataReq, TrackOfflineRes res)
+        {
+            try
+            {
+                List<ASAUDITPOSTMST> lst = new List<ASAUDITPOSTMST>();
+                lst = GetCutPostMST(dataReq);
+                if (lst != null && lst.Count == 0)
+                {
+                    var req = new AuditPostReq
+                    {
+                        COMPANY = dataReq.company,
+                        SQNO = dataReq.sqno,
+                        INPID = dataReq.ucode
+                    };
+                    InsertAuditPostMST(req);
+                }
+                    
+            }
+            catch (Exception ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Internal Server Error";
+            }
+
+            return res;
+        }
+
+        private TrackOfflineRes GetTrackOfflineHD(TrackOfflineReq dataReq, TrackOfflineRes res)
+        {
+            try
+            {
+                List<TrackHDRes> lstTrackHD = new List<TrackHDRes>();
+                lstTrackHD = GetTrackHD(dataReq);
+
+                res.lstTrackHD = lstTrackHD;
+
+                if(lstTrackHD != null && lstTrackHD.Count > 0)
+                {
+                    res._result._code = "200";
+                    res._result._message = "";
+                    res._result._status = "OK";
+                }
+                else
+                {
+                    res._result._code = "404";
+                    res._result._message = "ไม่พบข้อมูล";
+                    res._result._status = "Bad Request";
+                }
+            }
+            catch (Exception ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Internal Server Error";
+            }
+
+            return res;
         }
 
         private TrackOfflineRes getTrackOffline(TrackOfflineReq dataReq, TrackOfflineRes res)
@@ -301,13 +369,33 @@ namespace ASSETKKF_API.Engine.Asset.Track
                         MEMO1 = dataReq.memo1
 
                     };
-                    UpdateAuditPostMST(reqPostMst);
 
-                    dataReq.transy = transy;
-                    UpdateAuditTrackPostMST(dataReq);
+                    if (!String.IsNullOrEmpty(dataReq.transy) && dataReq.transy.ToLower().Equals("y"))
+                    {
+                       var stSave =  UpdateAuditPostMST(reqPostMst);
+                        if (stSave.Result != 0)
+                        {
+                            flag = "2";
+                            msg = "บันทึกผลการตรวจสอบเรียบร้อยแล้ว";
+                        }
+                        else
+                        {
+                            msg = "พบข้อผิดพลาดจากการบันทึกผลการตรวจสอบ";
+                        }
+                    }
+                    else
+                    {
+                        msg = "ไม่บันทึกผลการตรวจสอบ";
+                    }
+
+                    dataReq.remark = msg;
+                    dataReq.flag = flag;
+                    
                 }
+                dataReq.transy = !String.IsNullOrEmpty(dataReq.transy) ? dataReq.transy.ToUpper() : dataReq.transy;
+                UpdateAuditTrackPostMST(dataReq);
 
-                
+
 
 
             }
@@ -387,11 +475,31 @@ namespace ASSETKKF_API.Engine.Asset.Track
                         MODE = "ADD",
                         UCODE = dataReq.inpid
                     };
-                    UpdateAuditPostTRN(reqPostTrn);
+                    
 
-                    dataReq.transy = transy;
-                    UpdateAuditTrackPostTRN(dataReq);
+                    if (!String.IsNullOrEmpty(dataReq.transy) && dataReq.transy.ToLower().Equals("y"))
+                    {
+                        var stSave = UpdateAuditPostTRN(reqPostTrn);
+                        if (stSave.Result != 0)
+                        {
+                            flag = "2";
+                            msg = "บันทึกผลการตรวจสอบเรียบร้อยแล้ว";
+                        }
+                        else
+                        {
+                            msg = "พบข้อผิดพลาดจากการบันทึกผลการตรวจสอบ";
+                        }
+                    }
+                    else
+                    {
+                        msg = "ไม่บันทึกผลการตรวจสอบ";
+                    }
+
+                    dataReq.remark = msg;
+                    dataReq.flag = flag;                    
                 }
+                dataReq.transy = !String.IsNullOrEmpty(dataReq.transy) ? dataReq.transy.ToUpper() : dataReq.transy;
+                UpdateAuditTrackPostTRN(dataReq);
             }
             catch (Exception ex)
             {
@@ -428,6 +536,22 @@ namespace ASSETKKF_API.Engine.Asset.Track
         public List<TrackPostTRNRes> GetTrackPostTRN(TrackOfflineReq dataReq)
         {
             return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostTRNAdo.GetInstant().GetData(dataReq)).Result;
+        }
+
+        public List<TrackHDRes> GetTrackHD(TrackOfflineReq dataReq)
+        {
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackHDAdo.GetInstant().GetData(dataReq)).Result;
+        }
+
+        public List<ASAUDITPOSTMST> GetCutPostMST(TrackOfflineReq dataReq)
+        {
+            var reqMst = new AuditPostReq
+            {
+                COMPANY = dataReq.company,
+                SQNO = dataReq.sqno,
+                INPID = dataReq.ucode
+            };
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(reqMst)).Result;
         }
 
         public ProblemList GetProblemBase(TrackOfflineReq dataReq)
@@ -481,5 +605,10 @@ namespace ASSETKKF_API.Engine.Asset.Track
             return Task.Run(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().saveAUDITPOSTTRN(dataReq));
         }
 
+        public Task<int> InsertAuditPostMST(AuditPostReq dataReq)
+        {
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().addAUDITPOSTMST(dataReq));
+
+        }
     }
 }

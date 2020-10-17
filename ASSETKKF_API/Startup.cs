@@ -70,15 +70,15 @@ namespace ASSETKKF_API
             switch (Configuration["DBMOD"])
             {
                 case "1":
-                    ASSETKKF_ADO.Mssql.Asset.Base.conString = Configuration["ConnAssetKKFBak"];
+                    ASSETKKF_ADO.Mssql.Base.conString = Configuration["ConnAssetKKFBak"];
                     break;
 
                 case "2":
-                    ASSETKKF_ADO.Mssql.Asset.Base.conString = Configuration["ConnAssetKKFLocal"];
+                    ASSETKKF_ADO.Mssql.Base.conString = Configuration["ConnAssetKKFLocal"];
 
                     break;
                 default:
-                    ASSETKKF_ADO.Mssql.Asset.Base.conString = Configuration["ConnAssetKKF"];
+                    ASSETKKF_ADO.Mssql.Base.conString = Configuration["ConnAssetKKF"];
                     break;
             }
 

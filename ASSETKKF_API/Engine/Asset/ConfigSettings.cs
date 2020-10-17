@@ -31,22 +31,19 @@ namespace ASSETKKF_API.Engine.Asset
                     switch (dataReq.DBMode)
                     {                        
                         case "1":
-                            ASSETKKF_ADO.Mssql.Asset.Base.conString = Configuration["ConnAssetKKFBak"];
                             ASSETKKF_ADO.Mssql.Base.conString = Configuration["ConnAssetKKFBak"];
-                            res.ConnStr = ASSETKKF_ADO.Mssql.Asset.Base.conString;                            
+                            res.ConnStr = ASSETKKF_ADO.Mssql.Base.conString;                            
 
                             break;
 
                         case "2":
-                            ASSETKKF_ADO.Mssql.Asset.Base.conString = Configuration["ConnAssetKKFLocal"];
                             ASSETKKF_ADO.Mssql.Base.conString = Configuration["ConnAssetKKFLocal"];
-                            res.ConnStr = ASSETKKF_ADO.Mssql.Asset.Base.conString;
+                            res.ConnStr = ASSETKKF_ADO.Mssql.Base.conString;
 
                             break;
                         default:
-                            ASSETKKF_ADO.Mssql.Asset.Base.conString = Configuration["ConnAssetKKF"];
                             ASSETKKF_ADO.Mssql.Base.conString =  Configuration["ConnAssetKKF"];
-                            res.ConnStr = ASSETKKF_ADO.Mssql.Asset.Base.conString;
+                            res.ConnStr = ASSETKKF_ADO.Mssql.Base.conString;
                             
                             break;
                     }

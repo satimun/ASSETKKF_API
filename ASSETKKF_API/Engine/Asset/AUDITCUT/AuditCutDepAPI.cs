@@ -35,7 +35,18 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     Menu4 = dataReq.Menu4
                 };
 
-                var obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAuditDepList(dataReq);
+                List<ASSETKKF_MODEL.Response.Asset.AuditCutList> obj = new List<ASSETKKF_MODEL.Response.Asset.AuditCutList>();
+
+                if (!String.IsNullOrEmpty(dataReq.MODE) && dataReq.MODE.ToLower().Equals("rd"))
+                {
+                     obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAuditDepList2(dataReq);
+                }
+                else
+                {
+                     obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAuditDepList(dataReq);
+                }
+
+                
                 if (obj == null)
                 {
                     res._result._code = "404";

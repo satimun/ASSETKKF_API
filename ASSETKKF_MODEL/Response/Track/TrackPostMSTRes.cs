@@ -23,7 +23,9 @@ namespace ASSETKKF_MODEL.Response.Track
         public string transid { get; set; }
         public DateTime? transdt { get; set; }
         public string remark { get; set; }
-
+        public int trackseq { get; set; }
         
+
+
     }
 }

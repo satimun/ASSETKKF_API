@@ -112,6 +112,73 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
         }
 
+        public List<ASSETKKF_MODEL.Response.Asset.AuditCutList> getAuditDepList2(ASSETKKF_MODEL.Request.Asset.AuditCutReq d, SqlTransaction transac = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            string cmd = " SELECT M.Company,max(M.SQNO) as SQNO,min(isnull(DEPCODEOL,'')) as DEPCODEOL,max(isnull(M.Audit_NO,'')) as Audit_NO";
+            cmd += " ,M.DEPMST as id,DEPNM,max(M.YR) as YR,max(M.MN) as MN,max(M.YRMN) as YRMN,max(D.DEPCODE) as DEPCODE,max(D.CUTDT) as CUTDT,max(D.STNAME) as STNAME";
+            cmd += "  ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST ) as Descriptions ";
+            cmd += " FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") M ,FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.Company) + ") D";
+            cmd += " where D.SQNO = M.SQNO ";
+            cmd += " and D.Company = M.Company ";
+            cmd += " and M.Audit_NO is not null";
+            cmd += " and  M.FLAG not in ('X')";
+
+            if (!String.IsNullOrEmpty(d.Company))
+            {
+                var comp = "";
+                comp = "'" + d.Company.Replace(",", "','") + "'";
+                cmd += " and M.COMPANY in (" + comp + ") ";
+            }
+
+            if ((!d.Menu3 && !d.Menu4) && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
+            {
+                cmd += " and (";
+                if (!String.IsNullOrEmpty(d.DeptCode))
+                {
+                    cmd += " DEPCODEOL = '" + d.DeptCode + "'";
+                }
+                if (d.DeptLST != null && d.DeptLST.Length > 0)
+                {
+                    var arrDept = d.DeptLST.Split(",");
+                    foreach (string s in arrDept)
+                    {
+                        cmd += " or DEPCODEOL like ' " + s + "%'";
+                    }
+
+                }
+                cmd += " )";
+            }
+
+            if ((!d.Menu3 && !d.Menu4))
+            {
+                cmd += " and isnull(M.Audit_NO,'') like 'DU%' ";
+            }
+            else if (d.Menu4)
+            {
+                cmd += " and isnull(M.Audit_NO,'') not like 'DU%' ";
+            }
+
+            if (!String.IsNullOrEmpty(d.YR))
+            {
+                cmd += " and M.YR = " + QuoteStr(d.YR);
+            }
+
+            if (!String.IsNullOrEmpty(d.MN))
+            {
+                cmd += " and M.MN = " + QuoteStr(d.MN);
+            }
+
+
+
+            cmd += " group by M.Company,M.DEPMST,DEPNM";
+
+
+            var res = Query<ASSETKKF_MODEL.Response.Asset.AuditCutList>(cmd, param).ToList();
+            return res;
+
+        }
+
         public List<ASSETKKF_MODEL.Response.Asset.AuditCutList> getAuditCutNoList(ASSETKKF_MODEL.Request.Asset.AuditCutReq d, SqlTransaction transac = null)
         {
             DynamicParameters param = new DynamicParameters();
@@ -874,16 +941,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and MN = '" + d.MN + "'";
             }
 
-            if (!String.IsNullOrEmpty(d.DEPMST))
-            {
-                //sql += " and DEPMST = '" + d.DEPMST + "'";
-                sql += "and DEPCODE in (SELECT [DEPCODE] ";
-                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
-                sql += " where DEPMST = '" + d.DEPMST + "'";
-                sql += " and company = '" + d.COMPANY + "'";
-                sql += " and SQNO = '" + d.SQNO + "'";
-                sql += " group by[DEPCODE])";
-            }
+            //if (!String.IsNullOrEmpty(d.DEPMST))
+            //{
+            //    sql += "and DEPCODE in (SELECT [DEPCODE] ";
+            //    sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
+            //    sql += " where DEPMST = '" + d.DEPMST + "'";
+            //    sql += " and company = '" + d.COMPANY + "'";
+            //    sql += " and SQNO = '" + d.SQNO + "'";
+            //    sql += " group by[DEPCODE])";
+            //}
 
             sql += " order by (case when a.INPID = '" + d.UCODE + "' then 1 else 0 end) desc";
 

@@ -48,6 +48,10 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
                         lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getAuditOFFICECODE(dataReq);
                         break;
 
+                    case "getpivotdept":
+                        var obj = ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant().getProblemByDep(dataReq);
+                        break;
+
 
                     default:
                         lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(dataReq);

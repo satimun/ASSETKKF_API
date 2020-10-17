@@ -22,6 +22,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string GASTCODE { get; set; }
         public string OFFICECODE { get; set; }
         public string inspection { get; set; }
+        public string mode { get; set; }
 
     }
 }
