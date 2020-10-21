@@ -15,7 +15,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Net.Http.Headers;
-using static System.Net.Mime.MediaTypeNames;
+using IronXL;
+using ExcelDataReader;
+using System.Net.Http;
+using System.Text;
 
 namespace ASSETKKF_API.Controllers.Files
 {
@@ -25,7 +28,7 @@ namespace ASSETKKF_API.Controllers.Files
     [ApiController]
     public class FilesAPIController : Base
     {
-        private IConfiguration Configuration;
+        
         private IHostingEnvironment _hostingEnvironment;
 
         public FilesAPIController(IConfiguration configuration, IHostingEnvironment environment)
@@ -131,8 +134,46 @@ namespace ASSETKKF_API.Controllers.Files
             return new FileStream(dataReq.file, FileMode.Open, FileAccess.Read);
         }
 
-        
-        [HttpPost("DownloadFile")] //download
+        [HttpPost("SaveFile")] //download
+        public async Task<dynamic> SaveFile([FromBody] dynamic data)
+        {
+            string path = Configuration["IMG_PATH"];
+            FilesReq dataReq = new FilesReq();
+            dataReq.fileName = data != null ? data.fileName : null;
+            dataReq.path = data != null ? data.path : path;
+            dataReq.fullpath = data != null ? data.fullpath : null;
+            if (String.IsNullOrEmpty(dataReq.fullpath))
+            {
+                dataReq.file = Path.Combine(dataReq.path, dataReq.fileName);
+            }
+            else
+            {
+                dataReq.file = Path.Combine(dataReq.fullpath);
+            }
+
+            if (!System.IO.File.Exists(dataReq.file))
+                return NotFound();
+
+            string responsedata = String.Empty;
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(dataReq.file, FileMode.Open))
+            {
+                //await stream.CopyToAsync(memory);
+                byte[] buffer = new byte[stream.Length];
+                stream.Read(buffer, 0, (int)stream.Length);
+                responsedata = Convert.ToBase64String(buffer);
+            }
+            memory.Position = 0;
+
+
+            return responsedata;
+
+
+
+        }
+
+
+    [HttpPost("DownloadFile")] //download
         public async Task<dynamic> DownloadFile([FromBody] dynamic data)
         {
 
@@ -152,8 +193,32 @@ namespace ASSETKKF_API.Controllers.Files
 
         }
 
+        [HttpPost("deleteFile")] //download
+        public void DeleteFile([FromBody] dynamic data)
+        {
+            string path = Configuration["IMG_PATH"];
+            FilesReq dataReq = new FilesReq();
+            dataReq.fileName = data != null ? data.fileName : null;
+            dataReq.path = data != null ? data.path : path;
+            dataReq.fullpath = data != null ? data.fullpath : null;
+            if (String.IsNullOrEmpty(dataReq.fullpath))
+            {
+                dataReq.file = Path.Combine(dataReq.path, dataReq.fileName);
+            }
+            else
+            {
+                dataReq.file = Path.Combine(dataReq.fullpath);
+            }
 
-        
+            if ((System.IO.File.Exists(dataReq.file)))
+            {
+                System.IO.File.Delete(dataReq.file);
+            }
+
+        }
+
+
+
         [HttpPost("upload")]
         public async Task<dynamic> Upload(IFormFile file)
         {
@@ -215,7 +280,68 @@ namespace ASSETKKF_API.Controllers.Files
             return res;
         }
 
-        
+        [HttpPost("uploadFile")]
+        public async Task<dynamic> UploadFile(IFormFile file)
+        {
+            var res = new AuditUploadRes();
+            FilesReq dataReq = new FilesReq();
+
+
+
+            try
+            {
+                dataReq.path = Configuration["IMG_PATH"];
+
+                var uploads = Path.Combine(dataReq.path, "fileupload");
+                if (!Directory.Exists(uploads))
+                {
+                    Directory.CreateDirectory(uploads);
+                }
+                dataReq.path = uploads;
+
+                if (file != null && file.Length > 0)
+                {
+                    var filePath = Path.Combine(dataReq.path, file.FileName);
+
+                    string extension = Path.GetExtension(file.FileName);
+                    string newFileName = Guid.NewGuid() + extension;
+                    string newPath = Path.Combine(dataReq.path, newFileName);
+                    using (var fileStream = new FileStream(newPath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+
+                    res._result._code = "200";
+                    res._result._message = "";
+                    res._result._status = "OK";
+
+                    res.fileName = newFileName;
+                    res.path = dataReq.path;
+                    res.fullpath = newPath;
+
+
+
+                }
+                else
+                {
+                    res._result._code = "204";
+                    res._result._message = "";
+                    res._result._status = "No Content";
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                res._result._code = "415 ";
+                res._result._message = ex.Message;
+                res._result._status = "Unsupported Media Type";
+            }
+
+            return res;
+        }
+
+
         [HttpPost("FileUpload")]
         public async Task<object> FileUpload()
         {

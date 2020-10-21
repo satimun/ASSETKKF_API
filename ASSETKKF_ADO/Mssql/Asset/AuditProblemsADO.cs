@@ -13,17 +13,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AuditProblemsADO instant;
 
-        public static AuditProblemsADO GetInstant()
+        public static AuditProblemsADO GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AuditProblemsADO();
+            if (instant == null) instant = new AuditProblemsADO(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
+        
 
-        private AuditProblemsADO()
+        private AuditProblemsADO(string conStr = null)
         {
+            conectStr = conStr;
         }
+
 
         public List<AuditProblems> GetSummary(AuditProblemsReq d, SqlTransaction transac = null)
         {
@@ -122,7 +125,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             //    }
             //    cmd += " )";
             //}
-            var res = Query<AuditProblems>(cmd, param).ToList();
+            var res = Query<AuditProblems>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -230,7 +233,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             //}
             cmd += " group by company,depcodeol";
 
-            var res = Query<AuditProblems>(cmd, param).ToList();
+            var res = Query<AuditProblems>(cmd, param, conectStr).ToList();
             return res;
         }
 

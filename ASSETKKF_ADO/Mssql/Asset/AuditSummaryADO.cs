@@ -12,16 +12,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AuditSummaryADO instant;
 
-        public static AuditSummaryADO GetInstant()
+        public static AuditSummaryADO GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AuditSummaryADO();
+            if (instant == null) instant = new AuditSummaryADO(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AuditSummaryADO()
+        private AuditSummaryADO(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
@@ -81,7 +82,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 //cmd += " and DEPCODEOL = (SELECT distinct DEPCODEEOL FROM [dbo].[FT_UserAsset] ( '" + d.OFFICECODE + "') where COMPANY = c.COMPANY )";
             }
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conectStr).ToList();
 
             return res;
         }
@@ -121,7 +122,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             }
             cmd += " group by company,depcodeol,SQNO,audit_no";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -160,7 +161,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 
             }
             cmd += " group by company,depcodeol,SQNO,audit_no";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -206,7 +207,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             cmd += " group by company,YRMN,DEPMST";
             cmd += " order by company,YRMN,DEPMST";
-            var res = Query<AuditDeptSummary>(cmd, param).ToList();
+            var res = Query<AuditDeptSummary>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -258,7 +259,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             cmd += " group by company,depcodeol,SQNO,audit_no";
             cmd += " order by company,depcodeol,SQNO,audit_no";
-            var res = Query<AuditDeptSummary>(cmd, param).ToList();
+            var res = Query<AuditDeptSummary>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -293,7 +294,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " group by YR ";
             cmd += " order by YR desc ";
 
-            var res = Query<Multiselect>(cmd, param).ToList();
+            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -333,7 +334,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " group by MN ";
             cmd += " order by MN desc ";
 
-            var res = Query<Multiselect>(cmd, param).ToList();
+            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
             return res;
         }
 

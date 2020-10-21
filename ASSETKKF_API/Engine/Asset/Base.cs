@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset
 {
@@ -36,6 +38,39 @@ namespace ASSETKKF_API.Engine.Asset
 
         protected string DBMode { get; set; }
         protected string CompCode { get; set; }
+        protected string conString { get; set; }
+        protected SqlTransaction transac { get; set; }
+        protected IConfiguration Configuration { get; set; }
+        protected string ServerAddr { get; set; }
+
+        public string ConnectionString()
+        {
+            switch (DBMode)
+            {
+                case "1":
+                    conString = Configuration["ConnAssetKKFBak"];
+                    break;
+
+                case "2":
+                    conString = Configuration["ConnAssetKKFLocal"];
+
+                    break;
+                default:
+                    conString = Configuration["ConnAssetKKF"];
+                    break;
+            }
+
+            if (!String.IsNullOrEmpty(conString))
+            {
+                var arrCon = conString.Split(";");
+                if (arrCon.Length > 0)
+                {
+                    var arrServer = arrCon[0].Split("=");
+                    ServerAddr = arrServer[1];
+                }
+            }
+            return ServerAddr;
+        }
 
 
         protected abstract void ExecuteChild(TRequest dataReq, ResponseAPI dataRes);

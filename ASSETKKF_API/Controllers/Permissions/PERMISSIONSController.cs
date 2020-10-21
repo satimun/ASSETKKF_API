@@ -15,7 +15,6 @@ namespace ASSETKKF_API.Controllers.Permissions
     [ApiController]
     public class PERMISSIONSController : Base
     {
-        private IConfiguration Configuration;
 
         public PERMISSIONSController(IConfiguration configuration)
         {
@@ -26,7 +25,7 @@ namespace ASSETKKF_API.Controllers.Permissions
         [HttpPost("Action")]
         public async Task<dynamic> Action([FromBody] dynamic data)
         {
-            var res = new PERMISSIONSApi();
+            var res = new PERMISSIONSApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }

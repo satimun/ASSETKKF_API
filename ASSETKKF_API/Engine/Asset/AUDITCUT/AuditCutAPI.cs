@@ -10,15 +10,18 @@ using System.Threading.Tasks;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response.Asset;
+using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 {
     public class AuditCutAPI :  Base<AuditCutReq>
     {
-        public AuditCutAPI()
+        public AuditCutAPI(IConfiguration configuration)
     {
         AllowAnonymous = true;
         RecaptchaRequire = true;
+        Configuration = configuration;
     }
 
     protected override void ExecuteChild(AuditCutReq dataReq, ResponseAPI dataRes)
@@ -26,8 +29,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
         var res = new AuditCutListRes();
             try
             {
-
-                var obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().GetAuditCutLists(dataReq);
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
+                var obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).GetAuditCutLists(dataReq);
                 if (obj == null)
                 {
                     res._result._code = "404";
@@ -44,7 +48,19 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 res.auditCutNoLst = obj;
             }
-            catch(Exception ex)
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
+            }
+            catch (Exception ex)
             {
                 res._result._code = "500 ";
                 res._result._message = ex.Message;

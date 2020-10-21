@@ -14,16 +14,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AuditManagerAdo instant;
 
-        public static AuditManagerAdo GetInstant()
+        public static AuditManagerAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AuditManagerAdo();
+            if (instant == null) instant = new AuditManagerAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AuditManagerAdo()
+        private AuditManagerAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<AuditManager> GetData2Send(AuditResultReq d, SqlTransaction transac = null)
@@ -63,7 +64,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
             }
 
-            var res = Query<AuditManager>(sql, param).ToList();
+            var res = Query<AuditManager>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -105,7 +106,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
             }
 
-            var res = Query<AuditManager>(sql, param).ToList();
+            var res = Query<AuditManager>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -147,7 +148,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
             }
 
-            var res = Query<AuditManager>(sql, param).ToList();
+            var res = Query<AuditManager>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -162,7 +163,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@FLAG = '" + d.FLAG + "'";
 
 
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
         }
 
@@ -181,7 +182,7 @@ FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) +")  B ";
             sql += " and    SNDST = 'Y'   AND   SNDACCDT IS NULL";
             sql += " GROUP BY MN,YR,OFFICECODE   )  AS X GROUP BY  MN,YR 	) as Z ";
 
-            var res = Query<SummaryAudit>(sql, param).FirstOrDefault();
+            var res = Query<SummaryAudit>(sql, param, conectStr).FirstOrDefault();
             return res;
         }
 
@@ -195,7 +196,7 @@ FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) +")  B ";
             sql += " GROUP BY MN,YR,PCODE,PNAME,DEPCODE,DEPCODEOL  ";
             sql += " order BY DEPCODE,DEPCODEOL, PCODE,PNAME  ";
 
-            var res = Query<SummaryResult>(sql, param).ToList();
+            var res = Query<SummaryResult>(sql, param, conectStr).ToList();
             return res;
 
         }

@@ -15,7 +15,7 @@ namespace ASSETKKF_API.Controllers.Audit
     [ApiController]
     public class AuditDepController : Base
     {
-        private IConfiguration Configuration;
+       
 
         public AuditDepController(IConfiguration configuration)
         {
@@ -26,7 +26,7 @@ namespace ASSETKKF_API.Controllers.Audit
         [HttpPost("AuditDep")]
         public async Task<dynamic> GetAuditResult([FromBody] dynamic data)
         {
-            var res = new AuditDepApi();
+            var res = new AuditDepApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
@@ -34,7 +34,7 @@ namespace ASSETKKF_API.Controllers.Audit
         [HttpPost("DepEditAudit")]
         public async Task<dynamic> GetAuditDuplicate([FromBody] dynamic data)
         {
-            var res = new DepEditAuditApi();
+            var res = new DepEditAuditApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }

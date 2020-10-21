@@ -12,16 +12,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AsFixedAssetAdo instant;
 
-        public static AsFixedAssetAdo GetInstant()
+        public static AsFixedAssetAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AsFixedAssetAdo();
+            if (instant == null) instant = new AsFixedAssetAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AsFixedAssetAdo()
+        private AsFixedAssetAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<AsFixedAsset> Search(ASSETKKF_MODEL.Data.Mssql.Asset.AsFixedAsset d, SqlTransaction transac = null)
@@ -37,7 +38,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 cmd += " and  assetno = " + QuoteStr(d.ASSETNO);
             }
-            var res = Query<AsFixedAsset>(cmd, param).ToList();
+            var res = Query<AsFixedAsset>(cmd, param, conectStr).ToList();
             return res;
         }
     }

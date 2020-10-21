@@ -25,5 +25,7 @@ namespace ASSETKKF_MODEL.Request.Report
         public string OFFICECODE { get; set; }
         public string TYPECODE { get; set; }
         public string GASTCODE { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 }

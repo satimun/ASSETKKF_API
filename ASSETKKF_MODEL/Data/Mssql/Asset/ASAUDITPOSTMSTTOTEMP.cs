@@ -61,5 +61,6 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string AREACODE { get; set; }
         public string IMGPATH { get; set; }
         public string INPNAME { get; set; }
+        public string FILEPATH { get; set; }
     }
 }

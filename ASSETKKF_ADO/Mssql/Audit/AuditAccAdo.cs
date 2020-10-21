@@ -15,16 +15,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AuditAccAdo instant;
 
-        public static AuditAccAdo GetInstant()
+        public static AuditAccAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AuditAccAdo();
+            if (instant == null) instant = new AuditAccAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AuditAccAdo()
+        private AuditAccAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<AuditAcc> GetData(AuditResultReq d, SqlTransaction transac = null)
@@ -63,7 +64,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
             }
 
-            var res = Query<AuditAcc>(sql, param).ToList();
+            var res = Query<AuditAcc>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -83,7 +84,7 @@ FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B ";
             sql += " AND  B.PCODE IN (SELECT  A.PCODE FROM  FT_ASSTProblem() A  WHERE  isnull(A.SACC,'') = 'Y' and COMPANY = " + QuoteStr(d.COMPANY) + ") ";
             sql += " GROUP BY MN,YR,OFFICECODE   )  AS X GROUP BY  MN,YR 	) as Z ";
 
-            var res = Query<SummaryAudit>(sql, param).FirstOrDefault();
+            var res = Query<SummaryAudit>(sql, param, conectStr).FirstOrDefault();
             return res;
         }
 
@@ -98,7 +99,7 @@ FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B ";
             sql += " GROUP BY MN,YR,PCODE,PNAME,DEPCODE,DEPCODEOL  ";
             sql += " order BY DEPCODE,DEPCODEOL, PCODE,PNAME  ";
 
-            var res = Query<SummaryResult>(sql, param).ToList();
+            var res = Query<SummaryResult>(sql, param, conectStr).ToList();
             return res;
 
         }

@@ -7,20 +7,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.Oauth
 {
     public class OauthApproveApi : Base<OauthLoginReq>
     {
-        public OauthApproveApi()
+        public OauthApproveApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(OauthLoginReq dataReq, ResponseAPI dataRes)
         {
+            DBMode = dataReq.DBMode;
+            
             var res = new OauthLoginRes();
+            res._result.ServerAddr = ConnectionString();
 
             var userApprove = new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET();
 
@@ -30,7 +35,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
 
             try
             {
-                var roles = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant().CheckApprover(userApprove);
+                var roles = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant(conString).CheckApprover(userApprove);
 
                 if (roles.Count <= 0)
                 {
@@ -44,7 +49,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                 else
                 {
 
-                    var user = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant().Search(new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET() { UCODE = dataReq.usercode.Trim() }).FirstOrDefault();
+                    var user = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant(conString).Search(new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET() { UCODE = dataReq.usercode.Trim() }).FirstOrDefault();
                     if (user == null) { throw new Exception("Username Not Found."); }
                     if (user.STAEMP == "9") { throw new Exception("พ้นสภาพพนักงาน ไม่มีสิทธิ์เข้าใช้โปรแกรม."); }
                     if (user.A_Review == "N") { throw new Exception("ถูกยกเลิกสิทธิ์เข้าใช้โปรแกรม."); }

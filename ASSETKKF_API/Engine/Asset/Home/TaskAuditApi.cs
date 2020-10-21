@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Home;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.Home
 {
     public class TaskAuditApi : Base<TaskAudit>
     {
-        public TaskAuditApi()
+        public TaskAuditApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(TaskAudit dataReq, ResponseAPI dataRes)
@@ -22,6 +25,8 @@ namespace ASSETKKF_API.Engine.Asset.Home
 
             try
             {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 List<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit> auditLst = new List<TaskAudit>();
 
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
@@ -29,11 +34,11 @@ namespace ASSETKKF_API.Engine.Asset.Home
                 switch (mode)
                 {
                     case "tracking":
-                        auditLst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().GetTracking(dataReq);
+                        auditLst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant(conString).GetTracking(dataReq);
                         break;
 
                     default:
-                        auditLst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().GetData(dataReq);
+                        auditLst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant(conString).GetData(dataReq);
                         break;
                 }
 
@@ -56,6 +61,18 @@ namespace ASSETKKF_API.Engine.Asset.Home
 
                
 
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {

@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Audit;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.AUDITDEP
 {
     public class DepEditAuditApi : Base<AuditPostReq>
     {
-        public DepEditAuditApi()
+        public DepEditAuditApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(AuditPostReq dataReq, ResponseAPI dataRes)
@@ -21,6 +24,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
             var res = new AuditDepRes();
             try
             {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 var mode = !String.IsNullOrEmpty(dataReq.mode) ? dataReq.mode.Trim().ToLower() : dataReq.mode;
                 switch (mode)
                 {
@@ -61,6 +66,18 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                         break;
                 }
             }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
+            }
             catch (Exception ex)
             {
                 res._result._code = "500 ";
@@ -74,11 +91,23 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
         {
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToClear(dataReq);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToClear(dataReq);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNDep(dataReq);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNDep(dataReq);
                 res.POSTTRNDuplicateLST = lstPostTRN;
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -96,12 +125,24 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
         {
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToConfirm(dataReq);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToConfirm(dataReq);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -119,12 +160,24 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
         {
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getAuditAssetNo(dataReq);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getAuditAssetNo(dataReq);
                 res.AUDITPOSTMSTTODEP = lst != null ? lst.FirstOrDefault() : null;
 
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -150,11 +203,23 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                     MODE = "updateDEP_STY"
 
                 };
-                var updateSTCY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req);
+                var updateSTCY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).SP_AUDITPOSTMSTTODEPPHONE(req);
 
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -183,12 +248,24 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
 
                 };
 
-                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req);
+                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).SP_AUDITPOSTTRNPHONE(req);
 
 
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -217,11 +294,23 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                     MODE = "updateDEP_STY"
 
                 };
-                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req);
+                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).SP_AUDITPOSTMSTTODEPPHONE(req);
 
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -237,10 +326,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                     COMPANY = dataReq.COMPANY,
                     filter = dataReq.filter
                 };
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToClear(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToClear(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNDep(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNDep(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 
@@ -265,12 +354,24 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
 
                 };
 
-                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req);
+                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).SP_AUDITPOSTTRNPHONE(req);
 
 
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -286,10 +387,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                     COMPANY = dataReq.COMPANY,
                     filter = dataReq.filter
                 };
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToClear(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToClear(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNDep(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNDep(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 
@@ -313,11 +414,23 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                     MODE = "update_IMG"
 
                 };
-                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req);
+                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).SP_AUDITPOSTMSTTODEPPHONE(req);
 
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -333,10 +446,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                     COMPANY = dataReq.COMPANY,
                     filter = dataReq.filter
                 };
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToClear(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToClear(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNDep(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNDep(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 
@@ -361,12 +474,24 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
 
                 };
 
-                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req);
+                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).SP_AUDITPOSTTRNPHONE(req);
 
 
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -382,10 +507,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                     COMPANY = dataReq.COMPANY,
                     filter = dataReq.filter
                 };
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToClear(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToClear(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNDep(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNDep(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 

@@ -52,6 +52,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string OFNAME { get; set; }
         public string ASSETNONEW { get; set; }
         public string ACTION { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
 
     }
 
@@ -81,6 +83,8 @@ namespace ASSETKKF_MODEL.Request.Asset
 
         public string DEPMST { get; set; }
         public string cutdt { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 
     public class AUDITPOSTMSTReq
@@ -110,5 +114,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string expstdt { get; set; }
         public string INPID { get; set; }
         public string FLAG { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 }

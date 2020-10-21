@@ -13,17 +13,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AUDITCUTDATEAdo instant;
 
-        public static AUDITCUTDATEAdo GetInstant()
+        public static AUDITCUTDATEAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AUDITCUTDATEAdo();
+            if (instant == null) instant = new AUDITCUTDATEAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AUDITCUTDATEAdo()
+        private AUDITCUTDATEAdo(string conStr = null)
         {
-
+            conectStr = conStr;
         }
 
         public List<ASAUDITCUTDATE> getNoAudit(AuditPostReq d, string flag = null, SqlTransaction transac = null)
@@ -36,7 +36,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " WHERE X.SQNO =" + QuoteStr(d.SQNO);
             sql += " AND  X.PCODE <> '' )";
 
-            var res = Query<ASAUDITCUTDATE>(sql, param).ToList();
+            var res = Query<ASAUDITCUTDATE>(sql, param, conectStr).ToList();
             return res;
 
         }

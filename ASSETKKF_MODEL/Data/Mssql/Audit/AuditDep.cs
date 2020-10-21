@@ -32,5 +32,6 @@ namespace ASSETKKF_MODEL.Data.Mssql.Audit
         public DateTime? EXPSTDT { get; set; }
         public DateTime? ACCDT { get; set; }
         public DateTime? EXPACCDT { get; set; }
+        public string FILEPATH { get; set; }
     }
 }

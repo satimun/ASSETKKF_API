@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,10 +16,11 @@ namespace ASSETKKF_API.Engine.Asset.File
 {
     public class AuditUploadApi : Base<AUDITPOSTMSTReq>
     {
-        public AuditUploadApi()
+        public AuditUploadApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
 
@@ -26,11 +28,13 @@ namespace ASSETKKF_API.Engine.Asset.File
         {            
             var res = new AuditUploadRes();
             try
-            {                
+            {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 if (dataReq != null && System.IO.File.Exists(dataReq.IMGPATH)) { }
                 {
                     
-                    var obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().UpdateAUDITPOSTMSTImage(dataReq);
+                    var obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).UpdateAUDITPOSTMSTImage(dataReq);
                     res.fullpath = dataReq.IMGPATH;
                 }
 
@@ -39,6 +43,18 @@ namespace ASSETKKF_API.Engine.Asset.File
                 res._result._status = "OK";
 
 
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {

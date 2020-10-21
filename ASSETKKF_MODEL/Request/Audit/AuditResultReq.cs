@@ -32,5 +32,7 @@ namespace ASSETKKF_MODEL.Request.Audit
         public bool Menu4 { get; set; }
 
         public string FLAG { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 }

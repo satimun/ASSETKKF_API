@@ -9,19 +9,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Request.Asset;
+using Microsoft.Extensions.Configuration;
+
 namespace ASSETKKF_API.Engine.Asset
 {
     public class STPOSITASSETAPI : Base<STPOSITASSETReq>
     {
-        public STPOSITASSETAPI()
+        public STPOSITASSETAPI(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(STPOSITASSETReq dataReq, ResponseAPI dataRes)
         {
+            DBMode = dataReq.DBMode;
+            
             var res = new STPOSITASSETReq();
+            res._result.ServerAddr = ConnectionString();
+
             var req = new ASSETKKF_MODEL.Request.Asset.STPOSITASSETReq()
             {
                 Company = dataReq.Company,

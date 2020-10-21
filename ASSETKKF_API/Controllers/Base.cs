@@ -1,5 +1,6 @@
 ﻿using ASSETKKF_MODEL.Response;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace ASSETKKF_API.Controllers
 {
     public abstract class Base : ControllerBase
     {
+        public IConfiguration Configuration { get; set; }
         public dynamic ResponeValid(ResponseAPI res)
         {
             if (res.status == "F")

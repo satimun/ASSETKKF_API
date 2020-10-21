@@ -19,6 +19,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string SQNO { get; set; }
         public string YR { get; set; }
         public string MN { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
 
     }
 
@@ -35,6 +37,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string DEPMST { get; set; }
         public string YR { get; set; }
         public string MN { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 
     public class AuditCutPostReq
@@ -46,6 +50,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string AREACODE { get; set; }
         public string YR { get; set; }
         public string MN { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 
     #endregion

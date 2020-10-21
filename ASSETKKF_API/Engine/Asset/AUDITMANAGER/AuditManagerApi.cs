@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_ADO.Mssql.Audit;
@@ -7,15 +8,17 @@ using ASSETKKF_MODEL.Data.Mssql.Audit;
 using ASSETKKF_MODEL.Request.Audit;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Audit;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
 {
     public class AuditManagerApi : Base<AuditResultReq>
     {
-        public AuditManagerApi()
+        public AuditManagerApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(AuditResultReq dataReq, ResponseAPI dataRes)
@@ -24,6 +27,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
 
             try
             {
+                DBMode = dataReq.DBMode;
+                ConnectionString();
                 List<AuditManager> auditLst = new List<AuditManager>();
 
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
@@ -31,15 +36,15 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
                 switch (mode)
                 {
                     case "mgr1":
-                        auditLst = AuditManagerAdo.GetInstant().GetData2MGR1(dataReq);
+                        auditLst = AuditManagerAdo.GetInstant(conString).GetData2MGR1(dataReq);
                         break;
 
                     case "mgr2":
-                        auditLst = AuditManagerAdo.GetInstant().GetData2MGR2(dataReq);
+                        auditLst = AuditManagerAdo.GetInstant(conString).GetData2MGR2(dataReq);
                         break;
 
                     default:
-                        auditLst = AuditManagerAdo.GetInstant().GetData2Send(dataReq);
+                        auditLst = AuditManagerAdo.GetInstant(conString).GetData2Send(dataReq);
                         break;
                 }
 
@@ -59,6 +64,18 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
                     res._result._status = "OK";
 
                 }
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {

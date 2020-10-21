@@ -15,7 +15,6 @@ namespace ASSETKKF_API.Controllers.Asset
     [ApiController]
     public class AUDITPOSTTRNController : Base
     {
-        private IConfiguration Configuration;
 
         public AUDITPOSTTRNController(IConfiguration configuration)
         {
@@ -35,7 +34,7 @@ namespace ASSETKKF_API.Controllers.Asset
         [HttpPost("AuditAssetIMG")]
         public async Task<dynamic> AuditAssetIMG([FromBody] dynamic data)
         {
-            var res = new AuditPostTRNUploadAPI();
+            var res = new AuditPostTRNUploadAPI(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
@@ -43,7 +42,7 @@ namespace ASSETKKF_API.Controllers.Asset
         [HttpPost("GetAuditPostTRNInfo")]
         public async Task<dynamic> GetAuditPostTRNInfo([FromBody] dynamic data)
         {
-            var res = new AuditPostTRNInfoAPI();
+            var res = new AuditPostTRNInfoAPI(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
@@ -51,7 +50,7 @@ namespace ASSETKKF_API.Controllers.Asset
         [HttpPost("GetASSETOFFICECODE")]
         public async Task<dynamic> GetASSETOFFICECODE([FromBody] dynamic data)
         {
-            var res = new ASSETOFFICECODEAPI();
+            var res = new ASSETOFFICECODEAPI(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
@@ -59,7 +58,7 @@ namespace ASSETKKF_API.Controllers.Asset
         [HttpPost("GetASSETASSETNO")]
         public async Task<dynamic> GetASSETASSETNO([FromBody] dynamic data)
         {
-            var res = new ASSETASSETNOAPI();
+            var res = new ASSETASSETNOAPI(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
@@ -67,7 +66,7 @@ namespace ASSETKKF_API.Controllers.Asset
         [HttpPost("CheckASSETOFFICECODE")]
         public async Task<dynamic> CheckASSETOFFICECODE([FromBody] dynamic data)
         {
-            var res = new ASSETOFFICECODECheckAPI();
+            var res = new ASSETOFFICECODECheckAPI(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
@@ -75,7 +74,7 @@ namespace ASSETKKF_API.Controllers.Asset
         [HttpPost("CheckASSETASSETNO")]
         public async Task<dynamic> CheckASSETASSETNO([FromBody] dynamic data)
         {
-            var res = new ASSETASSETNOCheckAPI();
+            var res = new ASSETASSETNOCheckAPI(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }

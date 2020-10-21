@@ -10,5 +10,6 @@ namespace ASSETKKF_MODEL.Response
         public string code { get; set; }
         public string message { get; set; }
         public dynamic data = "";
+        public string ServerAddr { get; set; }
     }
 }

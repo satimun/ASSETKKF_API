@@ -13,17 +13,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AUDITPOSTMSTTODEPAdo instant;
 
-        public static AUDITPOSTMSTTODEPAdo GetInstant()
+        public static AUDITPOSTMSTTODEPAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AUDITPOSTMSTTODEPAdo();
+            if (instant == null) instant = new AUDITPOSTMSTTODEPAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AUDITPOSTMSTTODEPAdo()
+        private AUDITPOSTMSTTODEPAdo(string conStr = null)
         {
-
+            conectStr = conStr;
         }
 
         public int SP_AUDITPOSTMSTTODEP(AUDITPOSTMSTReq d, string flag = null, SqlTransaction transac = null)
@@ -40,7 +40,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@PNAME= '" + d.PNAME + "'";
             sql += " ,@MEMO= '" + d.MEMO1 + "'";
             
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
         }
 
@@ -96,7 +96,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -114,7 +114,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@MEMO= '" + d.MEMO1 + "'";
             sql += " ,@MODE = '" + d.MODE + "'";            
             
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
         }
 
@@ -154,7 +154,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -167,7 +167,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " and a.ASSETNO = '" + d.ASSETNO + "'";
             //sql += " and a.INPID = '" + d.UCODE + "'";
 
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -233,7 +233,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -300,8 +300,25 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
             return res;
+        }
+
+        public string getAttachedFile(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        {
+            string attachedFile = "";
+            DynamicParameters param = new DynamicParameters();
+            sql = "select * FROM  FT_ASAUDITPOSTMSTTOTEMP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B";
+            sql += " where B.SQNO = " + QuoteStr(d.SQNO);
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
+
+            if(res != null && res.Count > 0)
+            {
+               var obj = res.Where(x => !String.IsNullOrEmpty(x.FILEPATH)).FirstOrDefault();
+                attachedFile = obj != null ? obj.FILEPATH : attachedFile;
+            }
+
+            return attachedFile;
         }
 
 

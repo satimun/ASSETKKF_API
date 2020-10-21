@@ -1,6 +1,7 @@
 ﻿using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Audit;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,11 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
 {
     public class CompEditAuditApi : Base<AuditPostReq>
     {
-        public CompEditAuditApi()
+        public CompEditAuditApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(AuditPostReq dataReq, ResponseAPI dataRes)
@@ -22,6 +24,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
             var res = new AuditCompRes();
             try
             {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 var mode = !String.IsNullOrEmpty(dataReq.mode) ? dataReq.mode.Trim().ToLower() : dataReq.mode;
                 switch (mode)
                 {
@@ -60,10 +64,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
         {
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(dataReq);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToCompEdit(dataReq);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(dataReq);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNComp(dataReq);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
             catch (Exception ex)
@@ -97,7 +101,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                         MODE = "updatePCODE"
 
                     };
-                var updateDep = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEP(req);
+                var updateDep = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).SP_AUDITPOSTMSTTODEP(req);
 
                 Thread.Sleep(1000);
 
@@ -112,7 +116,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                     MODE = "updateDEP_STY"
 
                 };
-                var updateSTCY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req1);
+                var updateSTCY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).SP_AUDITPOSTMSTTODEPPHONE(req1);
 
                 res._result._code = "200";
                 res._result._message = "";
@@ -137,10 +141,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                     filter = dataReq.filter
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToCompEdit(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNComp(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 
@@ -165,7 +169,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                     MODE = "update_ComIMG"
 
                 };
-                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req);
+                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).SP_AUDITPOSTMSTTODEPPHONE(req);
 
                 Thread.Sleep(1000);
 
@@ -181,7 +185,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
 
                 };
 
-                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req1);
+                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).SP_AUDITPOSTTRNPHONE(req1);
                 Thread.Sleep(1000);
 
                 res._result._code = "200";
@@ -202,10 +206,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                     COMPANY = dataReq.COMPANY,
                     filter = dataReq.filter
                 };
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToCompEdit(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNComp(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 
@@ -230,7 +234,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
 
                 };
 
-                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req);
+                var updateSTY = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).SP_AUDITPOSTTRNPHONE(req);
 
                 Thread.Sleep(1000);
 
@@ -246,7 +250,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
 
                 };
 
-                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req1);
+                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).SP_AUDITPOSTTRNPHONE(req1);
                 Thread.Sleep(1000);
 
 
@@ -268,10 +272,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                     COMPANY = dataReq.COMPANY,
                     filter = dataReq.filter
                 };
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToCompEdit(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNComp(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 
@@ -301,7 +305,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                 };
 
 
-                var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().addAUDITPOSTTRN(req);
+                var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant(conString).addAUDITPOSTTRN(req);
 
                 Thread.Sleep(1000);
 
@@ -317,7 +321,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
 
                 };
 
-                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req1);
+                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).SP_AUDITPOSTTRNPHONE(req1);
                 Thread.Sleep(1000);
 
 
@@ -339,10 +343,10 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                     COMPANY = dataReq.COMPANY,
                     filter = dataReq.filter
                 };
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToClear(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToClear(req);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNDep(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNDep(req);
                 res.POSTTRNDuplicateLST = lstPostTRN;
             }
 

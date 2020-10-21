@@ -10,21 +10,24 @@ using ASSETKKF_API.Engine.Asset;
 using ASSETKKF_MODEL.Request.Line;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Line;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace ASSETKKF_API.Engine.Line.Notify
 {
     public class PushMessage : Base<NotifyPushMessage>
     {
-        public PushMessage()
+        public PushMessage(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(NotifyPushMessage dataReq, ResponseAPI dataRes)
         {
-
+            DBMode = dataReq.DBMode;
+            dataRes.ServerAddr = ConnectionString();
             string body = "";
             using (var client = new HttpClient())
             {

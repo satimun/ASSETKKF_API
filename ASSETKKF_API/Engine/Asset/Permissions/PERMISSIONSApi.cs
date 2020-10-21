@@ -1,25 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Request.Permissions;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Permissions;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.Permissions
 {
     public class PERMISSIONSApi : Base<PERMISSIONSReq>
     {
-        public PERMISSIONSApi()
+        public PERMISSIONSApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(PERMISSIONSReq dataReq, ResponseAPI dataRes)
         {
+            DBMode = dataReq.DBMode;
+            
             var res = new PERMISSIONSRes();
+            res._result.ServerAddr = ConnectionString();
 
             try
             {
@@ -71,6 +77,18 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
 
 
             }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
+            }
             catch (Exception ex)
             {
                 res._result._code = "500 ";
@@ -88,7 +106,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             var res = new PERMISSIONSRes();
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().Get(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE ,GUCODE = dataReq.GUCODE , COMPANY = dataReq.COMPANY });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).Get(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE ,GUCODE = dataReq.GUCODE , COMPANY = dataReq.COMPANY });
                 if (lst == null || (lst != null && lst.Count == 0))
                 {
                     var req = new STPERMISSIONS()
@@ -104,7 +122,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                         INPID = dataReq.INPID,
                     };
 
-                    var state = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().Insert(req);
+                    var state = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).Insert(req);
 
                     res._result._code = "200";
                     res._result._message = "บันทึกข้อมูลเรียบร้อยแล้ว";
@@ -124,7 +142,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             }
             finally
             {
-                var newList = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().ListActive(new STPERMISSIONS() { COMPANY = dataReq.COMPANY });
+                var newList = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).ListActive(new STPERMISSIONS() { COMPANY = dataReq.COMPANY });
                 res.PERMISSIONSLST = newList;
             }
             return res;
@@ -136,7 +154,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             var res = new PERMISSIONSRes();
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().Get(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).Get(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
                 if (lst != null && lst.Count > 0)
                 {
                     var req = new STPERMISSIONS()
@@ -152,7 +170,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                         INPID = dataReq.INPID,
                     };
 
-                    var state = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().Update(req);
+                    var state = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).Update(req);
 
                     res._result._code = "200";
                     res._result._message = "บันทึกข้อมูลเรียบร้อยแล้ว";
@@ -174,7 +192,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             }
             finally
             {
-                var newList = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().ListActive(new STPERMISSIONS() { COMPANY = dataReq.COMPANY });
+                var newList = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).ListActive(new STPERMISSIONS() { COMPANY = dataReq.COMPANY });
                 res.PERMISSIONSLST = newList;
             }
             return res;
@@ -185,7 +203,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             var res = new PERMISSIONSRes();
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().Get(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).Get(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
                 if (lst != null && lst.Count > 0)
                 {
                     var req = new STPERMISSIONS()
@@ -201,7 +219,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                         INPID = dataReq.INPID,
                     };
 
-                    var state = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().Delete(req);
+                    var state = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).Delete(req);
 
                     res._result._code = "200";
                     res._result._message = "ลบข้อมูลเรียบร้อยแล้ว";
@@ -223,7 +241,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             }
             finally
             {
-                var newList = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().ListActive(new STPERMISSIONS() { COMPANY = dataReq.COMPANY });
+                var newList = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).ListActive(new STPERMISSIONS() { COMPANY = dataReq.COMPANY });
                 res.PERMISSIONSLST = newList;
             }
             return res;
@@ -234,7 +252,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             var res = new PERMISSIONSRes();
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().Get(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).Get(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
                 if (lst != null && lst.Count > 0)
                 {
                     var req = new STPERMISSIONS()
@@ -250,7 +268,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                         INPID = dataReq.INPID,
                     };
 
-                    var state = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().DeleteAllByGroup(req);
+                    var state = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).DeleteAllByGroup(req);
 
                     res._result._code = "200";
                     res._result._message = "ลบข้อมูลเรียบร้อยแล้ว";
@@ -272,7 +290,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             }
             finally
             {
-                var newList = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().ListActive(new STPERMISSIONS() { COMPANY = dataReq.COMPANY });
+                var newList = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).ListActive(new STPERMISSIONS() { COMPANY = dataReq.COMPANY });
                 res.PERMISSIONSLST = newList;
             }
             return res;
@@ -296,7 +314,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                     INPID = dataReq.INPID,
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().Search(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).Search(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
                 res.PERMISSIONSLST = lst;
 
                 if (lst != null && lst.Count > 0)
@@ -340,7 +358,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                     INPID = dataReq.INPID,
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().ListActive(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).ListActive(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
                 res.PERMISSIONSLST = lst;
 
                 if (lst != null && lst.Count > 0)
@@ -384,7 +402,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                     INPID = dataReq.INPID,
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().GroupUserActive(new STPERMISSIONS() { GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).GroupUserActive(new STPERMISSIONS() { GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
                 res.PERMISSIONSLST = lst;
 
                 if (lst != null && lst.Count > 0)
@@ -429,7 +447,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                     INPID = dataReq.INPID,
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().getGROUPUSER(new STPERMISSIONS() { COMPANY = dataReq.COMPANY });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).getGROUPUSER(new STPERMISSIONS() { COMPANY = dataReq.COMPANY });
                 res.GROUPUSERLST = lst;
 
                 if (lst != null && lst.Count > 0)
@@ -473,7 +491,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                     INPID = dataReq.INPID,
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().ListMenu(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).ListMenu(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE, GUCODE = dataReq.GUCODE, COMPANY = dataReq.COMPANY });
                 res.MENULST = lst;
 
                 if (lst != null && lst.Count > 0)
@@ -517,7 +535,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                     INPID = dataReq.INPID,
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().GroupPermissions(req);
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).GroupPermissions(req);
                 res.PERMISSIONSLST = lst;
 
                 if (lst != null && lst.Count > 0)
@@ -552,7 +570,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                     UCODE = dataReq.INPID,
                     COMPANY = dataReq.COMPANY,
                 };
-                var userLst = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant().Search(userReq);
+                var userLst = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant(conString).Search(userReq);
                 var objUser = userLst != null ? userLst.FirstOrDefault() : null;
                 var gucode = objUser != null ? objUser.GUCODE : null;
                 var req = new STPERMISSIONS()
@@ -568,7 +586,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                     INPID = dataReq.INPID,
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().Valid(req);
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).Valid(req);
                 res.PERMISSIONSLST = lst;
 
                 if (lst != null && lst.Count > 0)

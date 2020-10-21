@@ -13,17 +13,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AUDITPOSTMSTAdo instant;
 
-        public static AUDITPOSTMSTAdo GetInstant()
+        public static AUDITPOSTMSTAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AUDITPOSTMSTAdo();
+            if (instant == null) instant = new AUDITPOSTMSTAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AUDITPOSTMSTAdo()
+        private AUDITPOSTMSTAdo(string conStr = null)
         {
-
+            conectStr = conStr;
         }
 
         public List<ASAUDITPOSTMST> getPOSTMSTDuplicate(AuditPostReq d, string flag = null, SqlTransaction transac = null)
@@ -112,7 +112,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMST>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -144,7 +144,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@PFLAG = '" + d.PFLAG + "'";
 
 
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
         }
 
@@ -160,7 +160,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += "  and  X.PCODE <> ''  GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) = 1 )  ";
 
-            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMST>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -177,7 +177,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += "  and  X.PCODE <> ''  GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) > 1 )  ";
 
-            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMST>(sql, param, conectStr).ToList();
             return res;
         }
 

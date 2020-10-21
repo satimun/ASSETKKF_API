@@ -10,5 +10,7 @@ namespace ASSETKKF_MODEL.Request.Oauth
         public string username { get; set; }
         public string password { get; set; }
         public string twofactor { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 }

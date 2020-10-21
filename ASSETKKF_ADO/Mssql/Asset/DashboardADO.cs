@@ -13,16 +13,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static DashboardADO instant;
 
-        public static DashboardADO GetInstant()
+        public static DashboardADO GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new DashboardADO();
+            if (instant == null) instant = new DashboardADO(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private DashboardADO()
+        private DashboardADO(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<DashboardInspection> getInspection(AuditSummaryReq d, SqlTransaction transac = null)
@@ -46,7 +47,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += ",@TYPECODE = " + QuoteStr(d.TYPECODE) + ",@GASTCODE = " + QuoteStr(d.GASTCODE) + ",@OFFICECODE = " + QuoteStr(d.OFFICECODE);
 
 
-            var lst = Query<DashboardInspection>(sql, param).ToList();
+            var lst = Query<DashboardInspection>(sql, param, conectStr).ToList();
 
             return lst;
 
@@ -124,7 +125,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             
 
-            var res = Query<DashboardInspection>(sql, param).ToList();
+            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -197,7 +198,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             
 
-            var res = Query<DashboardInspection>(sql, param).ToList();
+            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -276,7 +277,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             
 
-            var res = Query<DashboardInspection>(sql, param).ToList();
+            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -445,7 +446,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by COMPANY,YR,MN,TYPECODE,TYPENAME ) as D";
 
-            var res = Query<DashboardInspection>(sql, param).ToList();
+            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -613,7 +614,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by COMPANY,YR,MN,GASTCODE,GASTNAME,TYPECODE,TYPENAME ) as D";
 
-            var res = Query<DashboardInspection>(sql, param).ToList();
+            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -671,7 +672,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += @"    ) t group by COMPANY,YR,MN,SQNO,ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME 
                 ) Z   ";
 
-            var res = Query<DashboardInspection>(sql, param).ToList();
+            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -743,7 +744,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " Group BY  COMPANY,YR,MN,DEPMST,SQNO,Flag,DEPCODEOL,OFFICECODE,OFNAME";
 
             
-            var res = Query<DashboardInspection>(sql, param).ToList();
+            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
             return res;
 
         }

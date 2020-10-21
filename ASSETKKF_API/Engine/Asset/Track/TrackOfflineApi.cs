@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
@@ -8,15 +9,17 @@ using ASSETKKF_MODEL.Request.Track;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Asset;
 using ASSETKKF_MODEL.Response.Track;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.Track
 {
     public class TrackOfflineApi : Base<TrackOfflineReq>
     {
-        public TrackOfflineApi()
+        public TrackOfflineApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(TrackOfflineReq dataReq, ResponseAPI dataRes)
@@ -25,6 +28,8 @@ namespace ASSETKKF_API.Engine.Asset.Track
 
             try
             {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 var mode = String.IsNullOrEmpty(dataReq.mode) ? dataReq.mode : dataReq.mode.ToLower();
                 switch (mode)
                 {
@@ -64,6 +69,18 @@ namespace ASSETKKF_API.Engine.Asset.Track
                         getTrackOffline(dataReq, res);
                         break;
                 }
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -515,32 +532,32 @@ namespace ASSETKKF_API.Engine.Asset.Track
 
         public  ASAUDITCUTDATEMST GetAUDITCUTDATEMST(TrackOfflineReq dataReq)
         {            
-            return  Task.Run(() =>  ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getASAUDITCUTDATEMST(dataReq)).Result;
+            return  Task.Run(() =>  ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getASAUDITCUTDATEMST(dataReq)).Result;
         }
 
         public ASAUDITPOSTMST GetASAUDITPOSTMST(TrackOfflineReq dataReq)
         {
-            return  Task.Run(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getASAUDITPOSTMST(dataReq)).Result;
+            return  Task.Run(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getASAUDITPOSTMST(dataReq)).Result;
         }
 
         public ASAUDITPOSTTRN GetASAUDITPOSTTRN(TrackOfflineReq dataReq)
         {
-            return  Task.Run(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getASAUDITPOSTTRN(dataReq)).Result;
+            return  Task.Run(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getASAUDITPOSTTRN(dataReq)).Result;
         }
 
         public  List<TrackPostMSTRes> GetTrackPostMST(TrackOfflineReq dataReq)
         {
-            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostMSTAdo.GetInstant().GetData(dataReq)).Result;
+            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostMSTAdo.GetInstant(conString).GetData(dataReq)).Result;
         }
 
         public List<TrackPostTRNRes> GetTrackPostTRN(TrackOfflineReq dataReq)
         {
-            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostTRNAdo.GetInstant().GetData(dataReq)).Result;
+            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostTRNAdo.GetInstant(conString).GetData(dataReq)).Result;
         }
 
         public List<TrackHDRes> GetTrackHD(TrackOfflineReq dataReq)
         {
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackHDAdo.GetInstant().GetData(dataReq)).Result;
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackHDAdo.GetInstant(conString).GetData(dataReq)).Result;
         }
 
         public List<ASAUDITPOSTMST> GetCutPostMST(TrackOfflineReq dataReq)
@@ -551,7 +568,7 @@ namespace ASSETKKF_API.Engine.Asset.Track
                 SQNO = dataReq.sqno,
                 INPID = dataReq.ucode
             };
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(reqMst)).Result;
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTMST(reqMst)).Result;
         }
 
         public ProblemList GetProblemBase(TrackOfflineReq dataReq)
@@ -560,54 +577,54 @@ namespace ASSETKKF_API.Engine.Asset.Track
             {
                 Company = dataReq.company
             };
-            var lstProblem = Task.Run(() => ASSETKKF_ADO.Mssql.Asset.STProblemADO.GetInstant().Search(reqProblem)).Result;
+            var lstProblem = Task.Run(() => ASSETKKF_ADO.Mssql.Asset.STProblemADO.GetInstant(conString).Search(reqProblem)).Result;
             return lstProblem.FirstOrDefault(); 
         }
 
         public  Task<int> InsertTrackPostMST(TrackOfflineReq dataReq)
         {
-            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostMSTAdo.GetInstant().Insert(dataReq));
+            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostMSTAdo.GetInstant(conString).Insert(dataReq));
         }
 
         public  Task<int> InsertTrackPostTRN(TrackOfflineReq dataReq)
         {
-            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostTRNAdo.GetInstant().Insert(dataReq));
+            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostTRNAdo.GetInstant(conString).Insert(dataReq));
         }
 
         public  Task<int> UpdateTransferTrackPostMST(TrackOfflineReq dataReq)
         {
-            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostMSTAdo.GetInstant().UpdateTransfer(dataReq));
+            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostMSTAdo.GetInstant(conString).UpdateTransfer(dataReq));
         }
 
         public Task<int> UpdateAuditTrackPostMST(TrackOfflineReq dataReq)
         {
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostMSTAdo.GetInstant().UpdateAudit(dataReq));
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostMSTAdo.GetInstant(conString).UpdateAudit(dataReq));
         }
 
         public  Task<int> UpdateTransferTrackPostTRN(TrackOfflineReq dataReq)
         {
-            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostTRNAdo.GetInstant().UpdateTransfer(dataReq));
+            return  Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostTRNAdo.GetInstant(conString).UpdateTransfer(dataReq));
         }
 
 
         public Task<int> UpdateAuditTrackPostTRN(TrackOfflineReq dataReq)
         {
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostTRNAdo.GetInstant().UpdateAudit(dataReq));
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Track.TrackPostTRNAdo.GetInstant(conString).UpdateAudit(dataReq));
         }
 
         public Task<int> UpdateAuditPostMST(AUDITPOSTMSTReq dataReq)
         {
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTAdo.GetInstant().saveAUDITPOSTMST(dataReq));
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTAdo.GetInstant(conString).saveAUDITPOSTMST(dataReq));
         }
 
         public Task<int> UpdateAuditPostTRN(AUDITPOSTTRNReq dataReq)
         {
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().saveAUDITPOSTTRN(dataReq));
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).saveAUDITPOSTTRN(dataReq));
         }
 
         public Task<int> InsertAuditPostMST(AuditPostReq dataReq)
         {
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().addAUDITPOSTMST(dataReq));
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).addAUDITPOSTMST(dataReq));
 
         }
     }

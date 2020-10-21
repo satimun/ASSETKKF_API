@@ -12,16 +12,17 @@ namespace ASSETKKF_ADO.Mssql.Track
     public class TrackPostMSTAdo : Base
     {
         private static TrackPostMSTAdo instant;
-        public static TrackPostMSTAdo GetInstant()
+        public static TrackPostMSTAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new TrackPostMSTAdo();
+            if (instant == null) instant = new TrackPostMSTAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private TrackPostMSTAdo()
+        private TrackPostMSTAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<TrackPostMSTRes> GetData(TrackOfflineReq d, SqlTransaction transac = null)
@@ -53,7 +54,7 @@ namespace ASSETKKF_ADO.Mssql.Track
 
             sql += " order by flag,assetno";
 
-            var res = Query<TrackPostMSTRes>(sql, param).ToList();
+            var res = Query<TrackPostMSTRes>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -79,7 +80,7 @@ namespace ASSETKKF_ADO.Mssql.Track
             sql += " ,@INPID,@INPDT,@ASSETNO,@MEMO1,@FLAG";
             sql += " ,@TRACKID, GETDATE())";
 
-            var res = ExecuteNonQuery(transac, sql, param);
+            var res = ExecuteNonQuery(transac, sql, param, conectStr);
             return res;
 
         }
@@ -109,7 +110,7 @@ namespace ASSETKKF_ADO.Mssql.Track
                 " and INPID = @INPID" +
                 " and ASSETNO = @ASSETNO ";
 
-            var res = ExecuteNonQuery(transac, sql, param);
+            var res = ExecuteNonQuery(transac, sql, param, conectStr);
             return res;
 
         }
@@ -140,7 +141,7 @@ namespace ASSETKKF_ADO.Mssql.Track
                 " and INPID = @INPID" +
                 " and ASSETNO = @ASSETNO ";
 
-            var res = ExecuteNonQuery(transac, sql, param);
+            var res = ExecuteNonQuery(transac, sql, param, conectStr);
             return res;
 
         }

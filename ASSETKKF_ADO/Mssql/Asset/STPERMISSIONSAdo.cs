@@ -13,16 +13,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static STPERMISSIONSAdo instant;
 
-        public static STPERMISSIONSAdo GetInstant()
+        public static STPERMISSIONSAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new STPERMISSIONSAdo();
+            if (instant == null) instant = new STPERMISSIONSAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private STPERMISSIONSAdo()
+        private STPERMISSIONSAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public int Insert(STPERMISSIONS d, SqlTransaction transac = null)
@@ -40,7 +41,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "INSERT INTO STPERMISSIONS (MENUCODE, GUCODE, COMPANY, P_ACCESS,  P_MANAGE, P_DELETE, P_APPROVE,P_EXPORT, INPID, INPDT) " +
                 "VALUES (@MENUCODE, @GUCODE, @COMPANY, @P_ACCESS, @P_MANAGE, @P_DELETE, @P_APPROVE, @P_EXPORT, @INPID, GETDATE());";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -87,7 +88,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
 
             cmd += " Where MENUCODE = @MENUCODE and GUCODE = @GUCODE and COMPANY =@COMPANY ;";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -101,7 +102,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "Delete From STPERMISSIONS  " +
                 " Where MENUCODE = @MENUCODE and GUCODE = @GUCODE and COMPANY =@COMPANY ;";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -113,7 +114,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "Delete From STPERMISSIONS  " +
                 " Where MENUCODE = @MENUCODE and COMPANY =@COMPANY ;";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -125,7 +126,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "Delete From STPERMISSIONS  " +
                 " Where GUCODE = @GUCODE and COMPANY =@COMPANY ;";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -184,7 +185,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@P_EXPORT", d.P_EXPORT);
             }
 
-            var res = Query<STPERMISSIONS>(sql, param).ToList();
+            var res = Query<STPERMISSIONS>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -249,7 +250,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@P_EXPORT", d.P_EXPORT);
             }
 
-            var res = Query<STPERMISSIONSRes>(sql, param).ToList();
+            var res = Query<STPERMISSIONSRes>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -314,7 +315,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@P_EXPORT", d.P_EXPORT);
             }
 
-            var res = Query<STPERMISSIONSRes>(sql, param).ToList();
+            var res = Query<STPERMISSIONSRes>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -378,7 +379,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@P_EXPORT", d.P_EXPORT);
             }
 
-            var res = Query<STPERMISSIONSRes>(sql, param).ToList();
+            var res = Query<STPERMISSIONSRes>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -445,7 +446,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += "group by M.MENUCODE , M.MENUNAME , P.COMPANY ,P.P_ACCESS ,P.P_MANAGE , P.P_DELETE , P.P_APPROVE, P_EXPORT ";
 
-            var res = Query<STPERMISSIONSRes>(sql, param).ToList();
+            var res = Query<STPERMISSIONSRes>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -476,7 +477,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += "group by G.GUCODE , G.GUNAME , P.COMPANY";
 
-            var res = Query<STPERMISSIONSRes>(sql, param).ToList();
+            var res = Query<STPERMISSIONSRes>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -508,7 +509,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by gucode,guname";
 
-            var res = Query<STGROUPUSER>(sql, param).ToList();
+            var res = Query<STGROUPUSER>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -532,7 +533,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
             sql += " )";
 
-            var res = Query<STMENU>(sql, param).ToList();
+            var res = Query<STMENU>(sql, param, conectStr).ToList();
             return res;
         }
 

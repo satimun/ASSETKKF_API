@@ -11,6 +11,8 @@ namespace ASSETKKF_MODEL.Request
         public string path { get; set; }
         public string fullpath { get; set; }
         public string file { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
         public IFormFile FileToUpload { get; set; }
     }
 }

@@ -3,8 +3,10 @@ using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Asset;
 using Core.Util;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,15 +14,19 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 {
     public class AuditPostCheckAPI : Base<AuditPostCheckReq>
     {
-        public AuditPostCheckAPI()
+        public AuditPostCheckAPI(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
-        }
+            Configuration = configuration;
+        }        
 
         protected override void ExecuteChild(AuditPostCheckReq dataReq, ResponseAPI dataRes)
         {
             var res = new AuditPostRes();
+
+            DBMode = dataReq.DBMode;
+            res._result.ServerAddr = ConnectionString();
 
 
             var req1 = new ASSETKKF_MODEL.Request.Asset.AuditPostReq()
@@ -37,7 +43,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             {
                 List<ASAUDITPOSTMST> lst = new List<ASAUDITPOSTMST>();
                 //var lst = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq);
-                var t1 = System.Threading.Tasks.Task.Factory.StartNew(() =>  lst = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(dataReq));
+                var t1 = System.Threading.Tasks.Task.Factory.StartNew(() =>  lst = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).checkAUDITAssetNo(dataReq,transac));
                 t1.Wait();
 
 
@@ -51,7 +57,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     {
                         ASSETNO = dataReq.ASSETNO
                     };
-                    ASSETASSETNO obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().checkASSETASSETNO(req);
+                    ASSETASSETNO obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant(conString).checkASSETASSETNO(req,transac);
 
                     res.ASSETASSETNO = obj;
 
@@ -80,7 +86,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         {
                             Company = dataReq.COMPANY
                         };
-                        var lstProblem = ASSETKKF_ADO.Mssql.Asset.STProblemADO.GetInstant().Search(reqProblem);
+                        var lstProblem = ASSETKKF_ADO.Mssql.Asset.STProblemADO.GetInstant(conString).Search(reqProblem,transac);
                         var objProblem = lstProblem.FirstOrDefault();
                         var reqPostMst = new AUDITPOSTMSTReq
                         {
@@ -127,13 +133,13 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                                 reqPostMst.MODE = "";
                                 //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
-                                var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst));
+                                var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).updateAUDITPOSTMST(reqPostMst,transac));
                                 task1.Wait();
 
 
                                 reqPostMstPhone.MODE = "Edit";
                                 //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone);
-                                var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone));
+                                var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).updateAUDITPOSTMSTPHONE(reqPostMstPhone,transac));
                                 task2.Wait();
 
                                 res.AUDITPOSTMST = objSecound;
@@ -157,12 +163,12 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         {
                             reqPostMst.MODE = "";
                             //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
-                            var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst));
+                            var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).updateAUDITPOSTMST(reqPostMst,transac));
                             task1.Wait();
 
                             reqPostMstPhone.MODE = "Edit";
                             //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone);
-                            var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMSTPHONE(reqPostMstPhone));
+                            var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).updateAUDITPOSTMSTPHONE(reqPostMstPhone,transac));
                             task2.Wait();
 
                             res.AUDITPOSTMST = objFirstEx;
@@ -176,7 +182,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         {
                             reqPostMst.MODE = "ADD";
                             //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
-                            var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst));
+                            var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).updateAUDITPOSTMST(reqPostMst,transac));
                             task1.Wait();
 
                             res.AUDITPOSTMST = objFirst;
@@ -201,7 +207,19 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 }
             }
-            catch(Exception ex)
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
+            }
+            catch (Exception ex)
             {
                 res._result._code = "500 ";
                 res._result._message = ex.Message;
@@ -209,7 +227,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             }
             finally
             {
-                var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(req1);
+                var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITCUTDATE(req1,transac);
                 res.AUDITCUTDATELST = lstAUDITCUTDATE;
 
                 var req = new ASSETKKF_MODEL.Request.Asset.AuditPostReq()
@@ -233,8 +251,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 };
 
-                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req);
-                var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req);
+                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTMST(req);
+                var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTTRN(req);
 
                 res.AUDITPOSTTRNLST = lstAUDITPOSTTRN;
 
@@ -253,7 +271,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     mn = dataReq.MN,
                     sqno = dataReq.SQNO
                 };
-                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(reqSum);
+                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByDEPMST(reqSum,transac);
                 res.DashboardInspectionLST = lstSum;
             }
 

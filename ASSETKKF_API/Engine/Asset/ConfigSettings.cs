@@ -17,13 +17,14 @@ namespace ASSETKKF_API.Engine.Asset
 
         }
 
-        private  IConfiguration Configuration;
 
         protected override void ExecuteChild(ConfigSetting dataReq, ResponseAPI dataRes)
         {
             var res = new ConfigSetting();
             try
             {
+                DBMode = dataReq.DBMode;
+                dataRes.ServerAddr = ConnectionString();
                 if (dataReq != null)
                 {
                     res.DBMode = dataReq.DBMode;

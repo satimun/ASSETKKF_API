@@ -23,6 +23,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string OFFICECODE { get; set; }
         public string inspection { get; set; }
         public string mode { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
 
     }
 }

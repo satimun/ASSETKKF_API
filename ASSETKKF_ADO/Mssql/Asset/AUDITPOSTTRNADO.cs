@@ -14,17 +14,19 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AUDITPOSTTRNADO instant;
 
-        public static AUDITPOSTTRNADO GetInstant()
+        public static AUDITPOSTTRNADO GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AUDITPOSTTRNADO();
+            if (instant == null) instant = new AUDITPOSTTRNADO(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AUDITPOSTTRNADO()
+        private AUDITPOSTTRNADO(string conStr = null)
         {
-        }
+			conectStr = conStr;
+
+		}
 
         public int addAUDITPOSTTRN(AUDITPOSTTRNReq d, SqlTransaction transac = null)
         {
@@ -60,7 +62,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			sql += " ,@ASSETNONEW = '" + d.ASSETNONEW + "'";
 			sql += " ,@INPID = '" + d.INPID + "'";
 
-			var res = ExecuteNonQuery(sql, param);
+			var res = ExecuteNonQuery(sql, param, conectStr);
 			return res;
 
 		}
@@ -80,7 +82,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			sql += " ,@INPID = '" + d.INPID + "'";
 
 
-			var res = ExecuteNonQuery(sql, param);
+			var res = ExecuteNonQuery(sql, param, conectStr);
 			return res;
 		}
 
@@ -102,7 +104,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 				sql += " and OFFICECODE = '" + d.OFFICECODE + "'";
 			}
 			sql += " GROUP BY OFFICECODE,DEPCODEOL,DEPCODE";
-			var res = Query<ASSETOFFICECODE>(sql, param).ToList();
+			var res = Query<ASSETOFFICECODE>(sql, param, conectStr).ToList();
 			return res;
 
 		}
@@ -114,7 +116,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			sql = " select * from  [FT_ASFIXEDASSET] (@OFFICECODE)  ";
 			sql += " where COMPANY = '" + d.COMPANY + "'";
 			
-			var res = Query<ASSETASSETNO>(sql, param).ToList();
+			var res = Query<ASSETASSETNO>(sql, param, conectStr).ToList();
 			return res;
 
 		}
@@ -132,7 +134,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			//	sql += " and OFFICECODE = '" + d.OFFICECODE + "'";
 			//}
 			sql += " GROUP BY OFFICECODE,DEPCODEOL,DEPCODE";
-			var res = Query<ASSETOFFICECODE>(sql, param).FirstOrDefault();
+			var res = Query<ASSETOFFICECODE>(sql, param, conectStr).FirstOrDefault();
 			return res;
 		}
 
@@ -158,7 +160,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 				sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
 			}
 
-			var res = Query<ASSETASSETNO>(sql, param).FirstOrDefault();
+			var res = Query<ASSETASSETNO>(sql, param, conectStr).FirstOrDefault();
 			return res;
 		}
 
@@ -175,7 +177,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
 			
 
-			var res = Query<ASSETASSETNO>(sql, param).FirstOrDefault();
+			var res = Query<ASSETASSETNO>(sql, param, conectStr).FirstOrDefault();
 			return res;
 		}
 
@@ -199,7 +201,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 				sql += " and a.ASSETNO = '" + d.ASSETNO + "'";
 			}
 
-			var res = Query<AuditPostTRN>(sql, param).ToList();
+			var res = Query<AuditPostTRN>(sql, param, conectStr).ToList();
 
 			//var obj = Query<ASAUDITPOSTTRN>(sql, param).ToList();
 			//List<AuditPostTRN> res = new List<AuditPostTRN>();
@@ -248,7 +250,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			sql += " and INPID = '" + d.UCODE + "'"; 
 			 sql += " and assetno = '" + d.ASSETNO + "'";
 
-			var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+			var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).ToList();
 			return res;
 
 		}
@@ -335,7 +337,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			{
 				sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
 			}
-			var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+			var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).ToList();
 			return res;
 		}
 

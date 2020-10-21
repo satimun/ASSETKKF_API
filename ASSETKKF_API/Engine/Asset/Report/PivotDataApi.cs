@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Report;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace ASSETKKF_API.Engine.Asset.Report
 {
     public class PivotDataApi : Base<AuditSummaryReq>
     {
-        public PivotDataApi()
+        public PivotDataApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(AuditSummaryReq dataReq, ResponseAPI dataRes)
@@ -23,6 +26,8 @@ namespace ASSETKKF_API.Engine.Asset.Report
             PivotDataRes res = new PivotDataRes();
             try
             {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 var mode = String.IsNullOrEmpty(dataReq.mode) ? null : dataReq.mode.Trim().ToLower();
 
                 switch (mode)
@@ -35,6 +40,18 @@ namespace ASSETKKF_API.Engine.Asset.Report
                         GetPivotProblemByDep(dataReq, res);
                         break;
                 }
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {
@@ -162,12 +179,12 @@ namespace ASSETKKF_API.Engine.Asset.Report
 
         public  DataTable getProblemByDep(AuditSummaryReq dataReq)
         {
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant().getProblemByDep(dataReq)).Result;
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant(conString).getProblemByDep(dataReq)).Result;
         }
 
         public DataTable getProblemByDepcodeol(AuditSummaryReq dataReq)
         {
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant().getProblemByDepcodeol(dataReq)).Result;
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant(conString).getProblemByDepcodeol(dataReq)).Result;
         }
 
     }

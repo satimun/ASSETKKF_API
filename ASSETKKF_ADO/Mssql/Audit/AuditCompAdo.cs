@@ -13,16 +13,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AuditCompAdo instant;
 
-        public static AuditCompAdo GetInstant()
+        public static AuditCompAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AuditCompAdo();
+            if (instant == null) instant = new AuditCompAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AuditCompAdo()
+        private AuditCompAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<AuditComp> GetData(AuditResultReq d, SqlTransaction transac = null)
@@ -60,7 +61,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
             }
 
-            var res = Query<AuditComp>(sql, param).ToList();
+            var res = Query<AuditComp>(sql, param, conectStr).ToList();
             return res;
         }
     }

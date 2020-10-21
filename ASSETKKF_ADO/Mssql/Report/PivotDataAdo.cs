@@ -13,16 +13,17 @@ namespace ASSETKKF_ADO.Mssql.Report
     public class PivotDataAdo : Base
     {
         private static PivotDataAdo instant;
-        public static PivotDataAdo GetInstant()
+        public static PivotDataAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new PivotDataAdo();
+            if (instant == null) instant = new PivotDataAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private PivotDataAdo()
+        private PivotDataAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public DataTable getProblemByDep(AuditSummaryReq d, SqlTransaction transac = null)
@@ -31,7 +32,7 @@ namespace ASSETKKF_ADO.Mssql.Report
             param.Add("@COMPANY", d.Company);
             param.Add("@YEAR", d.year);
 
-            var obs = QuerySP<dynamic>("SP_ProblemByDep",param);
+            var obs = QuerySP<dynamic>("SP_ProblemByDep",param, conectStr);
 
             //IList<dynamic> data = obs.ToList();
 
@@ -48,7 +49,7 @@ namespace ASSETKKF_ADO.Mssql.Report
             param.Add("@YEAR", d.year);
             param.Add("@DEPMST", d.depmst);
 
-            var obs = QuerySP<dynamic>("SP_ProblemByDepcodeol", param);
+            var obs = QuerySP<dynamic>("SP_ProblemByDepcodeol", param, conectStr);
 
             //IList<dynamic> data = obs.ToList();
 

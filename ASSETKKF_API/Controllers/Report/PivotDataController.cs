@@ -15,7 +15,6 @@ namespace ASSETKKF_API.Controllers.Report
     [ApiController]
     public class PivotDataController : Base
     {
-        private IConfiguration Configuration;
 
         public PivotDataController(IConfiguration configuration)
         {
@@ -26,7 +25,7 @@ namespace ASSETKKF_API.Controllers.Report
         [HttpPost("PivotData")]
         public async Task<dynamic> PivotData([FromBody] dynamic data)
         {
-            var res = new PivotDataApi();
+            var res = new PivotDataApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }

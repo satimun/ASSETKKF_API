@@ -15,7 +15,7 @@ namespace ASSETKKF_API.Controllers.Audit
     [ApiController]
     public class AuditManagerController : Base
     {
-        private IConfiguration Configuration;
+        
 
         public AuditManagerController(IConfiguration configuration)
         {
@@ -26,7 +26,7 @@ namespace ASSETKKF_API.Controllers.Audit
         [HttpPost("AuditMGR")]
         public async Task<dynamic> GetAuditResult([FromBody] dynamic data)
         {
-            var res = new AuditManagerApi();
+            var res = new AuditManagerApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
@@ -34,7 +34,7 @@ namespace ASSETKKF_API.Controllers.Audit
         [HttpPost("AuditMGRAppv")]
         public async Task<dynamic> GetAuditMGRAppv([FromBody] dynamic data)
         {
-            var res = new AuditManagerAppvApi();
+            var res = new AuditManagerAppvApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }

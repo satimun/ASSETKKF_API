@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Asset;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.Dashboard
 {
     public class InspectionApi : Base<AuditSummaryReq>
     {
-        public InspectionApi()
+        public InspectionApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(AuditSummaryReq dataReq, ResponseAPI dataRes)
@@ -22,39 +25,41 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
             var res = new InspectionRes();
             try
             {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 List<DashboardInspection> lst = new List<DashboardInspection>();
                 var mode = String.IsNullOrEmpty(dataReq.inspection) ? null : dataReq.inspection.Trim().ToLower();
 
                 switch (mode)
                 {
                     case "depcodeol":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPCODEOL(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByDEPCODEOL(dataReq);
                         break;
 
                     case "officecode":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByOFFICECODE(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByOFFICECODE(dataReq);
                         break;
                     case "typecode":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByTYPECODE(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByTYPECODE(dataReq);
                         break;
                     case "gastcode":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByGASTCODE(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByGASTCODE(dataReq);
                         break;
 
                     case "assetno":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByASSETNO(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByASSETNO(dataReq);
                         break;
                     case "auditofficecode":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getAuditOFFICECODE(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getAuditOFFICECODE(dataReq);
                         break;
 
                     case "getpivotdept":
-                        var obj = ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant().getProblemByDep(dataReq);
+                        var obj = ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant(conString).getProblemByDep(dataReq);
                         break;
 
 
                     default:
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByDEPMST(dataReq);
                         break;
                 }
                 
@@ -76,6 +81,18 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
 
                 res.DashboardInspectionLST = lst;
 
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {

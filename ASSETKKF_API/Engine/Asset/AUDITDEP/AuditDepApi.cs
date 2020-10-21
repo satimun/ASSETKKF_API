@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_ADO.Mssql.Audit;
@@ -8,15 +9,17 @@ using ASSETKKF_MODEL.Data.Mssql.Audit;
 using ASSETKKF_MODEL.Request.Audit;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Audit;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.AUDITDEP
 {
     public class AuditDepApi : Base<AuditResultReq>
     {
-        public AuditDepApi()
+        public AuditDepApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(AuditResultReq dataReq, ResponseAPI dataRes)
@@ -25,6 +28,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
 
             try
             {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 List<AuditDep> auditLst = new List<AuditDep>();
 
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
@@ -32,7 +37,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                 switch (mode)
                 {
                     default:
-                        auditLst = AuditDepAdo.GetInstant().GetData(dataReq);
+                        auditLst = AuditDepAdo.GetInstant(conString).GetData(dataReq);
                         break;
                 }
 
@@ -52,6 +57,18 @@ namespace ASSETKKF_API.Engine.Asset.AUDITDEP
                     res._result._status = "OK";
 
                 }
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {

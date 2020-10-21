@@ -15,7 +15,6 @@ namespace ASSETKKF_API.Controllers.Track
     [ApiController]
     public class TrackOfflineController : Base
     {
-        private IConfiguration Configuration;
 
         public TrackOfflineController(IConfiguration configuration)
         {
@@ -26,7 +25,7 @@ namespace ASSETKKF_API.Controllers.Track
         [HttpPost("TrackOffline")]
         public async Task<dynamic> TrackOffline([FromBody] dynamic data)
         {
-            var res = new TrackOfflineApi();
+            var res = new TrackOfflineApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }

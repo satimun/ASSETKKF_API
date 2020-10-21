@@ -16,5 +16,7 @@ namespace ASSETKKF_MODEL.Request.Permissions
         public string P_EXPORT { get; set; }
         public string INPID { get; set; }
         public string MODE { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 }

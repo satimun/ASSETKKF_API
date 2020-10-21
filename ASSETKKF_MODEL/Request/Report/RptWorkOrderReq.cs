@@ -8,6 +8,8 @@ namespace ASSETKKF_MODEL.Request.Report
     {
         public string MchProjectID;
         public string WorkOrderID;
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
 
     }
 }

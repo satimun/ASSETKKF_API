@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_ADO.Mssql.Audit;
@@ -7,15 +8,17 @@ using ASSETKKF_MODEL.Data.Mssql.Audit;
 using ASSETKKF_MODEL.Request.Audit;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Audit;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.AUDITACC
 {
     public class AuditAccApi : Base<AuditResultReq>
     {
-        public AuditAccApi()
+        public AuditAccApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(AuditResultReq dataReq, ResponseAPI dataRes)
@@ -23,6 +26,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
             var res = new AuditAccRes();
             try
             {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 List<AuditAcc> auditLst = new List<AuditAcc>();
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
                 switch (mode)
@@ -49,6 +54,18 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
 
                 }
 
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {

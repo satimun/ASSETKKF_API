@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ASSETKKF_API.Engine.Asset.Home;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Controllers.Asset
 {
@@ -15,10 +15,16 @@ namespace ASSETKKF_API.Controllers.Asset
     [ApiController]
     public class AsFixedAssetController : Base
     {
+        public AsFixedAssetController(IConfiguration configuration)
+        {
+            Configuration = configuration;
+
+        }
+
         [HttpPost("GetData")]
         public async Task<dynamic> GetData([FromBody] dynamic data)
         {
-            var res = new AsFixedAssetApi();
+            var res = new AsFixedAssetApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
@@ -26,7 +32,7 @@ namespace ASSETKKF_API.Controllers.Asset
         [HttpPost("GetTask")]
         public async Task<dynamic> GetTask([FromBody] dynamic data)
         {
-            var res = new TaskAuditApi();
+            var res = new TaskAuditApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
@@ -34,7 +40,7 @@ namespace ASSETKKF_API.Controllers.Asset
         [HttpPost("CancelAudit")]
         public async Task<dynamic> CancelAudit([FromBody] dynamic data)
         {
-            var res = new AuditCancelApi();
+            var res = new AuditCancelApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }
@@ -42,7 +48,7 @@ namespace ASSETKKF_API.Controllers.Asset
         [HttpPost("GetTracking")]
         public async Task<dynamic> GetTracking([FromBody] dynamic data)
         {
-            var res = new TaskAuditApi();
+            var res = new TaskAuditApi(Configuration);
             return await Task.Run(() => ResponeValid(res.Execute(HttpContext, data)));
 
         }

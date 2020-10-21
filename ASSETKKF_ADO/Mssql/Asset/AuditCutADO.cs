@@ -18,16 +18,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AuditCutADO instant;
 
-        public static AuditCutADO GetInstant()
+        public static AuditCutADO GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AuditCutADO();
+            if (instant == null) instant = new AuditCutADO(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AuditCutADO()
+        private AuditCutADO(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<ASSETKKF_MODEL.Response.Asset.AuditCutList> GetAuditCutLists(ASSETKKF_MODEL.Request.Asset.AuditCutReq d, SqlTransaction transac = null)
@@ -107,7 +108,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " group by M.Company,M.DEPMST,DEPNM";
             
 
-            var res = Query<ASSETKKF_MODEL.Response.Asset.AuditCutList>(cmd, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Response.Asset.AuditCutList>(cmd, param, conectStr).ToList();
             return res;
 
         }
@@ -174,7 +175,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " group by M.Company,M.DEPMST,DEPNM";
 
 
-            var res = Query<ASSETKKF_MODEL.Response.Asset.AuditCutList>(cmd, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Response.Asset.AuditCutList>(cmd, param, conectStr).ToList();
             return res;
 
         }
@@ -267,7 +268,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " group by M.Company,M.SQNO,M.Audit_NO,M.DEPMST,DEPNM,M.YR,M.MN";
             cmd += " order by max(D.CUTDT) desc,M.SQNO desc";
 
-            var res = Query<ASSETKKF_MODEL.Response.Asset.AuditCutList>(cmd, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Response.Asset.AuditCutList>(cmd, param, conectStr).ToList();
             return res;
             
          }
@@ -344,7 +345,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             cmd += " GROUP BY DEPCODEOL,DEPCODE,M.COMPANY order by  DEPCODEOL";
-            var obj = Query<ASSETKKF_MODEL.Request.Asset.DEPTList>(cmd, param).ToList();
+            var obj = Query<ASSETKKF_MODEL.Request.Asset.DEPTList>(cmd, param, conectStr).ToList();
 
             List<ASSETKKF_MODEL.Response.Asset.DEPTList> res = new List<ASSETKKF_MODEL.Response.Asset.DEPTList>();
 
@@ -429,7 +430,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " order by CODEMPID";
 
-            var obj = Query<ASSETKKF_MODEL.Request.Asset.Leader>(sql, param).ToList();
+            var obj = Query<ASSETKKF_MODEL.Request.Asset.Leader>(sql, param, conectStr).ToList();
             List<LeaderList> res = new List<LeaderList>();
 
 
@@ -495,7 +496,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " order by OFFICECODE";
 
-            var res = Query<LeaderList>(sql, param).ToList();
+            var res = Query<LeaderList>(sql, param, conectStr).ToList();
 
 
             return res;
@@ -558,7 +559,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by case when isnull(DEPCODEOL,'') <> '' then   SUBSTRING(DEPCODEOL,1,2) else '' end";
 
-            var res = Query<String>(sql, param).ToList();
+            var res = Query<String>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -637,7 +638,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " and  M.FLAG not in ('X','C')";
 
-            var res = Query<ASAUDITCUTDATEMST>(sql, param).FirstOrDefault();
+            var res = Query<ASAUDITCUTDATEMST>(sql, param, conectStr).FirstOrDefault();
             return res;
         }
 
@@ -707,7 +708,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " and  M.FLAG not in ('X','C')";
 
-            var res = Query<ASAUDITCUTDATE>(sql, param).ToList();
+            var res = Query<ASAUDITCUTDATE>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -792,7 +793,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
             sql += " order by (case when P.INPID = '" + d.UCODE + "' then 1 else 0 end) desc, P.INPDT desc";
-            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMST>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -807,7 +808,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " and INPID = '" + d.UCODE + "'";
             
             sql += " order by (case when INPID = '" + d.UCODE + "' then 1 else 0 end) desc";
-            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMST>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -830,7 +831,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += "  order by a.INPDT desc";
 
-            var res = Query<ASAUDITPOSTMST>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTMST>(sql, param, conectStr).ToList();
              return res;
         }
 
@@ -854,7 +855,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@GASTCODE = '" + d.GASTCODE + "'";
 
 
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
         }
 
@@ -880,7 +881,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@PFLAG = '" + d.PFLAG + "'";
 
 
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
         }
 
@@ -907,7 +908,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@AREA = '" + d.AREA + "'";
 
 
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
         }
 
@@ -953,7 +954,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " order by (case when a.INPID = '" + d.UCODE + "' then 1 else 0 end) desc";
 
-            var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -969,7 +970,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@USERID = '" + d.UCODE + "'";;
 
 
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
         }
 
@@ -1026,7 +1027,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
 
 
-            var res = Query<ASSETKKF_MODEL.Response.Asset.LeaderList>(sql, param).ToList();            
+            var res = Query<ASSETKKF_MODEL.Response.Asset.LeaderList>(sql, param, conectStr).ToList();            
 
             return res;
         }
@@ -1038,7 +1039,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " where Audit_NO = " + QuoteStr(d.audit_no);
             sql += " and Audit_NO is not null";
             sql += " and FLAG not in ('X')";
-            var res = Query<ASAUDITCUTDATEMST>(sql, param).FirstOrDefault();
+            var res = Query<ASAUDITCUTDATEMST>(sql, param, conectStr).FirstOrDefault();
 
             return res;
         }
@@ -1050,7 +1051,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " where sqno = " + QuoteStr(d.sqno);
             sql += " and inpid = " + QuoteStr(d.inpid);
             sql += " and assetno = " + QuoteStr(d.assetno);
-            var res = Query<ASAUDITPOSTMST>(sql, param).FirstOrDefault();
+            var res = Query<ASAUDITPOSTMST>(sql, param, conectStr).FirstOrDefault();
 
             return res;
         }
@@ -1062,7 +1063,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " where sqno = " + QuoteStr(d.sqno);
             sql += " and inpid = " + QuoteStr(d.inpid);
             sql += " and assetno = " + QuoteStr(d.assetno);
-            var res = Query<ASAUDITPOSTTRN>(sql, param).FirstOrDefault();
+            var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).FirstOrDefault();
 
             return res;
         }

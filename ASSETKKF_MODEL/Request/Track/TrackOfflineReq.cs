@@ -31,6 +31,8 @@ namespace ASSETKKF_MODEL.Request.Track
         public string yr { get; set; }
         public string mn { get; set; }
         public string yrmn { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
 
     }
 }

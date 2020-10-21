@@ -13,17 +13,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AUDITPOSTTRNAdo instant;
 
-        public static AUDITPOSTTRNAdo GetInstant()
+        public static AUDITPOSTTRNAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AUDITPOSTTRNAdo();
+            if (instant == null) instant = new AUDITPOSTTRNAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AUDITPOSTTRNAdo()
+        private AUDITPOSTTRNAdo(string conStr = null)
         {
-
+            conectStr = conStr;
         }
 
         public List<ASAUDITPOSTTRN> getPOSTTRNDuplicate(AuditPostReq d, string flag = null, SqlTransaction transac = null)
@@ -114,7 +114,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -153,7 +153,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@ASSETNONEW = '" + d.ASSETNONEW + "'";
             sql += " ,@INPID = '" + d.INPID + "'";
 
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
 
         }
@@ -172,7 +172,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@MEMO= '" + d.MEMO1 + "'";
             sql += " ,@MODE = '" + d.MODE + "'";
 
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
         }
 
@@ -185,7 +185,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
 
-            var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -220,7 +220,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 }
             }
 
-            var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -255,7 +255,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 }
             }
 
-            var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).ToList();
             return res;
 
         }
@@ -292,7 +292,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 }
             }
 
-            var res = Query<ASAUDITPOSTTRN>(sql, param).ToList();
+            var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).ToList();
             return res;
 
         }

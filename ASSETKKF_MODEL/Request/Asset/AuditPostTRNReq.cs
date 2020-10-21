@@ -30,6 +30,8 @@ namespace ASSETKKF_MODEL.Request.Asset
 
         public string DEPMST { get; set; }
         public string cutdt { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 
     public class AUDITPOSTTRNReq
@@ -66,6 +68,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string ASSETNONEW { get; set; }
         public string INPID { get; set; }
         public string FLAG { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 
     public class ASSETOFFICECODEReq
@@ -73,6 +77,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string COMPANY { get; set; }
         public string DEPCODEOL { get; set; }
         public string OFFICECODE { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 
     public class ASSETASSETNOReq
@@ -86,5 +92,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string AREANAME { get; set; }
         public string AREACODE { get; set; }
         public string UCODE { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 }

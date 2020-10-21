@@ -15,8 +15,6 @@ namespace ASSETKKF_API.Controllers.Asset
     [ApiController]
     public class ConfigSettingController : Base
     {
-        private IConfiguration Configuration;
-
         public ConfigSettingController(IConfiguration configuration)
         {
             Configuration = configuration;

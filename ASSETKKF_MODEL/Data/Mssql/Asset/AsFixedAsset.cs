@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ASSETKKF_MODEL.Response;
 
 namespace ASSETKKF_MODEL.Data.Mssql.Asset
 {
@@ -137,7 +138,11 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
 
         public string REC_NEW { get; set; }
 
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
+
         public List<AsFixedAsset> AsFixedAssetLST { get; set; }
+        public ResultDataResponse _result = new ResultDataResponse();
     }
 
     public class TaskAudit
@@ -166,5 +171,7 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string DEPNM { get; set; }
         public bool Menu3 { get; set; }
         public bool Menu4 { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 }

@@ -7,22 +7,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.Oauth
 {
     public class OauthLoginApi : Base<OauthLoginReq>
     {
-        public OauthLoginApi()
+        public OauthLoginApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(OauthLoginReq dataReq, ResponseAPI dataRes)
         {
+            DBMode = dataReq.DBMode;
+            
             var res = new OauthLoginRes();
+            res._result.ServerAddr = ConnectionString();
 
-            var user = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant().Search(new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET() { UCODE = dataReq.username.Trim() });
+            var user = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant(conString).Search(new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET() { UCODE = dataReq.username.Trim() });
             if (user == null) { throw new Exception("ไม่พบชื่อผู้ใช้งาน"); }
 
             var STAEMP = user.Where(s => s.STAEMP == "9")
@@ -118,7 +123,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                               .ToList();
                 res.Menu4 = Menu4.Count > 0;
 
-                ASSETKKF_ADO.Mssql.Asset.muTokenAdo.GetInstant().Insert(new ASSETKKF_MODEL.Data.Mssql.Asset.muToken()
+                ASSETKKF_ADO.Mssql.Asset.muTokenAdo.GetInstant(conString).Insert(new ASSETKKF_MODEL.Data.Mssql.Asset.muToken()
                 {
                     UserCode = obj.UCODE,
                     AccessToken_Code = this.AccessToken,

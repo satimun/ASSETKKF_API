@@ -11,16 +11,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static STUSERASSETAdo instant;
 
-        public static STUSERASSETAdo GetInstant()
+        public static STUSERASSETAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new STUSERASSETAdo();
+            if (instant == null) instant = new STUSERASSETAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private STUSERASSETAdo()
+        private STUSERASSETAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET> Search(ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET d, SqlTransaction transac = null)
@@ -37,7 +38,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 
             }
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET>(cmd, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -47,7 +48,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             //param.Add("@UserCode", d.UserCode);
 
             string cmd = "";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -57,7 +58,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             //param.Add("@UserCode", d.UserCode);
 
             string cmd = "";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -69,7 +70,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             string cmd = "SELECT * FROM [dbo].[FT_UserAsset] (" + QuoteStr(d.UCODE) + ")" + 
                 $" where A_Approv = 'Y'";
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET>(cmd, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET>(cmd, param, conectStr).ToList();
             return res;
         }
 

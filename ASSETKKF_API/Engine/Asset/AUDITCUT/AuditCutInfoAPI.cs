@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_ADO.Mssql.Asset;
 using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 {
     public class AuditCutInfoAPI : Base<AuditCutInfoReq>
     {
-        public AuditCutInfoAPI()
+        public AuditCutInfoAPI(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(AuditCutInfoReq dataReq, ResponseAPI dataRes)
@@ -22,10 +25,12 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
             try
             {
-                var objDEPTList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getDeptLst(dataReq);
-                var objLeaderList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getLeaderCentralLst(dataReq);
-                var objDepLikeList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getDepLikeList(dataReq);
-                var objPOSITASSETLst = STPOSITASSETADO.GetInstant().GetSTPOSITASSETLists(objDepLikeList, dataReq.Company);
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
+                var objDEPTList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getDeptLst(dataReq);
+                var objLeaderList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getLeaderCentralLst(dataReq);
+                var objDepLikeList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getDepLikeList(dataReq);
+                var objPOSITASSETLst = STPOSITASSETADO.GetInstant(conString).GetSTPOSITASSETLists(objDepLikeList, dataReq.Company);
 
                 res.auditCutDEPTList = objDEPTList;
                 res.auditCutLeaderList = objLeaderList;
@@ -36,7 +41,19 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 res._result._message = "";
                 res._result._status = "OK";
             }
-            catch(Exception ex)
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
+            }
+            catch (Exception ex)
             {
                 res._result._code = "500 ";
                 res._result._message = ex.Message;

@@ -11,5 +11,7 @@ namespace ASSETKKF_MODEL.Request.Line
         public string imageFullsize { get; set; }
         public string imageThumbnail { get; set; }
         public string token { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 }

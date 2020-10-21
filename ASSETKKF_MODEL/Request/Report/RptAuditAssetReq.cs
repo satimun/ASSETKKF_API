@@ -33,6 +33,8 @@ namespace ASSETKKF_MODEL.Request.Report
         public string orderby { get; set; }
 
         public string MODE { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
 
 
     }

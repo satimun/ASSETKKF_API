@@ -13,16 +13,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AuditProblemSummaryADO instant;
 
-        public static AuditProblemSummaryADO GetInstant()
+        public static AuditProblemSummaryADO GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new AuditProblemSummaryADO();
+            if (instant == null) instant = new AuditProblemSummaryADO(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AuditProblemSummaryADO()
+        private AuditProblemSummaryADO(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<AuditProblemSummary> GetProblemSummary(AuditProblemSummaryReq d, SqlTransaction transac = null)
@@ -106,7 +107,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " )";
             }
             cmd += " group by pname";
-            var res = Query<AuditProblemSummary>(cmd, param).ToList();
+            var res = Query<AuditProblemSummary>(cmd, param, conectStr).ToList();
             return res;
         }
     }

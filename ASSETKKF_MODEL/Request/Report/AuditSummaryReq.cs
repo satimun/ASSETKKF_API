@@ -13,5 +13,7 @@ namespace ASSETKKF_MODEL.Request.Report
         public bool Menu4 { get; set; }
         public string Dept { get; set; }
         public string yr { get; set; }
+        public string DBMode { get; set; }
+        public string ConnStr { get; set; }
     }
 }

@@ -10,15 +10,18 @@ using System.Threading.Tasks;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response.Asset;
+using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.Dashboard
 {
     public class AuditSummaryApi : Base<AuditSummaryReq>
     {
-        public AuditSummaryApi()
+        public AuditSummaryApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(AuditSummaryReq dataReq, ResponseAPI dataRes)
@@ -26,8 +29,9 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
             var res = new AuditSummaryRes();
             try
             {
-
-                var obj = ASSETKKF_ADO.Mssql.Asset.AuditSummaryADO.GetInstant().GetSummary(dataReq);
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
+                var obj = ASSETKKF_ADO.Mssql.Asset.AuditSummaryADO.GetInstant(conString).GetSummary(dataReq);
 
                 if (obj == null)
                 {
@@ -46,6 +50,18 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
 
                 res.AuditSummaryRPT = obj.FirstOrDefault();
 
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {

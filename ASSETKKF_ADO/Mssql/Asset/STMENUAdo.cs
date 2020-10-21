@@ -12,16 +12,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static STMENUAdo instant;
 
-        public static STMENUAdo GetInstant()
+        public static STMENUAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new STMENUAdo();
+            if (instant == null) instant = new STMENUAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private STMENUAdo()
+        private STMENUAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public int Insert(STMENU d, SqlTransaction transac = null)
@@ -34,7 +35,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "INSERT INTO STMENU (MENUCODE, MENUNAME, FLAG, INPID, INPDT) " +
                 "VALUES (@MENUCODE, @MENUNAME, @FLAG, @INPID, GETDATE());";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -48,7 +49,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "Update STMENU set MENUNAME = @MENUNAME , FLAG = @FLAG, INPID = @INPID, INPDT = GETDATE() " +
                 "Where MENUCODE = @MENUCODE ;";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -59,7 +60,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "Delete from STMENU " +
                 "Where MENUCODE = @MENUCODE ;";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -82,7 +83,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@MENUNAME", d.MENUNAME);
             }
 
-            var res = Query<STMENU>(sql, param).ToList();
+            var res = Query<STMENU>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -105,7 +106,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@MENUNAME", d.MENUNAME);
             }
 
-            var res = Query<STMENU>(sql, param).ToList();
+            var res = Query<STMENU>(sql, param, conectStr).ToList();
             return res;
         }
 

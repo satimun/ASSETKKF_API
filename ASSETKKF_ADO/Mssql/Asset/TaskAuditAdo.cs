@@ -13,16 +13,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static TaskAuditAdo instant;
 
-        public static TaskAuditAdo GetInstant()
+        public static TaskAuditAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new TaskAuditAdo();
+            if (instant == null) instant = new TaskAuditAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private TaskAuditAdo()
+        private TaskAuditAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit> GetData(TaskAudit d, SqlTransaction transac = null)
@@ -48,7 +49,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and MN = '" + d.MN + "'";
             }
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -61,7 +62,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@USERID = '" + d.INPID + "'";
 
 
-            var res = ExecuteNonQuery(sql, param);
+            var res = ExecuteNonQuery(sql, param, conectStr);
             return res;
         }
 
@@ -88,7 +89,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and MN = '" + d.MN + "'";
             }
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param, conectStr).ToList();
             return res;
         }
 

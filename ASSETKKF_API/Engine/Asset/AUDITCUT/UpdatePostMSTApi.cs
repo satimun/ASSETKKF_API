@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
-
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 {
     public class UpdatePostMSTApi : Base<ASSETASSETNOReq>
     {
-        public UpdatePostMSTApi()
+        public UpdatePostMSTApi(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(ASSETASSETNOReq dataReq, ResponseAPI dataRes)
@@ -21,11 +23,13 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             var res = new ASSETKKF_MODEL.Response.Asset.ASSETASSETNORes();
             try
             {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 var reqProblem = new STProblemReq
                 {
                     Company = dataReq.COMPANY
                 };
-                var lstProblem = ASSETKKF_ADO.Mssql.Asset.STProblemADO.GetInstant().Search(reqProblem);
+                var lstProblem = ASSETKKF_ADO.Mssql.Asset.STProblemADO.GetInstant(conString).Search(reqProblem);
                 var objProblem = lstProblem.FirstOrDefault();
 
                 var reqPostMst = new AUDITPOSTMSTReq
@@ -73,7 +77,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 reqPostMst.MODE = "EDIT";
                 //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst);
-                var editAuditPost = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(reqPostMst));
+                var editAuditPost = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).updateAUDITPOSTMST(reqPostMst));
                 editAuditPost.Wait();
 
                 //res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1, "");
@@ -82,8 +86,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 //var lstAUDITAssetNo = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().checkAUDITAssetNo(reqPostChk);
                 //res.AUDITPOSTMST = lstAUDITAssetNo.FirstOrDefault();
 
-                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1);
-                var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
+                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTMST(req1);
+                var lstAUDITPOSTTRN = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTTRN(req1);
 
                 res.AUDITPOSTTRNLST = lstAUDITPOSTTRN;
                 var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
@@ -102,7 +106,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     mn = res.AUDITPOSTMST.MN.ToString(),
                     sqno = dataReq.SQNO
                 };
-                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(reqSum);
+                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByDEPMST(reqSum);
                 res.DashboardInspectionLST = lstSum;
 
 
@@ -111,7 +115,19 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 res._result._status = "OK";
 
             }
-            catch(Exception ex)
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
+            }
+            catch (Exception ex)
             {
                 res._result._code = "500 ";
                 res._result._message = ex.Message;

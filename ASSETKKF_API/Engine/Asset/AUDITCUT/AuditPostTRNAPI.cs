@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_API.Service;
@@ -12,7 +13,6 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 {
     public class AuditPostTRNAPI : Base<AUDITPOSTTRNReq>
     {
-        private IConfiguration Configuration;
         private FilesUtil FilesUtilSvc;
         public AuditPostTRNAPI(IConfiguration configuration)
         {
@@ -28,16 +28,18 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
             try
             {
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
                 if (dataReq.MODE.Trim().ToLower() == "add")
                 {
-                    var objTRN = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getAuditPostTRN(dataReq);
+                    var objTRN = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant(conString).getAuditPostTRN(dataReq);
                     if(objTRN != null && objTRN.Count > 0)
                     {
                         throw new Exception("คุณได้บันทึกตรวจสอบรหัสทรัพย์สินนี้แล้ว กรุณาตรวจสอบข้อมูล");
                     }
                 }
 
-                var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().addAUDITPOSTTRN(dataReq);
+                var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant(conString).addAUDITPOSTTRN(dataReq);
 
                 if (!String.IsNullOrEmpty(dataReq.IMGPATH))
                 {
@@ -53,7 +55,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 if (!String.IsNullOrEmpty(res.IMGPATH))
                 {
-                    ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().UpdateAUDITPOSTTRNIMG(dataReq);
+                    ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant(conString).UpdateAUDITPOSTTRNIMG(dataReq);
                     res.IMGSRC = FilesUtilSvc.getImageURL(res.IMGPATH);
                 }
 
@@ -64,13 +66,13 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         COMPANY = dataReq.COMPANY,
                         SQNO = dataReq.SQNO
                     };
-                    var lstPostMSTToTEMP = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTOTEMPAdo.GetInstant().getDataToSendDep(req1);
+                    var lstPostMSTToTEMP = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTOTEMPAdo.GetInstant(conString).getDataToSendDep(req1);
                     res.AuditToTEMPLST = lstPostMSTToTEMP;
 
-                    var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRN(req1);
+                    var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRN(req1);
                     res.POSTTRNDuplicateLST = lstPostTRN;
 
-                    var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(req1);
+                    var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant(conString).getNoAudit(req1);
                     res.NoAuditLST = lstNoAudit;
 
                     res._result._code = "200";
@@ -89,16 +91,16 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         UCODE = dataReq.UCODE
                     };
 
-                    res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1);
+                    res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTTRN(req1);
 
-                    var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1);
+                    var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTMST(req1);
                     var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
                     var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
                     res.AUDITPOSTMSTWAITLST = lstWait;
                     res.AUDITPOSTMSTCHECKEDLST = lstChecked;
                     res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
                     res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
-                    var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(req1);
+                    var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITCUTDATE(req1);
                     res.AUDITCUTDATELST = lstAUDITCUTDATE;
 
                     res.AREACODE = dataReq.AREACODE;
@@ -114,6 +116,18 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 
 
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {

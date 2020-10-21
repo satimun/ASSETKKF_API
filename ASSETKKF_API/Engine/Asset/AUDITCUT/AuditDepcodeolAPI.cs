@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
+using Microsoft.Extensions.Configuration;
 
 namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 {
     public class AuditDepcodeolAPI : Base<AuditCutInfoReq>
     {
-        public AuditDepcodeolAPI()
+        public AuditDepcodeolAPI(IConfiguration configuration)
         {
             AllowAnonymous = true;
             RecaptchaRequire = true;
+            Configuration = configuration;
         }
 
         protected override void ExecuteChild(AuditCutInfoReq dataReq, ResponseAPI dataRes)
@@ -21,13 +24,27 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
             try
             {
-                var objDEPTList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getDeptLst(dataReq);
+                DBMode = dataReq.DBMode;
+                res._result.ServerAddr = ConnectionString();
+                var objDEPTList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getDeptLst(dataReq);
 
                 res.auditCutDEPTList = objDEPTList;
 
                 res._result._code = "200";
                 res._result._message = "";
                 res._result._status = "OK";
+            }
+            catch (SqlException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Execute exception Error";
+            }
+            catch (InvalidOperationException ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Connection Exception Error";
             }
             catch (Exception ex)
             {

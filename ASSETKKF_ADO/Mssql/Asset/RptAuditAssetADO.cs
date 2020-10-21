@@ -14,16 +14,17 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static RptAuditAssetADO instant;
 
-        public static RptAuditAssetADO GetInstant()
+        public static RptAuditAssetADO GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new RptAuditAssetADO();
+            if (instant == null) instant = new RptAuditAssetADO(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private RptAuditAssetADO()
+        private RptAuditAssetADO(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> GetAuditAssetLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
@@ -389,7 +390,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var obj = Query<RptAuditAsset>(sql, param).ToList();
+            var obj = Query<RptAuditAsset>(sql, param, conectStr).ToList();
 
 
             List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> res = new List<ASSETKKF_MODEL.Response.Report.RptAuditAsset>();
@@ -500,7 +501,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and OFFICECODE = " + QuoteStr(d.OFFICECODE);
             }
 
-            var res = Query<RptAuditAsset>(sql, param).ToList();
+            var res = Query<RptAuditAsset>(sql, param, conectStr).ToList();
             return res;
         }
 
@@ -650,7 +651,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
 
-            var obj = Query<RptAuditAssetTRN>(sql, param).ToList();
+            var obj = Query<RptAuditAssetTRN>(sql, param, conectStr).ToList();
 
 
             List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN> res = new List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN>();
@@ -718,7 +719,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " group by CUTDT ";
             cmd += " order by CUTDT desc ";
 
-            var res = Query<Multiselect>(cmd, param).ToList();
+            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -754,7 +755,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " GROUP BY OFFICECODE,DEPCODEOL,DEPCODE )  ";
             cmd += " AS X   WHERE  1=1 ";
 
-            var res = Query<Multiselect>(cmd, param).ToList();
+            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -774,7 +775,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " GROUP BY TYPECODE ,TYPENAME  ";
             cmd += " order BY TYPECODE ";
 
-            var res = Query<Multiselect>(cmd, param).ToList();
+            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -805,7 +806,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " GROUP BY GASTCODE ,GASTNAME ";
             cmd += " order BY GASTCODE ";
 
-            var res = Query<Multiselect>(cmd, param).ToList();
+            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
             return res;
         }
 

@@ -11,23 +11,24 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static muTokenAdo instant;
 
-        public static muTokenAdo GetInstant()
+        public static muTokenAdo GetInstant(string conStr = null)
         {
-            if (instant == null) instant = new muTokenAdo();
+            if (instant == null) instant = new muTokenAdo(conStr);
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private muTokenAdo()
+        private muTokenAdo(string conStr = null)
         {
+            conectStr = conStr;
         }
 
         public List<ASSETKKF_MODEL.Data.Mssql.Asset.muToken> ListActive()
         {
             string cmd = "SELECT * FROM muToken " +
                 "WHERE ExpiryTime > GETDATE() AND Status = 'A';";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.muToken>(cmd, null).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.muToken>(cmd, null, conectStr).ToList();
             return res;
         }
 
@@ -38,7 +39,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "SELECT * FROM muToken " +
                 "WHERE Code=@Code;";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.muToken>(cmd, param).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.muToken>(cmd, param, conectStr).ToList();
             return res;
         }
 
@@ -54,7 +55,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 "UpdateBy=@UpdateBy, " +
                 "Timestamp=GETDATE() " +
                 "WHERE Code=@Code;";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -69,7 +70,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 "UpdateBy=@UpdateBy, " +
                 "Timestamp=GETDATE() " +
                 "WHERE Code=@Code;";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
 
@@ -85,7 +86,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "INSERT INTO muToken (Code, UserCode, AccessToken_Code, ExpiryTime, Type, Status, UpdateBy, Timestamp) " +
                 "VALUES (@Code, @UserCode, @AccessToken_Code, @ExpiryTime, @Type, 'A', @UpdateBy, GETDATE());";
-            var res = ExecuteNonQuery(transac, cmd, param);
+            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
             return res;
         }
     }
