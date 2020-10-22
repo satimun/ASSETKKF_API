@@ -26,7 +26,9 @@ namespace ASSETKKF_API.Engine.Asset
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var obj = ASSETKKF_ADO.Mssql.Asset.STProblemADO.GetInstant(conString).Search(dataReq);
+                res._result.DBMode = DBMode;
+
+                var obj = ASSETKKF_ADO.Mssql.Asset.STProblemADO.GetInstant().Search(dataReq, null, conString);
                 if (obj == null)
                 {
                     res._result._code = "404";

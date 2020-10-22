@@ -28,22 +28,24 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
+
                 var mode = !String.IsNullOrEmpty(dataReq.mode) ? dataReq.mode.Trim().ToLower() : dataReq.mode;
                 switch (mode)
                 {
                     case "sendmst":
-                        res = sendMst(dataReq, res);
+                        res = sendMst(dataReq, res,conString);
                         break;
                     case "sendtrn":
-                        res = sendTrn(dataReq, res);
+                        res = sendTrn(dataReq, res,conString);
                         break;
 
                     case "save":
-                        res = save(dataReq, res);
+                        res = save(dataReq, res,conString);
                         break;
 
                     default:
-                        res = getAuditResult(dataReq, res);
+                        res = getAuditResult(dataReq, res,conString);
                         break;
                 }
             }
@@ -68,7 +70,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
             dataRes.data = res;
         }
 
-        private AuditAccRes sendMst(AuditPostReq dataReq, AuditAccRes res)
+        private AuditAccRes sendMst(AuditPostReq dataReq, AuditAccRes res, string conStr = null)
         {
             try
             {
@@ -86,7 +88,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
                 //var updateDep = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req);
 
 
-                var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).SP_AUDITPOSTMSTTODEPPHONE(req));
+                var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req,null,null,conStr));
                 task1.Wait();
             }
             catch (SqlException ex)
@@ -112,7 +114,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
             return res;
         }
 
-        private AuditAccRes sendTrn(AuditPostReq dataReq, AuditAccRes res)
+        private AuditAccRes sendTrn(AuditPostReq dataReq, AuditAccRes res, string conStr = null)
         {
             try
             {
@@ -129,7 +131,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
                 };
 
                 //var updateTrn = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req1);
-                var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).SP_AUDITPOSTMSTTODEPPHONE(req1));
+                var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req1,null,null,conStr));
                 task2.Wait();
             }
             catch (SqlException ex)
@@ -155,7 +157,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
             return res;
         }
 
-        private AuditAccRes save(AuditPostReq dataReq, AuditAccRes res)
+        private AuditAccRes save(AuditPostReq dataReq, AuditAccRes res, string conStr = null)
         {
             try
             {
@@ -173,7 +175,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
                 //var updateDep = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req);
 
 
-                var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).SP_AUDITPOSTMSTTODEPPHONE(req));
+                var task1 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req,null,null,conStr));
                 task1.Wait();
 
                 AUDITPOSTMSTReq req1 = new AUDITPOSTMSTReq()
@@ -188,7 +190,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
 
                 };
 
-                var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).SP_AUDITPOSTMSTTODEPPHONE(req1));
+                var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().SP_AUDITPOSTMSTTODEPPHONE(req1,null,null,conStr));
                 task2.Wait();
             }
             catch (SqlException ex)
@@ -218,17 +220,17 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
                     filter = dataReq.filter
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToACCEdit(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToACCEdit(req,null,null,conStr);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNACC(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNACC(req,null,null,conStr);
                 res.POSTTRNDuplicateLST = lstPostTRN;
 
 
-                var summaryAudit = AuditAccAdo.GetInstant(conString).GetSummaryAudit(dataReq);
+                var summaryAudit = AuditAccAdo.GetInstant().GetSummaryAudit(dataReq,null,conStr);
                 res.AuditSummary = summaryAudit;
 
-                var lstResult = AuditAccAdo.GetInstant(conString).GetSummaryResult(dataReq);
+                var lstResult = AuditAccAdo.GetInstant().GetSummaryResult(dataReq,null,conStr);
                 res.SummaryResultLst = lstResult;
             }
 
@@ -236,7 +238,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
             return res;
         }
 
-        private AuditAccRes getAuditResult(AuditPostReq dataReq, AuditAccRes res)
+        private AuditAccRes getAuditResult(AuditPostReq dataReq, AuditAccRes res, string conStr = null)
         {
             try
             {
@@ -247,17 +249,17 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
                     filter = dataReq.filter
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToACCEdit(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToACCEdit(req,null,null,conStr);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNACC(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNACC(req,null,null,conStr);
                 res.POSTTRNDuplicateLST = lstPostTRN;
 
 
-                var summaryAudit = AuditAccAdo.GetInstant(conString).GetSummaryAudit(dataReq);
+                var summaryAudit = AuditAccAdo.GetInstant().GetSummaryAudit(dataReq,null,conStr);
                 res.AuditSummary = summaryAudit;
 
-                var lstResult = AuditAccAdo.GetInstant(conString).GetSummaryResult(dataReq);
+                var lstResult = AuditAccAdo.GetInstant().GetSummaryResult(dataReq,null,conStr);
                 res.SummaryResultLst = lstResult;
             }
             catch (SqlException ex)

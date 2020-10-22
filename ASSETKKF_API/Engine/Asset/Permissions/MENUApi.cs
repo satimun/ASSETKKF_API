@@ -26,41 +26,42 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             
             var res = new MENURes();
             res._result.ServerAddr = ConnectionString();
+            res._result.DBMode = DBMode;
 
             try
             {
                 switch (dataReq.MODE.Trim().ToLower())
                 {
                     case "insert":
-                        res = insert(dataReq);
+                        res = insert(dataReq,conString);
                         break;
 
                     case "update":
-                        res = update(dataReq);
+                        res = update(dataReq, conString);
                         break;
 
                     case "delete":
-                        res = delete(dataReq);
+                        res = delete(dataReq, conString);
                         break;
 
                     case "search":
-                        res = search(dataReq);
+                        res = search(dataReq, conString);
                         break;
 
                     case "check":
-                        res = check(dataReq);
+                        res = check(dataReq, conString);
                         break;
 
                     case "active":
-                        res = active(dataReq, 1);
+                        res = active(dataReq, 1, conString);
                         break;
 
                     case "inactive":
-                        res = active(dataReq, 2);
+                        res = active(dataReq, 2, conString);
                         break;
 
                     default:
-                        res = getMenu(dataReq);
+                        res = getMenu(dataReq, conString);
                         break;
                 }
                                
@@ -89,12 +90,12 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
 
         }
 
-        private MENURes check(MENUREq dataReq)
+        private MENURes check(MENUREq dataReq, string conStr = null)
         {
             var res = new MENURes();
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Search(new STMENU() { MENUCODE = dataReq.MENUCODE });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = dataReq.MENUCODE },null,conStr);
                 if (lst == null || (lst != null && lst.Count == 0))
                 {
 
@@ -126,12 +127,12 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             return res;
         }
 
-        private MENURes insert(MENUREq dataReq)
+        private MENURes insert(MENUREq dataReq, string conStr = null)
         {
             var res = new MENURes();
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Search(new STMENU() { MENUCODE = dataReq.MENUCODE});
+                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = dataReq.MENUCODE},null,conStr);
                 if (lst == null || (lst != null && lst.Count == 0))
                 {
                     var req = new STMENU() { 
@@ -140,7 +141,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                         INPID = dataReq.INPID,
                     };
 
-                    var state = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Insert(req);
+                    var state = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Insert(req,null,conStr);
                     
                     res._result._code = "200";
                     res._result._message = "บันทึกข้อมูลเรียบร้อยแล้ว";
@@ -168,18 +169,18 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             }
             finally
             {
-                var newList = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Search(new STMENU() { MENUCODE = null });
+                var newList = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = null },null,conStr);
                 res.MENULST = newList;
             }
             return res;
         }
 
-        private MENURes update(MENUREq dataReq)
+        private MENURes update(MENUREq dataReq, string conStr = null)
         {
             var res = new MENURes();
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Search(new STMENU() { MENUCODE = dataReq.MENUCODE });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = dataReq.MENUCODE },null,conStr);
                 if (lst != null && lst.Count > 0)
                 {
                     var req = new STMENU()
@@ -190,7 +191,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                         INPID = dataReq.INPID,
                     };
 
-                    var state = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Update(req);
+                    var state = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Update(req,null,conStr);
 
                     res._result._code = "200";
                     res._result._message = "บันทึกข้อมูลเรียบร้อยแล้ว";
@@ -212,18 +213,18 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             }
             finally
             {
-                var newList = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Search(new STMENU() { MENUCODE = null });
+                var newList = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = null },null,conStr);
                 res.MENULST = newList;
             }
             return res;
         }
 
-        private MENURes delete(MENUREq dataReq)
+        private MENURes delete(MENUREq dataReq, string conStr = null)
         {
             var res = new MENURes();
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant(conString).Get(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STPERMISSIONSAdo.GetInstant().Get(new STPERMISSIONS() { MENUCODE = dataReq.MENUCODE },null,conStr);
                 if (lst == null || (lst != null && lst.Count == 0))
                 {
                     var req = new STMENU()
@@ -234,7 +235,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                         INPID = dataReq.INPID,
                     };
 
-                    var state = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Delete(req);
+                    var state = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Delete(req,null,conStr);
 
                     res._result._code = "200";
                     res._result._message = "ลบข้อมูลเรียบร้อยแล้ว";
@@ -254,18 +255,18 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             }
             finally
             {
-                var newList = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Search(new STMENU() { MENUCODE = dataReq.MENUCODE });
+                var newList = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = dataReq.MENUCODE },null,conStr);
                 res.MENULST = newList;
             }
             return res;
         }
 
-        private MENURes active(MENUREq dataReq,int flag)
+        private MENURes active(MENUREq dataReq,int flag, string conStr = null)
         {
             var res = new MENURes();
             try
             {
-                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Search(new STMENU() { MENUCODE = dataReq.MENUCODE });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = dataReq.MENUCODE },null,conStr);
                 if (lst != null && lst.Count > 0)
                 {
                     var obj = lst.FirstOrDefault();
@@ -277,7 +278,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                         INPID = dataReq.INPID,
                     };
 
-                    var state = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Update(req);
+                    var state = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Update(req,null,conStr);
 
                     res._result._code = "200";
                     res._result._message = "บันทึกข้อมูลเรียบร้อยแล้ว";
@@ -299,14 +300,14 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             }
             finally
             {
-                var newList = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Search(new STMENU() { MENUCODE = dataReq.MENUCODE });
+                var newList = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = dataReq.MENUCODE },null,conStr);
                 res.MENULST = newList;
             }
             return res;
         }
 
 
-        private MENURes search(MENUREq dataReq)
+        private MENURes search(MENUREq dataReq, string conStr = null)
         {
             var res = new MENURes();
             try
@@ -319,7 +320,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                     INPID = dataReq.INPID,
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).Search(new STMENU() { MENUCODE = dataReq.MENUCODE });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().Search(new STMENU() { MENUCODE = dataReq.MENUCODE },null,conStr);
                 res.MENULST = lst;
 
                 if (lst != null && lst.Count > 0)
@@ -345,7 +346,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
             return res;
         }
 
-        private MENURes getMenu(MENUREq dataReq)
+        private MENURes getMenu(MENUREq dataReq, string conStr = null)
         {
             var res = new MENURes();
             try
@@ -358,7 +359,7 @@ namespace ASSETKKF_API.Engine.Asset.Permissions
                     INPID = dataReq.INPID,
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant(conString).ListActive(new STMENU() { MENUCODE = dataReq.MENUCODE });
+                var lst = ASSETKKF_ADO.Mssql.Asset.STMENUAdo.GetInstant().ListActive(new STMENU() { MENUCODE = dataReq.MENUCODE },null,conStr);
                 res.MENULST = lst;
 
                 if (lst != null && lst.Count > 0)

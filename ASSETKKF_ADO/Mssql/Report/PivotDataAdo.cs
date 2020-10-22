@@ -13,26 +13,26 @@ namespace ASSETKKF_ADO.Mssql.Report
     public class PivotDataAdo : Base
     {
         private static PivotDataAdo instant;
-        public static PivotDataAdo GetInstant(string conStr = null)
+        public static PivotDataAdo GetInstant()
         {
-            if (instant == null) instant = new PivotDataAdo(conStr);
+            if (instant == null) instant = new PivotDataAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private PivotDataAdo(string conStr = null)
+        private PivotDataAdo()
         {
-            conectStr = conStr;
+            
         }
 
-        public DataTable getProblemByDep(AuditSummaryReq d, SqlTransaction transac = null)
+        public DataTable getProblemByDep(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.Company);
             param.Add("@YEAR", d.year);
 
-            var obs = QuerySP<dynamic>("SP_ProblemByDep",param, conectStr);
+            var obs = QuerySP<dynamic>("SP_ProblemByDep",param, conStr);
 
             //IList<dynamic> data = obs.ToList();
 
@@ -42,14 +42,14 @@ namespace ASSETKKF_ADO.Mssql.Report
             return dt;
         }
 
-        public DataTable getProblemByDepcodeol(AuditSummaryReq d, SqlTransaction transac = null)
+        public DataTable getProblemByDepcodeol(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.Company);
             param.Add("@YEAR", d.year);
             param.Add("@DEPMST", d.depmst);
 
-            var obs = QuerySP<dynamic>("SP_ProblemByDepcodeol", param, conectStr);
+            var obs = QuerySP<dynamic>("SP_ProblemByDepcodeol", param, conStr);
 
             //IList<dynamic> data = obs.ToList();
 

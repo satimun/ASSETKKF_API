@@ -12,20 +12,20 @@ namespace ASSETKKF_ADO.Mssql.Track
     public class TrackHDAdo : Base
     {
         private static TrackHDAdo instant;
-        public static TrackHDAdo GetInstant(string conStr = null)
+        public static TrackHDAdo GetInstant()
         {
-            if (instant == null) instant = new TrackHDAdo(conStr);
+            if (instant == null) instant = new TrackHDAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private TrackHDAdo(string conStr = null)
+        private TrackHDAdo()
         {
-            conectStr = conStr;
+           
         }
 
-        public List<TrackHDRes> GetData(TrackOfflineReq d, SqlTransaction transac = null)
+        public List<TrackHDRes> GetData(TrackOfflineReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -56,7 +56,7 @@ namespace ASSETKKF_ADO.Mssql.Track
 
             sql += " group by COMPANY, AUDIT_NO, INPID ";
 
-            var res = Query<TrackHDRes>(sql, param, conectStr).ToList();
+            var res = Query<TrackHDRes>(sql, param, conStr).ToList();
             return res;
         }
 

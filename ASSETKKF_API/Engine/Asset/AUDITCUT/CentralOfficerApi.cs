@@ -25,7 +25,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var objLeaderList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getCentralOfficerLst(dataReq);
+                res._result.DBMode = DBMode;
+
+                var objLeaderList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getCentralOfficerLst(dataReq, null, conString);
                 res.auditCutLeaderList = objLeaderList;
 
                 ASSETOFFICECODEReq reqASSETOFFICECODE = new ASSETOFFICECODEReq()
@@ -40,7 +42,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
 
                 //var lstASSETOFFICECODE = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETOFFICECODELST(reqASSETOFFICECODE);
-                var lstASSETASSETNO = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant(conString).getASSETASSETNOLST(reqASSETASSETNO);
+                var lstASSETASSETNO = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETASSETNOLST(reqASSETASSETNO, null, conString);
 
                 res.ASSETASSETNOLST = lstASSETASSETNO;
 

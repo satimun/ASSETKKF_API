@@ -13,20 +13,20 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AUDITPOSTMSTAdo instant;
 
-        public static AUDITPOSTMSTAdo GetInstant(string conStr = null)
+        public static AUDITPOSTMSTAdo GetInstant()
         {
-            if (instant == null) instant = new AUDITPOSTMSTAdo(conStr);
+            if (instant == null) instant = new AUDITPOSTMSTAdo();
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AUDITPOSTMSTAdo(string conStr = null)
+        private AUDITPOSTMSTAdo()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<ASAUDITPOSTMST> getPOSTMSTDuplicate(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        public List<ASAUDITPOSTMST> getPOSTMSTDuplicate(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "SELECT P.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME from  FT_ASAUDITPOSTMST_COMPANY(" + QuoteStr(d.COMPANY) + ") as P";
@@ -112,7 +112,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMST>(sql, param, conectStr).ToList();
+            var res = Query<ASAUDITPOSTMST>(sql, param, conStr).ToList();
             return res;
 
         }
@@ -123,7 +123,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
         /// <param name="d"></param>
         /// <param name="transac"></param>
         /// <returns></returns>
-        public int saveAUDITPOSTMST(AUDITPOSTMSTReq d, SqlTransaction transac = null)
+        public int saveAUDITPOSTMST(AUDITPOSTMSTReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " EXEC [dbo].[SP_AUDITPOSTMST]  ";
@@ -144,11 +144,11 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@PFLAG = '" + d.PFLAG + "'";
 
 
-            var res = ExecuteNonQuery(sql, param, conectStr);
+            var res = ExecuteNonQuery(sql, param, conStr);
             return res;
         }
 
-        public List<ASAUDITPOSTMST> getNoDuplicateAll(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        public List<ASAUDITPOSTMST> getNoDuplicateAll(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " Select * from  [FT_ASAUDITPOSTMST] () as P";
@@ -160,11 +160,11 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += "  and  X.PCODE <> ''  GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) = 1 )  ";
 
-            var res = Query<ASAUDITPOSTMST>(sql, param, conectStr).ToList();
+            var res = Query<ASAUDITPOSTMST>(sql, param, conStr).ToList();
             return res;
         }
 
-        public List<ASAUDITPOSTMST> getDuplicateAll(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        public List<ASAUDITPOSTMST> getDuplicateAll(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " Select * from  [FT_ASAUDITPOSTMST] () as P";
@@ -177,7 +177,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += "  and  X.PCODE <> ''  GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) > 1 )  ";
 
-            var res = Query<ASAUDITPOSTMST>(sql, param, conectStr).ToList();
+            var res = Query<ASAUDITPOSTMST>(sql, param, conStr).ToList();
             return res;
         }
 

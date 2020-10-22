@@ -28,6 +28,7 @@ namespace ASSETKKF_API.Engine.Asset
             
             var res = new STPOSITASSETReq();
             res._result.ServerAddr = ConnectionString();
+            res._result.DBMode = DBMode;
 
             var req = new ASSETKKF_MODEL.Request.Asset.STPOSITASSETReq()
             {

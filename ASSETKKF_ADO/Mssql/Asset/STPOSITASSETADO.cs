@@ -11,20 +11,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static STPOSITASSETADO instant;
 
-        public static STPOSITASSETADO GetInstant(string conStr = null)
+        public static STPOSITASSETADO GetInstant()
         {
-            if (instant == null) instant = new STPOSITASSETADO(conStr);
+            if (instant == null) instant = new STPOSITASSETADO();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private STPOSITASSETADO(string conStr = null)
+        private STPOSITASSETADO()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.STPOSITASSET> GetSTPOSITASSETLists(List<String> lstDepLike, String company, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.STPOSITASSET> GetSTPOSITASSETLists(List<String> lstDepLike, String company, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             int i = 0;
@@ -64,7 +64,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
 
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STPOSITASSET>(sql, param, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STPOSITASSET>(sql, param, conStr).ToList();
             res.ForEach(x => {
                 x.id = x.POSITCODE;
                 x.descriptions = x.POSITCODE + " : " + x.POSITDESC;

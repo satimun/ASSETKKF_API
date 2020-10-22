@@ -27,39 +27,41 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
+
                 List<DashboardInspection> lst = new List<DashboardInspection>();
                 var mode = String.IsNullOrEmpty(dataReq.inspection) ? null : dataReq.inspection.Trim().ToLower();
 
                 switch (mode)
                 {
                     case "depcodeol":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByDEPCODEOL(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPCODEOL(dataReq, null, conString);
                         break;
 
                     case "officecode":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByOFFICECODE(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByOFFICECODE(dataReq, null, conString);
                         break;
                     case "typecode":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByTYPECODE(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByTYPECODE(dataReq, null, conString);
                         break;
                     case "gastcode":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByGASTCODE(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByGASTCODE(dataReq, null, conString);
                         break;
 
                     case "assetno":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByASSETNO(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByASSETNO(dataReq, null, conString);
                         break;
                     case "auditofficecode":
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getAuditOFFICECODE(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getAuditOFFICECODE(dataReq, null, conString);
                         break;
 
                     case "getpivotdept":
-                        var obj = ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant(conString).getProblemByDep(dataReq);
+                        var obj = ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant().getProblemByDep(dataReq,null,  conString);
                         break;
 
 
                     default:
-                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByDEPMST(dataReq);
+                        lst = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(dataReq, null, conString);
                         break;
                 }
                 

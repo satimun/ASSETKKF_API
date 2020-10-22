@@ -11,39 +11,39 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static muTokenAdo instant;
 
-        public static muTokenAdo GetInstant(string conStr = null)
+        public static muTokenAdo GetInstant()
         {
-            if (instant == null) instant = new muTokenAdo(conStr);
+            if (instant == null) instant = new muTokenAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private muTokenAdo(string conStr = null)
+        private muTokenAdo()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.muToken> ListActive()
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.muToken> ListActive(string conStr = null)
         {
             string cmd = "SELECT * FROM muToken " +
                 "WHERE ExpiryTime > GETDATE() AND Status = 'A';";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.muToken>(cmd, null, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.muToken>(cmd, null, conStr).ToList();
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.muToken> Search(string Code, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.muToken> Search(string Code, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@Code", Code);
 
             string cmd = "SELECT * FROM muToken " +
                 "WHERE Code=@Code;";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.muToken>(cmd, param, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.muToken>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public int Get(string Code, DateTime ExpiryTime, string userCode = "", SqlTransaction transac = null)
+        public int Get(string Code, DateTime ExpiryTime, string userCode = "", SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@Code", Code);
@@ -55,11 +55,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 "UpdateBy=@UpdateBy, " +
                 "Timestamp=GETDATE() " +
                 "WHERE Code=@Code;";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public int Delete(string Code, string userCode = "", SqlTransaction transac = null)
+        public int Delete(string Code, string userCode = "", SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@Code", Code);
@@ -70,11 +70,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 "UpdateBy=@UpdateBy, " +
                 "Timestamp=GETDATE() " +
                 "WHERE Code=@Code;";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public int Insert(ASSETKKF_MODEL.Data.Mssql.Asset.muToken d, string userCode = "", SqlTransaction transac = null)
+        public int Insert(ASSETKKF_MODEL.Data.Mssql.Asset.muToken d, string userCode = "", SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@Code", d.Code);
@@ -86,7 +86,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "INSERT INTO muToken (Code, UserCode, AccessToken_Code, ExpiryTime, Type, Status, UpdateBy, Timestamp) " +
                 "VALUES (@Code, @UserCode, @AccessToken_Code, @ExpiryTime, @Type, 'A', @UpdateBy, GETDATE());";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
     }

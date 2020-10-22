@@ -13,20 +13,20 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AUDITCUTDATEAdo instant;
 
-        public static AUDITCUTDATEAdo GetInstant(string conStr = null)
+        public static AUDITCUTDATEAdo GetInstant()
         {
-            if (instant == null) instant = new AUDITCUTDATEAdo(conStr);
+            if (instant == null) instant = new AUDITCUTDATEAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private AUDITCUTDATEAdo(string conStr = null)
+        private AUDITCUTDATEAdo()
         {
-            conectStr = conStr;
+           
         }
 
-        public List<ASAUDITCUTDATE> getNoAudit(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        public List<ASAUDITCUTDATE> getNoAudit(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "SELECT  *    FROM   FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") as C";
@@ -36,7 +36,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " WHERE X.SQNO =" + QuoteStr(d.SQNO);
             sql += " AND  X.PCODE <> '' )";
 
-            var res = Query<ASAUDITCUTDATE>(sql, param, conectStr).ToList();
+            var res = Query<ASAUDITCUTDATE>(sql, param, conStr).ToList();
             return res;
 
         }

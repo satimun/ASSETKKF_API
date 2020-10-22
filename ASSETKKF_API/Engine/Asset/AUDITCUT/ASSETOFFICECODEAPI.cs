@@ -26,7 +26,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var lst = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant(conString).getASSETOFFICECODELST(dataReq);
+                res._result.DBMode = DBMode;
+
+                var lst = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETOFFICECODELST(dataReq,null,conString);
 
                 res.ASSETOFFICECODELST = lst;
 

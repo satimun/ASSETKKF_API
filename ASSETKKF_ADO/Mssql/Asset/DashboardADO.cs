@@ -13,20 +13,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static DashboardADO instant;
 
-        public static DashboardADO GetInstant(string conStr = null)
+        public static DashboardADO GetInstant()
         {
-            if (instant == null) instant = new DashboardADO(conStr);
+            if (instant == null) instant = new DashboardADO();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private DashboardADO(string conStr = null)
+        private DashboardADO()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<DashboardInspection> getInspection(AuditSummaryReq d, SqlTransaction transac = null)
+        public List<DashboardInspection> getInspection(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -47,13 +47,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += ",@TYPECODE = " + QuoteStr(d.TYPECODE) + ",@GASTCODE = " + QuoteStr(d.GASTCODE) + ",@OFFICECODE = " + QuoteStr(d.OFFICECODE);
 
 
-            var lst = Query<DashboardInspection>(sql, param, conectStr).ToList();
+            var lst = Query<DashboardInspection>(sql, param, conStr).ToList();
 
             return lst;
 
         }
 
-        public List<DashboardInspection> getInspectionByDEPMST(AuditSummaryReq d, SqlTransaction transac = null)
+        public List<DashboardInspection> getInspectionByDEPMST(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -125,12 +125,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             
 
-            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
+            var res = Query<DashboardInspection>(sql, param, conStr).ToList();
             return res;
 
         }
 
-        public List<DashboardInspection> getInspectionByDEPCODEOL(AuditSummaryReq d, SqlTransaction transac = null)
+        public List<DashboardInspection> getInspectionByDEPCODEOL(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -198,13 +198,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             
 
-            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
+            var res = Query<DashboardInspection>(sql, param, conStr).ToList();
             return res;
 
         }
 
 
-        public List<DashboardInspection> getInspectionByOFFICECODE(AuditSummaryReq d, SqlTransaction transac = null)
+        public List<DashboardInspection> getInspectionByOFFICECODE(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -277,12 +277,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             
 
-            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
+            var res = Query<DashboardInspection>(sql, param, conStr).ToList();
             return res;
 
         }
 
-        public List<DashboardInspection> getInspectionByTYPECODE(AuditSummaryReq d, SqlTransaction transac = null)
+        public List<DashboardInspection> getInspectionByTYPECODE(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -446,12 +446,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by COMPANY,YR,MN,TYPECODE,TYPENAME ) as D";
 
-            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
+            var res = Query<DashboardInspection>(sql, param, conStr).ToList();
             return res;
 
         }
 
-        public List<DashboardInspection> getInspectionByGASTCODE(AuditSummaryReq d, SqlTransaction transac = null)
+        public List<DashboardInspection> getInspectionByGASTCODE(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -614,12 +614,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by COMPANY,YR,MN,GASTCODE,GASTNAME,TYPECODE,TYPENAME ) as D";
 
-            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
+            var res = Query<DashboardInspection>(sql, param, conStr).ToList();
             return res;
 
         }
 
-        public List<DashboardInspection> getInspectionByASSETNO(AuditSummaryReq d, SqlTransaction transac = null)
+        public List<DashboardInspection> getInspectionByASSETNO(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -629,7 +629,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 ,case when PROGRESS =  0 Then '#A93226' else '#138D75' end ICONCOLOR
 
                 from (
-                Select COMPANY,YR,MN,SQNO
+                Select COMPANY,YR,MN,SQNO,AUDIT_NO
                 ,ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME 
                 ,MIN(PCODE) as PCODE,MIN(PNAME) as PNAME
                 ,MIN(INPDT) AS STARTDT ,MAX(INPDT) AS LASTDT
@@ -669,15 +669,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += @"    ) Z 
                 left join [dbo].[FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") as P  on p.COMPANY = z.COMPANY and p.sqno = z.sqno and p.ASSETNO = z.ASSETNO and isnull(p.PCODE,'') <> '' ";
             sql += @"        left join FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") as  M on m.COMPANY = Z.COMPANY and m.SQNO = Z.SQNO  ";
-            sql += @"    ) t group by COMPANY,YR,MN,SQNO,ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME 
+            sql += @"    ) t group by COMPANY,YR,MN,SQNO,AUDIT_NO,ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME 
                 ) Z   ";
 
-            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
+            var res = Query<DashboardInspection>(sql, param, conStr).ToList();
             return res;
 
         }
 
-        public List<DashboardInspection> getAuditOFFICECODE(AuditSummaryReq d, SqlTransaction transac = null)
+        public List<DashboardInspection> getAuditOFFICECODE(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -744,7 +744,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " Group BY  COMPANY,YR,MN,DEPMST,SQNO,Flag,DEPCODEOL,OFFICECODE,OFNAME";
 
             
-            var res = Query<DashboardInspection>(sql, param, conectStr).ToList();
+            var res = Query<DashboardInspection>(sql, param, conStr).ToList();
             return res;
 
         }

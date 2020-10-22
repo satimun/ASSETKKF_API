@@ -13,20 +13,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AuditProblemSummaryADO instant;
 
-        public static AuditProblemSummaryADO GetInstant(string conStr = null)
+        public static AuditProblemSummaryADO GetInstant()
         {
-            if (instant == null) instant = new AuditProblemSummaryADO(conStr);
+            if (instant == null) instant = new AuditProblemSummaryADO();
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AuditProblemSummaryADO(string conStr = null)
+        private AuditProblemSummaryADO()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<AuditProblemSummary> GetProblemSummary(AuditProblemSummaryReq d, SqlTransaction transac = null)
+        public List<AuditProblemSummary> GetProblemSummary(AuditProblemSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@TYPECODE", d.TYPECODE);
@@ -107,7 +107,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " )";
             }
             cmd += " group by pname";
-            var res = Query<AuditProblemSummary>(cmd, param, conectStr).ToList();
+            var res = Query<AuditProblemSummary>(cmd, param, conStr).ToList();
             return res;
         }
     }

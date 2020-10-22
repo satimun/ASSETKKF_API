@@ -31,6 +31,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITSEND
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
+
                 List<AuditResult> auditLst = new List<AuditResult>();
 
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
@@ -40,7 +42,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITSEND
                     
 
                     default:
-                        auditLst = AuditResultAdo.GetInstant(conString).GetData(dataReq);
+                        auditLst = AuditResultAdo.GetInstant().GetData(dataReq,null,conString);
                         break;
                 }
 

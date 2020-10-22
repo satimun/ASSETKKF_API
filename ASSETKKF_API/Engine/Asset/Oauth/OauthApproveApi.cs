@@ -26,6 +26,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
             
             var res = new OauthLoginRes();
             res._result.ServerAddr = ConnectionString();
+            res._result.DBMode = DBMode;
 
             var userApprove = new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET();
 
@@ -35,7 +36,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
 
             try
             {
-                var roles = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant(conString).CheckApprover(userApprove);
+                var roles = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant().CheckApprover(userApprove,conString);
 
                 if (roles.Count <= 0)
                 {
@@ -49,7 +50,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                 else
                 {
 
-                    var user = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant(conString).Search(new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET() { UCODE = dataReq.usercode.Trim() }).FirstOrDefault();
+                    var user = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant().Search(new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET() { UCODE = dataReq.usercode.Trim() },null,conString).FirstOrDefault();
                     if (user == null) { throw new Exception("Username Not Found."); }
                     if (user.STAEMP == "9") { throw new Exception("พ้นสภาพพนักงาน ไม่มีสิทธิ์เข้าใช้โปรแกรม."); }
                     if (user.A_Review == "N") { throw new Exception("ถูกยกเลิกสิทธิ์เข้าใช้โปรแกรม."); }

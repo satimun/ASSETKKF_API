@@ -13,20 +13,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static TaskAuditAdo instant;
 
-        public static TaskAuditAdo GetInstant(string conStr = null)
+        public static TaskAuditAdo GetInstant()
         {
-            if (instant == null) instant = new TaskAuditAdo(conStr);
+            if (instant == null) instant = new TaskAuditAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private TaskAuditAdo(string conStr = null)
+        private TaskAuditAdo()
         {
-            conectStr = conStr;
+           
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit> GetData(TaskAudit d, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit> GetData(TaskAudit d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -49,11 +49,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and MN = '" + d.MN + "'";
             }
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param, conStr).ToList();
             return res;
         }
 
-        public int AuditCancel(AsFixedAsset d, SqlTransaction transac = null)
+        public int AuditCancel(AsFixedAsset d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " EXEC [SP_AUDITCANCEL]  ";
@@ -62,11 +62,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,@USERID = '" + d.INPID + "'";
 
 
-            var res = ExecuteNonQuery(sql, param, conectStr);
+            var res = ExecuteNonQuery(sql, param, conStr);
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit> GetTracking(TaskAudit d, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit> GetTracking(TaskAudit d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -89,7 +89,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and MN = '" + d.MN + "'";
             }
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit>(sql, param, conStr).ToList();
             return res;
         }
 

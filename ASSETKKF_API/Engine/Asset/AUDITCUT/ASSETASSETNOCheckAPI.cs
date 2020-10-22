@@ -26,12 +26,14 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant(conString).checkASSETASSETNO(dataReq);
+                res._result.DBMode = DBMode;
+
+                var obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().checkASSETASSETNO(dataReq,null,conString);
                 if (obj == null)
                 {
                     if(dataReq.ASSETNO.Trim().Length > 1)
                     {
-                        obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant(conString).getASSETASSETNO(dataReq);
+                        obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().getASSETASSETNO(dataReq,null,conString);
                         res._result._code = "203";
                         res._result._message = "";
                         res._result._status = "Non-Authoritative Information";

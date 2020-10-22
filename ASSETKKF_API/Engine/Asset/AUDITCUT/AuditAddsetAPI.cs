@@ -26,7 +26,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTMST(dataReq);
+                res._result.DBMode = DBMode;
+
+                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(dataReq,null, null, conString);
                 var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
                 var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
                 res.AUDITPOSTMSTWAITLST = lstWait;
@@ -34,12 +36,12 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
                 res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
 
-                var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITCUTDATE(dataReq);
+                var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(dataReq, null, conString);
                 res.AUDITCUTDATELST = lstAUDITCUTDATE;
 
                 //res.AUDITPOSTMSTWAITLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(dataReq, "");
                 //res.AUDITPOSTMSTCHECKEDLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(dataReq, "Y");
-                res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTTRN(dataReq);
+                res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(dataReq, null, conString);
 
                 res.AREACODE = dataReq.AREACODE;
                 res.COMPANY = dataReq.COMPANY;

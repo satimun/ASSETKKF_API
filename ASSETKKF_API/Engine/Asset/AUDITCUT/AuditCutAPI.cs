@@ -31,7 +31,9 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).GetAuditCutLists(dataReq);
+                res._result.DBMode = DBMode;
+
+                var obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().GetAuditCutLists(dataReq,null, conString);
                 if (obj == null)
                 {
                     res._result._code = "404";

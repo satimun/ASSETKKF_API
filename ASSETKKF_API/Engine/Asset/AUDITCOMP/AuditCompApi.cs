@@ -28,6 +28,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
                 List<AuditComp> auditLst = new List<AuditComp>();
 
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
@@ -35,7 +36,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                 switch (mode)
                 {
                     default:
-                        auditLst = AuditCompAdo.GetInstant(conString).GetData(dataReq);
+                        auditLst = AuditCompAdo.GetInstant().GetData(dataReq,null,conString);
                         break;
                 }
 

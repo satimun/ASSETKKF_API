@@ -21,7 +21,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
         {
             DBMode = dataReq.DBMode;
             dataRes.ServerAddr = ConnectionString();
-            ASSETKKF_ADO.Mssql.Asset.muTokenAdo.GetInstant(conString).Delete(this.Token, dataReq.usercode);
+            ASSETKKF_ADO.Mssql.Asset.muTokenAdo.GetInstant().Delete(this.Token, dataReq.usercode,null,conString);
 
             StaticValue.GetInstant().TokenKey();
         }

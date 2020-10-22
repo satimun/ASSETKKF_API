@@ -26,7 +26,9 @@ namespace ASSETKKF_API.Engine.Asset.Report
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var obj = ASSETKKF_ADO.Mssql.Asset.AuditProblemsADO.GetInstant(conString).GetSummary(dataReq).ToList();
+                res._result.DBMode = DBMode;
+
+                var obj = ASSETKKF_ADO.Mssql.Asset.AuditProblemsADO.GetInstant().GetSummary(dataReq,null,conString).ToList();
 
                 if (obj == null)
                 {

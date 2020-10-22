@@ -27,14 +27,16 @@ namespace ASSETKKF_API.Engine.Asset.Home
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var state = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant(conString).AuditCancel(dataReq);
+                res._result.DBMode = DBMode;
+
+                var state = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().AuditCancel(dataReq,null,conString);
 
                 var taskReq = new TaskAudit()
                 {
                     INPID = dataReq.INPID,
                     COMPANY = dataReq.COMPANY
                 };
-                var lst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant(conString).GetData(taskReq);
+                var lst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().GetData(taskReq,null,conString);
 
                 if (lst == null)
                 {

@@ -12,20 +12,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static STMENUAdo instant;
 
-        public static STMENUAdo GetInstant(string conStr = null)
+        public static STMENUAdo GetInstant()
         {
-            if (instant == null) instant = new STMENUAdo(conStr);
+            if (instant == null) instant = new STMENUAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private STMENUAdo(string conStr = null)
+        private STMENUAdo()
         {
-            conectStr = conStr;
+            
         }
 
-        public int Insert(STMENU d, SqlTransaction transac = null)
+        public int Insert(STMENU d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@MENUCODE", d.MENUCODE);
@@ -35,11 +35,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "INSERT INTO STMENU (MENUCODE, MENUNAME, FLAG, INPID, INPDT) " +
                 "VALUES (@MENUCODE, @MENUNAME, @FLAG, @INPID, GETDATE());";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public int Update(STMENU d, SqlTransaction transac = null)
+        public int Update(STMENU d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@MENUCODE", d.MENUCODE);
@@ -49,22 +49,22 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "Update STMENU set MENUNAME = @MENUNAME , FLAG = @FLAG, INPID = @INPID, INPDT = GETDATE() " +
                 "Where MENUCODE = @MENUCODE ;";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public int Delete(STMENU d, SqlTransaction transac = null)
+        public int Delete(STMENU d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@MENUCODE", d.MENUCODE);
 
             string cmd = "Delete from STMENU " +
                 "Where MENUCODE = @MENUCODE ;";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public List<STMENU> Search(STMENU d, SqlTransaction transac = null)
+        public List<STMENU> Search(STMENU d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             
@@ -83,12 +83,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@MENUNAME", d.MENUNAME);
             }
 
-            var res = Query<STMENU>(sql, param, conectStr).ToList();
+            var res = Query<STMENU>(sql, param, conStr).ToList();
             return res;
         }
 
 
-        public List<STMENU> ListActive(STMENU d, SqlTransaction transac = null)
+        public List<STMENU> ListActive(STMENU d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -106,7 +106,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@MENUNAME", d.MENUNAME);
             }
 
-            var res = Query<STMENU>(sql, param, conectStr).ToList();
+            var res = Query<STMENU>(sql, param, conStr).ToList();
             return res;
         }
 

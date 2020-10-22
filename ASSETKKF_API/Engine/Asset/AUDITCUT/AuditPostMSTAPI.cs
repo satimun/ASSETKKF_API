@@ -32,6 +32,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
+
                 var req = new ASSETKKF_MODEL.Request.Asset.AUDITPOSTMSTReq()
                 {
                     SQNO = dataReq.SQNO,
@@ -53,7 +55,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 };
 
                 //var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(dataReq);
-                var updateAuditPost = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).updateAUDITPOSTMST(dataReq));
+                var updateAuditPost = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(dataReq, null, conString));
                 updateAuditPost.Wait();
 
 
@@ -74,7 +76,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 if (!String.IsNullOrEmpty(res.IMGPATH))
                 {
                     //ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().UpdateAUDITPOSTMSTImage(dataReq);
-                    var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).UpdateAUDITPOSTMSTImage(dataReq));
+                    var task2 = System.Threading.Tasks.Task.Factory.StartNew(() => ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().UpdateAUDITPOSTMSTImage(dataReq, null, conString));
                     task2.Wait();
                     res.IMGSRC = FilesUtilSvc.getImageURL(res.IMGPATH);
                 }
@@ -115,16 +117,16 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     AREACODE = dataReq.AREACODE,
                     UCODE = dataReq.UCODE
                 };
-                res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTTRN(req1);
+                res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1, null, conString);
 
-                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITPOSTMST(req1);
+                var lstAUDITPOSTMST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTMST(req1,null, null, conString);
                 var lstWait = lstAUDITPOSTMST.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
                 var lstChecked = lstAUDITPOSTMST.Where(p => !String.IsNullOrEmpty(p.PCODE)).ToList();
                 res.AUDITPOSTMSTWAITLST = lstWait;
                 res.AUDITPOSTMSTCHECKEDLST = lstChecked;
                 res.AUDITPOSTMSTNOPROBLEMLST = lstChecked.Where(x => x.PFLAG != "Y").ToList();
                 res.AUDITPOSTMSTPROBLEMLST = lstChecked.Where(x => x.PFLAG == "Y").ToList();
-                var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAUDITCUTDATE(req1);
+                var lstAUDITCUTDATE = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITCUTDATE(req1, null, conString);
                 res.AUDITCUTDATELST = lstAUDITCUTDATE;
 
                 res.AUDITPOSTMST = lstAUDITPOSTMST.Where(x => x.INPID == dataReq.UCODE && x.ASSETNO == dataReq.ASSETNO && x.SQNO == dataReq.SQNO).FirstOrDefault();
@@ -136,7 +138,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     mn = res.AUDITPOSTMST.MN.ToString(),
                     sqno = dataReq.SQNO
                 };
-                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant(conString).getInspectionByDEPMST(reqSum);
+                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(reqSum, null, conString);
                 res.DashboardInspectionLST = lstSum;
 
 

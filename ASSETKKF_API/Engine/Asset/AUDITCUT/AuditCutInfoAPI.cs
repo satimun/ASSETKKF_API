@@ -27,10 +27,12 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var objDEPTList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getDeptLst(dataReq);
-                var objLeaderList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getLeaderCentralLst(dataReq);
-                var objDepLikeList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getDepLikeList(dataReq);
-                var objPOSITASSETLst = STPOSITASSETADO.GetInstant(conString).GetSTPOSITASSETLists(objDepLikeList, dataReq.Company);
+                res._result.DBMode = DBMode;
+
+                var objDEPTList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getDeptLst(dataReq,null,conString);
+                var objLeaderList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getLeaderCentralLst(dataReq, null, conString);
+                var objDepLikeList = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getDepLikeList(dataReq, null, conString);
+                var objPOSITASSETLst = STPOSITASSETADO.GetInstant().GetSTPOSITASSETLists(objDepLikeList, dataReq.Company, null, conString);
 
                 res.auditCutDEPTList = objDEPTList;
                 res.auditCutLeaderList = objLeaderList;

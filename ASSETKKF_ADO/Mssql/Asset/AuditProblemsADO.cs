@@ -13,22 +13,22 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AuditProblemsADO instant;
 
-        public static AuditProblemsADO GetInstant(string conStr = null)
+        public static AuditProblemsADO GetInstant()
         {
-            if (instant == null) instant = new AuditProblemsADO(conStr);
+            if (instant == null) instant = new AuditProblemsADO();
             return instant;
         }
 
         private string conectStr { get; set; }
         
 
-        private AuditProblemsADO(string conStr = null)
+        private AuditProblemsADO()
         {
-            conectStr = conStr;
+            
         }
 
 
-        public List<AuditProblems> GetSummary(AuditProblemsReq d, SqlTransaction transac = null)
+        public List<AuditProblems> GetSummary(AuditProblemsReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@TYPECODE", d.TYPECODE);
@@ -125,11 +125,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             //    }
             //    cmd += " )";
             //}
-            var res = Query<AuditProblems>(cmd, param, conectStr).ToList();
+            var res = Query<AuditProblems>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public List<AuditProblems> GetDeptSummary(AuditProblemsReq d, SqlTransaction transac = null)
+        public List<AuditProblems> GetDeptSummary(AuditProblemsReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@TYPECODE", d.TYPECODE);
@@ -233,7 +233,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             //}
             cmd += " group by company,depcodeol";
 
-            var res = Query<AuditProblems>(cmd, param, conectStr).ToList();
+            var res = Query<AuditProblems>(cmd, param, conStr).ToList();
             return res;
         }
 

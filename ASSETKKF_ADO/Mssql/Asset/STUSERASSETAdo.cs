@@ -11,20 +11,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static STUSERASSETAdo instant;
 
-        public static STUSERASSETAdo GetInstant(string conStr = null)
+        public static STUSERASSETAdo GetInstant()
         {
-            if (instant == null) instant = new STUSERASSETAdo(conStr);
+            if (instant == null) instant = new STUSERASSETAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private STUSERASSETAdo(string conStr = null)
+        private STUSERASSETAdo()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET> Search(ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET d, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET> Search(ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@USERCODE", d.UCODE);
@@ -38,31 +38,31 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 
             }
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET>(cmd, param, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public int Insert(ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET d, string EditUser = "", SqlTransaction transac = null)
+        public int Insert(ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET d, string EditUser = "", SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             //param.Add("@UserCode", d.UserCode);
 
             string cmd = "";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public int Update(ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET d, string EditUser = "", SqlTransaction transac = null)
+        public int Update(ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET d, string EditUser = "", SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             //param.Add("@UserCode", d.UserCode);
 
             string cmd = "";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET> CheckApprover(ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET d)
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET> CheckApprover(ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET d, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@USERCODE", d.UCODE);
@@ -70,7 +70,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             string cmd = "SELECT * FROM [dbo].[FT_UserAsset] (" + QuoteStr(d.UCODE) + ")" + 
                 $" where A_Approv = 'Y'";
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET>(cmd, param, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET>(cmd, param, conStr).ToList();
             return res;
         }
 

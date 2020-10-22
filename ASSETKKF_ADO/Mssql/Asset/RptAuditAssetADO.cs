@@ -14,20 +14,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static RptAuditAssetADO instant;
 
-        public static RptAuditAssetADO GetInstant(string conStr = null)
+        public static RptAuditAssetADO GetInstant()
         {
-            if (instant == null) instant = new RptAuditAssetADO(conStr);
+            if (instant == null) instant = new RptAuditAssetADO();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private RptAuditAssetADO(string conStr = null)
+        private RptAuditAssetADO()
         {
-            conectStr = conStr;
+           
         }
 
-        public List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> GetAuditAssetLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> GetAuditAssetLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "  select   * from (  ";
@@ -390,7 +390,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var obj = Query<RptAuditAsset>(sql, param, conectStr).ToList();
+            var obj = Query<RptAuditAsset>(sql, param, conStr).ToList();
 
 
             List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> res = new List<ASSETKKF_MODEL.Response.Report.RptAuditAsset>();
@@ -436,7 +436,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> GetAuditAssetMainLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> GetAuditAssetMainLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.company);
@@ -501,11 +501,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and OFFICECODE = " + QuoteStr(d.OFFICECODE);
             }
 
-            var res = Query<RptAuditAsset>(sql, param, conectStr).ToList();
+            var res = Query<RptAuditAsset>(sql, param, conStr).ToList();
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN> GetAuditAssetTRNLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN> GetAuditAssetTRNLists(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " select P.*  ,D.IMGPATH   ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= P.INPID) as INPNAME,MEMO1 as AUDIT_NOTE    ";
@@ -651,7 +651,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
 
 
-            var obj = Query<RptAuditAssetTRN>(sql, param, conectStr).ToList();
+            var obj = Query<RptAuditAssetTRN>(sql, param, conStr).ToList();
 
 
             List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN> res = new List<ASSETKKF_MODEL.Response.Report.RptAuditAssetTRN>();
@@ -697,7 +697,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             return res;
         }
 
-        public List<Multiselect> GetAuditCUTDT(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
+        public List<Multiselect> GetAuditCUTDT(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " SELECT CUTDT as id,convert(varchar, max(CUTDT),103) as description FROM [dbo].FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.company) + ") ";
@@ -719,11 +719,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " group by CUTDT ";
             cmd += " order by CUTDT desc ";
 
-            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
+            var res = Query<Multiselect>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public List<Multiselect> GetAuditOFFICE(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
+        public List<Multiselect> GetAuditOFFICE(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " SELECT  OFFICECODE as id,(OFFICECODE + ' : ' + OFNAME) as description   FROM  ( ";
@@ -755,11 +755,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " GROUP BY OFFICECODE,DEPCODEOL,DEPCODE )  ";
             cmd += " AS X   WHERE  1=1 ";
 
-            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
+            var res = Query<Multiselect>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public List<Multiselect> GetTYPEASSET(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
+        public List<Multiselect> GetTYPEASSET(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " Select TYPECODE as id, (TYPECODE + ' : ' + TYPENAME ) as description from FT_STTYPEASSET() WHERE 1=1 ";
@@ -775,11 +775,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " GROUP BY TYPECODE ,TYPENAME  ";
             cmd += " order BY TYPECODE ";
 
-            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
+            var res = Query<Multiselect>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public List<Multiselect> GetGROUPASSET(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null)
+        public List<Multiselect> GetGROUPASSET(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " Select GASTCODE as id, (GASTCODE + ' : ' + GASTNAME ) as description   ";
@@ -806,7 +806,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " GROUP BY GASTCODE ,GASTNAME ";
             cmd += " order BY GASTCODE ";
 
-            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
+            var res = Query<Multiselect>(cmd, param, conStr).ToList();
             return res;
         }
 

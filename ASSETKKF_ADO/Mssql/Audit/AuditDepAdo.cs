@@ -14,20 +14,20 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AuditDepAdo instant;
 
-        public static AuditDepAdo GetInstant(string conStr = null)
+        public static AuditDepAdo GetInstant()
         {
-            if (instant == null) instant = new AuditDepAdo(conStr);
+            if (instant == null) instant = new AuditDepAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private AuditDepAdo(string conStr = null)
+        private AuditDepAdo()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<AuditDep> GetData(AuditResultReq d, SqlTransaction transac = null)
+        public List<AuditDep> GetData(AuditResultReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -62,7 +62,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
             }
 
-            var res = Query<AuditDep>(sql, param, conectStr).ToList();
+            var res = Query<AuditDep>(sql, param, conStr).ToList();
             return res;
         }
     }

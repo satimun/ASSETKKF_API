@@ -29,15 +29,17 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
+
                 var mode = !String.IsNullOrEmpty(dataReq.mode) ? dataReq.mode.Trim().ToLower() : dataReq.mode;
                 switch (mode)
                 {
                     case "save":
-                        res = save(dataReq, res);
+                        res = save(dataReq, res,conString);
                         break;
 
                     default:
-                        res = getAuditResult(dataReq, res);
+                        res = getAuditResult(dataReq, res,conString);
                         break;
                 }
 
@@ -60,10 +62,22 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
                 res._result._message = ex.Message;
                 res._result._status = "Internal Server Error";
             }
+            finally
+            {
+                if (res != null)
+                {
+                    if (res.AUDITPOSTMSTTODEPLST != null && res.AUDITPOSTMSTTODEPLST.Count > 0)
+                    {
+                        var obj = res.AUDITPOSTMSTTODEPLST.Where(x => !String.IsNullOrEmpty(x.FILEPATH)).FirstOrDefault();
+                        var attachedFile = obj != null ? obj.FILEPATH : null;
+                        res.FILEPATH = attachedFile;
+                    }
+                }
+            }
             dataRes.data = res;
         }
 
-        private AuditManagerRes save(AuditPostReq dataReq, AuditManagerRes res)
+        private AuditManagerRes save(AuditPostReq dataReq, AuditManagerRes res, string conStr = null)
         {
             try
             {
@@ -76,7 +90,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
                     mode = dataReq.ACTION
 
                 };
-                var updateCutMST = AuditManagerAdo.GetInstant(conString).saveAUDITCUTDATEMST(req);
+                var updateCutMST = AuditManagerAdo.GetInstant().saveAUDITCUTDATEMST(req,null,conStr);
             }
             catch (SqlException ex)
             {
@@ -106,17 +120,17 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
                     filter = dataReq.filter
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToCompEdit(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(req,null,null,conStr);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNComp(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(req,null,null,conStr);
                 res.POSTTRNDuplicateLST = lstPostTRN;
 
 
-                var summaryAudit = AuditManagerAdo.GetInstant(conString).GetSummaryAudit(dataReq);
+                var summaryAudit = AuditManagerAdo.GetInstant().GetSummaryAudit(dataReq,null,conStr);
                 res.AuditSummary = summaryAudit;
 
-                var lstResult = AuditManagerAdo.GetInstant(conString).GetSummaryResult(dataReq);
+                var lstResult = AuditManagerAdo.GetInstant().GetSummaryResult(dataReq,null,conStr);
                 res.SummaryResultLst = lstResult;
             }
 
@@ -125,7 +139,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
 
         }
 
-        private AuditManagerRes getAuditResult(AuditPostReq dataReq, AuditManagerRes res)
+        private AuditManagerRes getAuditResult(AuditPostReq dataReq, AuditManagerRes res, string conStr = null)
         {
             try
             {
@@ -136,17 +150,17 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
                     filter = dataReq.filter
                 };
 
-                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant(conString).getDataToCompEdit(req);
+                var lst = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTODEPAdo.GetInstant().getDataToCompEdit(req,null,null,conStr);
                 res.AUDITPOSTMSTTODEPLST = lst;
 
-                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant(conString).getPOSTTRNComp(req);
+                var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRNComp(req,null,null,conStr);
                 res.POSTTRNDuplicateLST = lstPostTRN;
 
 
-                var summaryAudit = AuditManagerAdo.GetInstant(conString).GetSummaryAudit(dataReq);
+                var summaryAudit = AuditManagerAdo.GetInstant().GetSummaryAudit(dataReq,null,conStr);
                 res.AuditSummary = summaryAudit;
 
-                var lstResult = AuditManagerAdo.GetInstant(conString).GetSummaryResult(dataReq);
+                var lstResult = AuditManagerAdo.GetInstant().GetSummaryResult(dataReq,null,conStr);
                 res.SummaryResultLst = lstResult;
             }
             catch (SqlException ex)

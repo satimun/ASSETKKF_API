@@ -13,20 +13,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static STProblemADO instant;
 
-        public static STProblemADO GetInstant(string conStr = null)
+        public static STProblemADO GetInstant()
         {
             if (instant == null) instant = new STProblemADO();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private STProblemADO(string conStr = null)
+        private STProblemADO()
         {
-            conectStr = conStr;
+           
         }
 
-        public List<ProblemList> Search(STProblemReq d, SqlTransaction transac = null)
+        public List<ProblemList> Search(STProblemReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.Company);
@@ -40,7 +40,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " group by Pcode,Pname,SACC,FINDY,PFLAG";
             cmd += " order by Pcode";
 
-            var obj = Query<ProblemList>(cmd, param, conectStr).ToList();
+            var obj = Query<ProblemList>(cmd, param, conStr).ToList();
             //var obj = Query<ASSETKKF_MODEL.Data.Mssql.Asset.ASSTProblem>(cmd, param).ToList();
             List<ProblemList> res = new List<ProblemList>();
             //if (obj != null && obj.Count > 0)

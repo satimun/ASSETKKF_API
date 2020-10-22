@@ -11,20 +11,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static muAPILogAdo instant;
 
-        public static muAPILogAdo GetInstant(string conStr = null)
+        public static muAPILogAdo GetInstant()
         {
-            if (instant == null) instant = new muAPILogAdo(conStr);
+            if (instant == null) instant = new muAPILogAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private muAPILogAdo(string conStr = null)
+        private muAPILogAdo()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog> Search(ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog d)
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog> Search(ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog d, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@ID", d.ID);
@@ -45,7 +45,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 "OR (@StartDate iS NULL OR StartDate=@StartDate) " +
                 "OR (@EndDate iS NULL OR EndDate=@EndDate) " +
                 "OR (@ServerName iS NULL OR ServerName=@ServerName);";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog>(cmd, param, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog>(cmd, param, conStr).ToList();
             return res;
         }
 
@@ -61,7 +61,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
         }
 
-        public int Update(ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog d, SqlTransaction transac = null)
+        public int Update(ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@ID", d.ID);
@@ -88,11 +88,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 "Input=@Input, " +
                 "Output=@Output " +
                 "WHERE ID=@ID;";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public int Insert(ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog d, SqlTransaction transac = null)
+        public int Insert(ASSETKKF_MODEL.Data.Mssql.Asset.muAPILog d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@RefID", d.RefID);
@@ -110,7 +110,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             string cmd = "INSERT INTO muAPILog (RefID, Token, APIName, Status, StatusMessage, StartDate, EndDate, ServerName, Input, Output, Remark) " +
                 "VALUES (@RefID, @Token, @APIName, @Status, @StatusMessage, @StartDate, @EndDate, @ServerName, @Input, @Output, @Remark); " +
                 "SELECT SCOPE_IDENTITY();";
-            var res = ExecuteScalar<int>(transac, cmd, param, conectStr);
+            var res = ExecuteScalar<int>(transac, cmd, param, conStr);
             return res;
         }
     }

@@ -28,16 +28,18 @@ namespace ASSETKKF_API.Engine.Asset.Report
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
+
                 var mode = String.IsNullOrEmpty(dataReq.mode) ? null : dataReq.mode.Trim().ToLower();
 
                 switch (mode)
                 {
                     case "depcodeol":
-                        GetPivotProblemByDepcodeol(dataReq, res);
+                        GetPivotProblemByDepcodeol(dataReq, res,conString);
                         break;
 
                     default:
-                        GetPivotProblemByDep(dataReq, res);
+                        GetPivotProblemByDep(dataReq, res,conString);
                         break;
                 }
             }
@@ -63,11 +65,11 @@ namespace ASSETKKF_API.Engine.Asset.Report
             dataRes.data = res;
         }
 
-        private PivotDataRes GetPivotProblemByDep(AuditSummaryReq dataReq, PivotDataRes res)
+        private PivotDataRes GetPivotProblemByDep(AuditSummaryReq dataReq, PivotDataRes res, string conStr = null)
         {
             try
             {
-                var dt = getProblemByDep(dataReq);
+                var dt = getProblemByDep(dataReq,conStr);
 
                 string JSONresult,jsonrow;
                 JSONresult = JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.Indented);
@@ -120,11 +122,11 @@ namespace ASSETKKF_API.Engine.Asset.Report
             
         }
 
-        private PivotDataRes GetPivotProblemByDepcodeol(AuditSummaryReq dataReq, PivotDataRes res)
+        private PivotDataRes GetPivotProblemByDepcodeol(AuditSummaryReq dataReq, PivotDataRes res, string conStr = null)
         {
             try
             {
-                var dt = getProblemByDepcodeol(dataReq);
+                var dt = getProblemByDepcodeol(dataReq,conStr);
 
                 string JSONresult, jsonrow;
                 JSONresult = JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.Indented);
@@ -177,14 +179,14 @@ namespace ASSETKKF_API.Engine.Asset.Report
 
         }
 
-        public  DataTable getProblemByDep(AuditSummaryReq dataReq)
+        public  DataTable getProblemByDep(AuditSummaryReq dataReq, string conStr = null)
         {
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant(conString).getProblemByDep(dataReq)).Result;
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant().getProblemByDep(dataReq,null,conStr)).Result;
         }
 
-        public DataTable getProblemByDepcodeol(AuditSummaryReq dataReq)
+        public DataTable getProblemByDepcodeol(AuditSummaryReq dataReq, string conStr = null)
         {
-            return Task.Run(() => ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant(conString).getProblemByDepcodeol(dataReq)).Result;
+            return Task.Run(() => ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant().getProblemByDepcodeol(dataReq,null,conStr)).Result;
         }
 
     }

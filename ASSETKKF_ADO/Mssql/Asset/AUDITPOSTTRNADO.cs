@@ -14,21 +14,21 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AUDITPOSTTRNADO instant;
 
-        public static AUDITPOSTTRNADO GetInstant(string conStr = null)
+        public static AUDITPOSTTRNADO GetInstant()
         {
-            if (instant == null) instant = new AUDITPOSTTRNADO(conStr);
+            if (instant == null) instant = new AUDITPOSTTRNADO();
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AUDITPOSTTRNADO(string conStr = null)
+        private AUDITPOSTTRNADO()
         {
-			conectStr = conStr;
+			
 
 		}
 
-        public int addAUDITPOSTTRN(AUDITPOSTTRNReq d, SqlTransaction transac = null)
+        public int addAUDITPOSTTRN(AUDITPOSTTRNReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " EXEC [dbo].[SP_AUDITPOSTTRN]  ";
@@ -62,12 +62,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			sql += " ,@ASSETNONEW = '" + d.ASSETNONEW + "'";
 			sql += " ,@INPID = '" + d.INPID + "'";
 
-			var res = ExecuteNonQuery(sql, param, conectStr);
+			var res = ExecuteNonQuery(sql, param, conStr);
 			return res;
 
 		}
 
-		public int UpdateAUDITPOSTTRNIMG(AUDITPOSTTRNReq d, SqlTransaction transac = null)
+		public int UpdateAUDITPOSTTRNIMG(AUDITPOSTTRNReq d, SqlTransaction transac = null, string conStr = null)
 		{
 			if (d == null && (d != null && (d.SQNO == null || d.ASSETNO == null))) { return -1; }
 			DynamicParameters param = new DynamicParameters();
@@ -82,11 +82,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			sql += " ,@INPID = '" + d.INPID + "'";
 
 
-			var res = ExecuteNonQuery(sql, param, conectStr);
+			var res = ExecuteNonQuery(sql, param, conStr);
 			return res;
 		}
 
-		public List<ASSETOFFICECODE> getASSETOFFICECODELST(ASSETOFFICECODEReq d, SqlTransaction transac = null)
+		public List<ASSETOFFICECODE> getASSETOFFICECODELST(ASSETOFFICECODEReq d, SqlTransaction transac = null, string conStr = null)
 		{
 			DynamicParameters param = new DynamicParameters();
 			param.Add("@OFFICECODE", d.OFFICECODE);
@@ -104,24 +104,24 @@ namespace ASSETKKF_ADO.Mssql.Asset
 				sql += " and OFFICECODE = '" + d.OFFICECODE + "'";
 			}
 			sql += " GROUP BY OFFICECODE,DEPCODEOL,DEPCODE";
-			var res = Query<ASSETOFFICECODE>(sql, param, conectStr).ToList();
+			var res = Query<ASSETOFFICECODE>(sql, param, conStr).ToList();
 			return res;
 
 		}
 
-		public List<ASSETASSETNO> getASSETASSETNOLST(ASSETASSETNOReq d, SqlTransaction transac = null)
+		public List<ASSETASSETNO> getASSETASSETNOLST(ASSETASSETNOReq d, SqlTransaction transac = null, string conStr = null)
 		{
 			DynamicParameters param = new DynamicParameters();
 			param.Add("@OFFICECODE", "");
 			sql = " select * from  [FT_ASFIXEDASSET] (@OFFICECODE)  ";
 			sql += " where COMPANY = '" + d.COMPANY + "'";
 			
-			var res = Query<ASSETASSETNO>(sql, param, conectStr).ToList();
+			var res = Query<ASSETASSETNO>(sql, param, conStr).ToList();
 			return res;
 
 		}
 
-		public ASSETOFFICECODE checkASSETOFFICECODE(ASSETOFFICECODEReq d, SqlTransaction transac = null)
+		public ASSETOFFICECODE checkASSETOFFICECODE(ASSETOFFICECODEReq d, SqlTransaction transac = null, string conStr = null)
 		{
 			DynamicParameters param = new DynamicParameters();
 			param.Add("@OFFICECODE", d.OFFICECODE);
@@ -134,11 +134,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			//	sql += " and OFFICECODE = '" + d.OFFICECODE + "'";
 			//}
 			sql += " GROUP BY OFFICECODE,DEPCODEOL,DEPCODE";
-			var res = Query<ASSETOFFICECODE>(sql, param, conectStr).FirstOrDefault();
+			var res = Query<ASSETOFFICECODE>(sql, param, conStr).FirstOrDefault();
 			return res;
 		}
 
-		public ASSETASSETNO checkASSETASSETNO(ASSETASSETNOReq d, SqlTransaction transac = null)
+		public ASSETASSETNO checkASSETASSETNO(ASSETASSETNOReq d, SqlTransaction transac = null, string conStr = null)
 		{
 			DynamicParameters param = new DynamicParameters();
 			param.Add("@OFFICECODE", "");
@@ -160,11 +160,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 				sql += " and DEPCODEOL = '" + d.DEPCODEOL + "'";
 			}
 
-			var res = Query<ASSETASSETNO>(sql, param, conectStr).FirstOrDefault();
+			var res = Query<ASSETASSETNO>(sql, param, conStr).FirstOrDefault();
 			return res;
 		}
 
-		public ASSETASSETNO getASSETASSETNO(ASSETASSETNOReq d, SqlTransaction transac = null)
+		public ASSETASSETNO getASSETASSETNO(ASSETASSETNOReq d, SqlTransaction transac = null, string conStr = null)
 		{
 			DynamicParameters param = new DynamicParameters();
 			sql = " SELECT FORMATMESSAGE('%s%d', '" + d.ASSETNO + "', (COUNT(assetno)+1))  as assetno FROM [dbo].[FT_ASAUDITPOSTTRN_COMPANY] (" + QuoteStr(d.COMPANY) + ")   ";
@@ -177,11 +177,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
 			
 
-			var res = Query<ASSETASSETNO>(sql, param, conectStr).FirstOrDefault();
+			var res = Query<ASSETASSETNO>(sql, param, conStr).FirstOrDefault();
 			return res;
 		}
 
-		public List<AuditPostTRN> getAUDITPOSTTRN(AuditPostTRNReq d, SqlTransaction transac = null)
+		public List<AuditPostTRN> getAUDITPOSTTRN(AuditPostTRNReq d, SqlTransaction transac = null, string conStr = null)
 
 		{
 			DynamicParameters param = new DynamicParameters();
@@ -201,7 +201,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 				sql += " and a.ASSETNO = '" + d.ASSETNO + "'";
 			}
 
-			var res = Query<AuditPostTRN>(sql, param, conectStr).ToList();
+			var res = Query<AuditPostTRN>(sql, param, conStr).ToList();
 
 			//var obj = Query<ASAUDITPOSTTRN>(sql, param).ToList();
 			//List<AuditPostTRN> res = new List<AuditPostTRN>();
@@ -240,7 +240,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			return res;
 		}
 
-		public List<ASAUDITPOSTTRN> getAuditPostTRN(AUDITPOSTTRNReq d, SqlTransaction transac = null)
+		public List<ASAUDITPOSTTRN> getAuditPostTRN(AUDITPOSTTRNReq d, SqlTransaction transac = null, string conStr = null)
 		{
 			DynamicParameters param = new DynamicParameters();
 			
@@ -250,12 +250,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			sql += " and INPID = '" + d.UCODE + "'"; 
 			 sql += " and assetno = '" + d.ASSETNO + "'";
 
-			var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).ToList();
+			var res = Query<ASAUDITPOSTTRN>(sql, param, conStr).ToList();
 			return res;
 
 		}
 
-		public List<ASAUDITPOSTTRN> getPOSTTRNDuplicate(AuditPostTRNReq d, SqlTransaction transac = null)
+		public List<ASAUDITPOSTTRN> getPOSTTRNDuplicate(AuditPostTRNReq d, SqlTransaction transac = null, string conStr = null)
         {
 			DynamicParameters param = new DynamicParameters();
 			sql = " select * from   [FT_ASAUDITPOSTTRN_COMPANY] (" + QuoteStr(d.COMPANY) + ") as  B ";
@@ -337,7 +337,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			{
 				sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
 			}
-			var res = Query<ASAUDITPOSTTRN>(sql, param, conectStr).ToList();
+			var res = Query<ASAUDITPOSTTRN>(sql, param, conStr).ToList();
 			return res;
 		}
 

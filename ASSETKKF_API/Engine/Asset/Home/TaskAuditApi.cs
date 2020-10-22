@@ -27,6 +27,8 @@ namespace ASSETKKF_API.Engine.Asset.Home
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
+
                 List<ASSETKKF_MODEL.Data.Mssql.Asset.TaskAudit> auditLst = new List<TaskAudit>();
 
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
@@ -34,11 +36,11 @@ namespace ASSETKKF_API.Engine.Asset.Home
                 switch (mode)
                 {
                     case "tracking":
-                        auditLst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant(conString).GetTracking(dataReq);
+                        auditLst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().GetTracking(dataReq,null,conString);
                         break;
 
                     default:
-                        auditLst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant(conString).GetData(dataReq);
+                        auditLst = ASSETKKF_ADO.Mssql.Asset.TaskAuditAdo.GetInstant().GetData(dataReq,null,conString);
                         break;
                 }
 

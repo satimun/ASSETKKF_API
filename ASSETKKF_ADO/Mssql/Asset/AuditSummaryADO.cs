@@ -12,20 +12,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AuditSummaryADO instant;
 
-        public static AuditSummaryADO GetInstant(string conStr = null)
+        public static AuditSummaryADO GetInstant()
         {
-            if (instant == null) instant = new AuditSummaryADO(conStr);
+            if (instant == null) instant = new AuditSummaryADO();
             return instant;
         }
 
         private string conectStr { get; set; }
 
-        private AuditSummaryADO(string conStr = null)
+        private AuditSummaryADO()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " select sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT,sum(QTY_PROBLEM) as QTY_PROBLEM,sum(QTY_NOPROBLEM) as QTY_NOPROBLEM ,sum(QTY_TRN) as QTY_TRN ";
@@ -82,12 +82,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 //cmd += " and DEPCODEOL = (SELECT distinct DEPCODEEOL FROM [dbo].[FT_UserAsset] ( '" + d.OFFICECODE + "') where COMPANY = c.COMPANY )";
             }
 
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conStr).ToList();
 
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetDeptSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetDeptSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " select company,depcodeol,max(stname) as stname,max(DEPMST) as DEPMST,max(DEPNM) as DEPNM,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
@@ -122,11 +122,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             }
             cmd += " group by company,depcodeol,SQNO,audit_no";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetDEPCODEOLSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetDEPCODEOLSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " select company,depcodeol,max(stname) as stname,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
@@ -161,11 +161,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 
             }
             cmd += " group by company,depcodeol,SQNO,audit_no";
-            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conectStr).ToList();
+            var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public List<AuditDeptSummary> GetDEPMSTSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        public List<AuditDeptSummary> GetDEPMSTSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " select company,YRMN,DEPMST ,max(DEPNM) as DEPNM,max(SQNO) as SQNO,max(audit_no) as audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT,sum(QTY_TRN) as QTY_TRN ";
@@ -207,11 +207,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             cmd += " group by company,YRMN,DEPMST";
             cmd += " order by company,YRMN,DEPMST";
-            var res = Query<AuditDeptSummary>(cmd, param, conectStr).ToList();
+            var res = Query<AuditDeptSummary>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public List<AuditDeptSummary> GetSummaryByDepMst(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        public List<AuditDeptSummary> GetSummaryByDepMst(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " select company,yrmn,max(DEPMST) as DEPMST,depcodeol,max(stname) as stname,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
@@ -259,11 +259,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             cmd += " group by company,depcodeol,SQNO,audit_no";
             cmd += " order by company,depcodeol,SQNO,audit_no";
-            var res = Query<AuditDeptSummary>(cmd, param, conectStr).ToList();
+            var res = Query<AuditDeptSummary>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public List<Multiselect> GetAuditYear(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        public List<Multiselect> GetAuditYear(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " SELECT YR as id,YR as description FROM [dbo].FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") as M ";
@@ -294,11 +294,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " group by YR ";
             cmd += " order by YR desc ";
 
-            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
+            var res = Query<Multiselect>(cmd, param, conStr).ToList();
             return res;
         }
 
-        public List<Multiselect> GetAuditMN(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null)
+        public List<Multiselect> GetAuditMN(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             string cmd = " SELECT MN as id,MN  as description FROM [dbo].FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") as M ";
@@ -334,7 +334,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " group by MN ";
             cmd += " order by MN desc ";
 
-            var res = Query<Multiselect>(cmd, param, conectStr).ToList();
+            var res = Query<Multiselect>(cmd, param, conStr).ToList();
             return res;
         }
 

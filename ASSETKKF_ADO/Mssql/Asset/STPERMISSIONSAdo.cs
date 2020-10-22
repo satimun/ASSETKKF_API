@@ -13,20 +13,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static STPERMISSIONSAdo instant;
 
-        public static STPERMISSIONSAdo GetInstant(string conStr = null)
+        public static STPERMISSIONSAdo GetInstant()
         {
-            if (instant == null) instant = new STPERMISSIONSAdo(conStr);
+            if (instant == null) instant = new STPERMISSIONSAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private STPERMISSIONSAdo(string conStr = null)
+        private STPERMISSIONSAdo()
         {
-            conectStr = conStr;
+           
         }
 
-        public int Insert(STPERMISSIONS d, SqlTransaction transac = null)
+        public int Insert(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@MENUCODE", d.MENUCODE);
@@ -41,11 +41,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "INSERT INTO STPERMISSIONS (MENUCODE, GUCODE, COMPANY, P_ACCESS,  P_MANAGE, P_DELETE, P_APPROVE,P_EXPORT, INPID, INPDT) " +
                 "VALUES (@MENUCODE, @GUCODE, @COMPANY, @P_ACCESS, @P_MANAGE, @P_DELETE, @P_APPROVE, @P_EXPORT, @INPID, GETDATE());";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public int Update(STPERMISSIONS d, SqlTransaction transac = null)
+        public int Update(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@MENUCODE", d.MENUCODE);
@@ -88,11 +88,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
 
             cmd += " Where MENUCODE = @MENUCODE and GUCODE = @GUCODE and COMPANY =@COMPANY ;";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public int Delete(STPERMISSIONS d, SqlTransaction transac = null)
+        public int Delete(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@MENUCODE", d.MENUCODE);
@@ -102,11 +102,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "Delete From STPERMISSIONS  " +
                 " Where MENUCODE = @MENUCODE and GUCODE = @GUCODE and COMPANY =@COMPANY ;";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public int DeleteAllByMenu(STPERMISSIONS d, SqlTransaction transac = null)
+        public int DeleteAllByMenu(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@MENUCODE", d.MENUCODE);
@@ -114,11 +114,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "Delete From STPERMISSIONS  " +
                 " Where MENUCODE = @MENUCODE and COMPANY =@COMPANY ;";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public int DeleteAllByGroup(STPERMISSIONS d, SqlTransaction transac = null)
+        public int DeleteAllByGroup(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@GUCODE", d.GUCODE);
@@ -126,11 +126,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             string cmd = "Delete From STPERMISSIONS  " +
                 " Where GUCODE = @GUCODE and COMPANY =@COMPANY ;";
-            var res = ExecuteNonQuery(transac, cmd, param, conectStr);
+            var res = ExecuteNonQuery(transac, cmd, param, conStr);
             return res;
         }
 
-        public List<STPERMISSIONS> Get(STPERMISSIONS d, SqlTransaction transac = null)
+        public List<STPERMISSIONS> Get(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -185,13 +185,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@P_EXPORT", d.P_EXPORT);
             }
 
-            var res = Query<STPERMISSIONS>(sql, param, conectStr).ToList();
+            var res = Query<STPERMISSIONS>(sql, param, conStr).ToList();
             return res;
 
         }
 
 
-        public List<STPERMISSIONSRes> Valid(STPERMISSIONS d, SqlTransaction transac = null)
+        public List<STPERMISSIONSRes> Valid(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -250,12 +250,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@P_EXPORT", d.P_EXPORT);
             }
 
-            var res = Query<STPERMISSIONSRes>(sql, param, conectStr).ToList();
+            var res = Query<STPERMISSIONSRes>(sql, param, conStr).ToList();
             return res;
 
         }
 
-        public List<STPERMISSIONSRes> Search(STPERMISSIONS d, SqlTransaction transac = null)
+        public List<STPERMISSIONSRes> Search(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -315,11 +315,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@P_EXPORT", d.P_EXPORT);
             }
 
-            var res = Query<STPERMISSIONSRes>(sql, param, conectStr).ToList();
+            var res = Query<STPERMISSIONSRes>(sql, param, conStr).ToList();
             return res;
         }
 
-        public List<STPERMISSIONSRes> ListActive(STPERMISSIONS d, SqlTransaction transac = null)
+        public List<STPERMISSIONSRes> ListActive(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -379,11 +379,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 param.Add("@P_EXPORT", d.P_EXPORT);
             }
 
-            var res = Query<STPERMISSIONSRes>(sql, param, conectStr).ToList();
+            var res = Query<STPERMISSIONSRes>(sql, param, conStr).ToList();
             return res;
         }
 
-        public List<STPERMISSIONSRes> GroupPermissions(STPERMISSIONS d, SqlTransaction transac = null)
+        public List<STPERMISSIONSRes> GroupPermissions(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -446,11 +446,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += "group by M.MENUCODE , M.MENUNAME , P.COMPANY ,P.P_ACCESS ,P.P_MANAGE , P.P_DELETE , P.P_APPROVE, P_EXPORT ";
 
-            var res = Query<STPERMISSIONSRes>(sql, param, conectStr).ToList();
+            var res = Query<STPERMISSIONSRes>(sql, param, conStr).ToList();
             return res;
         }
 
-        public List<STPERMISSIONSRes> GroupUserActive(STPERMISSIONS d, SqlTransaction transac = null)
+        public List<STPERMISSIONSRes> GroupUserActive(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -477,7 +477,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += "group by G.GUCODE , G.GUNAME , P.COMPANY";
 
-            var res = Query<STPERMISSIONSRes>(sql, param, conectStr).ToList();
+            var res = Query<STPERMISSIONSRes>(sql, param, conStr).ToList();
             return res;
         }
 
@@ -496,7 +496,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
         }
 
-        public List<STGROUPUSER> getGROUPUSER(STPERMISSIONS d, SqlTransaction transac = null)
+        public List<STGROUPUSER> getGROUPUSER(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "select gucode,guname from [FT_STGROUPUSER]() where 1 =1 ";
@@ -509,11 +509,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql += " group by gucode,guname";
 
-            var res = Query<STGROUPUSER>(sql, param, conectStr).ToList();
+            var res = Query<STGROUPUSER>(sql, param, conStr).ToList();
             return res;
         }
 
-        public List<STMENU> ListMenu(STPERMISSIONS d, SqlTransaction transac = null)
+        public List<STMENU> ListMenu(STPERMISSIONS d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -533,7 +533,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             }
             sql += " )";
 
-            var res = Query<STMENU>(sql, param, conectStr).ToList();
+            var res = Query<STMENU>(sql, param, conStr).ToList();
             return res;
         }
 

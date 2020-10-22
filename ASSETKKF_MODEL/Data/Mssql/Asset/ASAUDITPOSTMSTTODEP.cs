@@ -78,6 +78,7 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
 
         public string FLAG_ACCEPT { get; set; }
         public string FILEPATH { get; set; }
+        public string SACC { get; set; }
 
 
     }

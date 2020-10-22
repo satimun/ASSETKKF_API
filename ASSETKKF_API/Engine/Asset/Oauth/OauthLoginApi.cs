@@ -26,8 +26,9 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
             
             var res = new OauthLoginRes();
             res._result.ServerAddr = ConnectionString();
+            res._result.DBMode = DBMode;
 
-            var user = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant(conString).Search(new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET() { UCODE = dataReq.username.Trim() });
+            var user = ASSETKKF_ADO.Mssql.Asset.STUSERASSETAdo.GetInstant().Search(new ASSETKKF_MODEL.Data.Mssql.Asset.STUSERASSET() { UCODE = dataReq.username.Trim() },null,conString);
             if (user == null) { throw new Exception("ไม่พบชื่อผู้ใช้งาน"); }
 
             var STAEMP = user.Where(s => s.STAEMP == "9")
@@ -123,7 +124,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                               .ToList();
                 res.Menu4 = Menu4.Count > 0;
 
-                ASSETKKF_ADO.Mssql.Asset.muTokenAdo.GetInstant(conString).Insert(new ASSETKKF_MODEL.Data.Mssql.Asset.muToken()
+                ASSETKKF_ADO.Mssql.Asset.muTokenAdo.GetInstant().Insert(new ASSETKKF_MODEL.Data.Mssql.Asset.muToken()
                 {
                     UserCode = obj.UCODE,
                     AccessToken_Code = this.AccessToken,
@@ -132,7 +133,7 @@ namespace ASSETKKF_API.Engine.Asset.Oauth
                     Type = "L",
                     ExpiryTime = DateTime.Now.AddMinutes(480)
 
-                }, obj.UCODE);
+                }, obj.UCODE,null,conString);
 
 
                 /*

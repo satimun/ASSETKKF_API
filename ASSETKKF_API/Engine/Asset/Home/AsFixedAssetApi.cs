@@ -30,7 +30,9 @@ namespace ASSETKKF_API.Engine.Asset.Home
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var obj = ASSETKKF_ADO.Mssql.Asset.AsFixedAssetAdo.GetInstant(conString).Search(dataReq);
+                res._result.DBMode = DBMode;
+
+                var obj = ASSETKKF_ADO.Mssql.Asset.AsFixedAssetAdo.GetInstant().Search(dataReq,null,conString);
                 //if (obj == null) { throw new Exception("ไม่พบข้อมูล"); }
 
                 res.AsFixedAssetLST = obj;

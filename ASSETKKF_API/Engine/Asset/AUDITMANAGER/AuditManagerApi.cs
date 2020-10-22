@@ -28,7 +28,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
             try
             {
                 DBMode = dataReq.DBMode;
-                ConnectionString();
+                res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
                 List<AuditManager> auditLst = new List<AuditManager>();
 
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
@@ -36,15 +37,15 @@ namespace ASSETKKF_API.Engine.Asset.AUDITMANAGER
                 switch (mode)
                 {
                     case "mgr1":
-                        auditLst = AuditManagerAdo.GetInstant(conString).GetData2MGR1(dataReq);
+                        auditLst = AuditManagerAdo.GetInstant().GetData2MGR1(dataReq,null,conString);
                         break;
 
                     case "mgr2":
-                        auditLst = AuditManagerAdo.GetInstant(conString).GetData2MGR2(dataReq);
+                        auditLst = AuditManagerAdo.GetInstant().GetData2MGR2(dataReq,null,conString);
                         break;
 
                     default:
-                        auditLst = AuditManagerAdo.GetInstant(conString).GetData2Send(dataReq);
+                        auditLst = AuditManagerAdo.GetInstant().GetData2Send(dataReq,null,conString);
                         break;
                 }
 

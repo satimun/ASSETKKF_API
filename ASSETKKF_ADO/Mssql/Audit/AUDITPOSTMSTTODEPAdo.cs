@@ -13,20 +13,20 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AUDITPOSTMSTTODEPAdo instant;
 
-        public static AUDITPOSTMSTTODEPAdo GetInstant(string conStr = null)
+        public static AUDITPOSTMSTTODEPAdo GetInstant()
         {
-            if (instant == null) instant = new AUDITPOSTMSTTODEPAdo(conStr);
+            if (instant == null) instant = new AUDITPOSTMSTTODEPAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private AUDITPOSTMSTTODEPAdo(string conStr = null)
+        private AUDITPOSTMSTTODEPAdo()
         {
-            conectStr = conStr;
+            
         }
 
-        public int SP_AUDITPOSTMSTTODEP(AUDITPOSTMSTReq d, string flag = null, SqlTransaction transac = null)
+        public int SP_AUDITPOSTMSTTODEP(AUDITPOSTMSTReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "  EXEC  SP_AUDITPOSTMSTTODEP";
@@ -40,16 +40,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@PNAME= '" + d.PNAME + "'";
             sql += " ,@MEMO= '" + d.MEMO1 + "'";
             
-            var res = ExecuteNonQuery(sql, param, conectStr);
+            var res = ExecuteNonQuery(sql, param, conStr);
             return res;
         }
 
 
-        public List<ASAUDITPOSTMSTTODEP> getDataToClear(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        public List<ASAUDITPOSTMSTTODEP> getDataToClear(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME ,ISNULL(D.FLAG_ACCEPT,'') as FLAG_ACCEPT";
             sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.stid) as stidname";
+            sql += " ,(SELECT SACC FROM [dbo].[FT_ASSTProblem] () where COMPANY = B.COMPANY and PCODE = B.PCODE) as SACC";
             sql += "  FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B";
             sql += " left outer join [FT_ASAUDITCUTDATEMST_COMPANY](" + QuoteStr(d.COMPANY) + ") as D on D.sqno = B.sqno";
             sql += " where B.SQNO = " + QuoteStr(d.SQNO);
@@ -96,11 +97,11 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conStr).ToList();
             return res;
         }
 
-        public int SP_AUDITPOSTMSTTODEPPHONE(AUDITPOSTMSTReq d, string flag = null, SqlTransaction transac = null)
+        public int SP_AUDITPOSTMSTTODEPPHONE(AUDITPOSTMSTReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "  EXEC  SP_AUDITPOSTMSTTODEPPHONE";
@@ -114,11 +115,11 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ,@MEMO= '" + d.MEMO1 + "'";
             sql += " ,@MODE = '" + d.MODE + "'";            
             
-            var res = ExecuteNonQuery(sql, param, conectStr);
+            var res = ExecuteNonQuery(sql, param, conStr);
             return res;
         }
 
-        public List<ASAUDITPOSTMSTTODEP> getDataToConfirm(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        public List<ASAUDITPOSTMSTTODEP> getDataToConfirm(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME ";
@@ -154,11 +155,11 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conStr).ToList();
             return res;
         }
 
-        public List<ASAUDITPOSTMSTTODEP> getAuditAssetNo(AuditPostReq d, SqlTransaction transac = null)
+        public List<ASAUDITPOSTMSTTODEP> getAuditAssetNo(AuditPostReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = " select * from  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ") as a ";
@@ -167,15 +168,16 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " and a.ASSETNO = '" + d.ASSETNO + "'";
             //sql += " and a.INPID = '" + d.UCODE + "'";
 
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conStr).ToList();
             return res;
         }
 
-        public List<ASAUDITPOSTMSTTODEP> getDataToCompEdit(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        public List<ASAUDITPOSTMSTTODEP> getDataToCompEdit(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME ";
             sql += " ,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.stid) as stidname";
+            sql += " ,(SELECT SACC FROM [dbo].[FT_ASSTProblem] () where COMPANY = B.COMPANY and PCODE = B.PCODE) as SACC";
             sql += "  FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B";
             sql += " where B.SQNO = " + QuoteStr(d.SQNO);
             sql += " and B.COMPANY = " + QuoteStr(d.COMPANY);
@@ -233,11 +235,11 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conStr).ToList();
             return res;
         }
 
-        public List<ASAUDITPOSTMSTTODEP> getDataToACCEdit(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        public List<ASAUDITPOSTMSTTODEP> getDataToACCEdit(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME ";
@@ -300,17 +302,17 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " order by  POSITCODE,OFFICECODE,ASSETNO ";
             }
 
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conStr).ToList();
             return res;
         }
 
-        public string getAttachedFile(AuditPostReq d, string flag = null, SqlTransaction transac = null)
+        public string getAttachedFile(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             string attachedFile = "";
             DynamicParameters param = new DynamicParameters();
             sql = "select * FROM  FT_ASAUDITPOSTMSTTOTEMP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B";
             sql += " where B.SQNO = " + QuoteStr(d.SQNO);
-            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conectStr).ToList();
+            var res = Query<ASAUDITPOSTMSTTODEP>(sql, param, conStr).ToList();
 
             if(res != null && res.Count > 0)
             {

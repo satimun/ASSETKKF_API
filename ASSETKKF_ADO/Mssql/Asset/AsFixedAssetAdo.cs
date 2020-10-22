@@ -12,20 +12,20 @@ namespace ASSETKKF_ADO.Mssql.Asset
     {
         private static AsFixedAssetAdo instant;
 
-        public static AsFixedAssetAdo GetInstant(string conStr = null)
+        public static AsFixedAssetAdo GetInstant()
         {
-            if (instant == null) instant = new AsFixedAssetAdo(conStr);
+            if (instant == null) instant = new AsFixedAssetAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+       
 
-        private AsFixedAssetAdo(string conStr = null)
+        private AsFixedAssetAdo()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<AsFixedAsset> Search(ASSETKKF_MODEL.Data.Mssql.Asset.AsFixedAsset d, SqlTransaction transac = null)
+        public List<AsFixedAsset> Search(ASSETKKF_MODEL.Data.Mssql.Asset.AsFixedAsset d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@OFFICECODE", d.OFFICECODE);
@@ -38,7 +38,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 cmd += " and  assetno = " + QuoteStr(d.ASSETNO);
             }
-            var res = Query<AsFixedAsset>(cmd, param, conectStr).ToList();
+            var res = Query<AsFixedAsset>(cmd, param, conStr).ToList();
             return res;
         }
     }

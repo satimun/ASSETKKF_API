@@ -15,20 +15,20 @@ namespace ASSETKKF_ADO.Mssql.Audit
     {
         private static AuditAccAdo instant;
 
-        public static AuditAccAdo GetInstant(string conStr = null)
+        public static AuditAccAdo GetInstant()
         {
-            if (instant == null) instant = new AuditAccAdo(conStr);
+            if (instant == null) instant = new AuditAccAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private AuditAccAdo(string conStr = null)
+        private AuditAccAdo()
         {
-            conectStr = conStr;
+            
         }
 
-        public List<AuditAcc> GetData(AuditResultReq d, SqlTransaction transac = null)
+        public List<AuditAcc> GetData(AuditResultReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -64,11 +64,11 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
             }
 
-            var res = Query<AuditAcc>(sql, param, conectStr).ToList();
+            var res = Query<AuditAcc>(sql, param, conStr).ToList();
             return res;
         }
 
-        public SummaryAudit GetSummaryAudit(AuditPostReq d, SqlTransaction transac = null)
+        public SummaryAudit GetSummaryAudit(AuditPostReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = @"select *
@@ -84,11 +84,11 @@ FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B ";
             sql += " AND  B.PCODE IN (SELECT  A.PCODE FROM  FT_ASSTProblem() A  WHERE  isnull(A.SACC,'') = 'Y' and COMPANY = " + QuoteStr(d.COMPANY) + ") ";
             sql += " GROUP BY MN,YR,OFFICECODE   )  AS X GROUP BY  MN,YR 	) as Z ";
 
-            var res = Query<SummaryAudit>(sql, param, conectStr).FirstOrDefault();
+            var res = Query<SummaryAudit>(sql, param, conStr).FirstOrDefault();
             return res;
         }
 
-        public List<SummaryResult> GetSummaryResult(AuditPostReq d, SqlTransaction transac = null)
+        public List<SummaryResult> GetSummaryResult(AuditPostReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             sql = @" SELECT PCODE,PNAME,DEPCODE,DEPCODEOL,MAX(STNAME) AS STNAME,COUNT(PCODE) AS QTY  FROM    FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")   B ";
@@ -99,7 +99,7 @@ FROM  FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B ";
             sql += " GROUP BY MN,YR,PCODE,PNAME,DEPCODE,DEPCODEOL  ";
             sql += " order BY DEPCODE,DEPCODEOL, PCODE,PNAME  ";
 
-            var res = Query<SummaryResult>(sql, param, conectStr).ToList();
+            var res = Query<SummaryResult>(sql, param, conStr).ToList();
             return res;
 
         }

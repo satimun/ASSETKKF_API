@@ -27,7 +27,8 @@ namespace ASSETKKF_API.Engine.Asset.Dashboard
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
-                var obj = ASSETKKF_ADO.Mssql.Asset.AuditSummaryADO.GetInstant(conString).GetDEPMSTSummary(dataReq);
+                res._result.DBMode = DBMode;
+                var obj = ASSETKKF_ADO.Mssql.Asset.AuditSummaryADO.GetInstant().GetDEPMSTSummary(dataReq, null, conString);
                 if (obj == null)
                 {
                     res._result._code = "404";

@@ -27,10 +27,12 @@ namespace ASSETKKF_API.Engine.Asset.File
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
+
                 if (dataReq != null && System.IO.File.Exists(dataReq.IMGPATH)) { }
                 {
 
-                    var obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant(conString).UpdateAUDITPOSTTRNIMG(dataReq);
+                    var obj = ASSETKKF_ADO.Mssql.Asset.AUDITPOSTTRNADO.GetInstant().UpdateAUDITPOSTTRNIMG(dataReq,null,conString);
                     res.fullpath = dataReq.IMGPATH;
                 }
 

@@ -31,6 +31,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
+
                 var req = new ASSETKKF_MODEL.Request.Asset.AuditCutReq()
                 {
                     Company = dataReq.Company,
@@ -44,11 +46,11 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
 
                 if (!String.IsNullOrEmpty(dataReq.MODE) && dataReq.MODE.ToLower().Equals("rd"))
                 {
-                     obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAuditDepList2(dataReq);
+                     obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAuditDepList2(dataReq,null,conString);
                 }
                 else
                 {
-                     obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant(conString).getAuditDepList(dataReq);
+                     obj = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAuditDepList(dataReq,null,conString);
                 }
 
                 

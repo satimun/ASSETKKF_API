@@ -12,20 +12,20 @@ namespace ASSETKKF_ADO.Mssql.Track
     public class TrackPostTRNAdo : Base
     {
         private static TrackPostTRNAdo instant;
-        public static TrackPostTRNAdo GetInstant(string conStr = null)
+        public static TrackPostTRNAdo GetInstant()
         {
-            if (instant == null) instant = new TrackPostTRNAdo(conStr);
+            if (instant == null) instant = new TrackPostTRNAdo();
             return instant;
         }
 
-        private string conectStr { get; set; }
+        
 
-        private TrackPostTRNAdo(string conStr = null)
+        private TrackPostTRNAdo()
         {
-            conectStr = conStr;
+           
         }
 
-        public List<TrackPostTRNRes> GetData(TrackOfflineReq d, SqlTransaction transac = null)
+        public List<TrackPostTRNRes> GetData(TrackOfflineReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
 
@@ -54,11 +54,11 @@ namespace ASSETKKF_ADO.Mssql.Track
 
             sql += " order by flag,assetno";
 
-            var res = Query<TrackPostTRNRes>(sql, param, conectStr).ToList();
+            var res = Query<TrackPostTRNRes>(sql, param, conStr).ToList();
             return res;
         }
 
-        public int Insert(TrackOfflineReq d, SqlTransaction transac = null)
+        public int Insert(TrackOfflineReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.company);
@@ -87,12 +87,12 @@ namespace ASSETKKF_ADO.Mssql.Track
             sql += " ,@OFFICECODE,@OFNAME,@POSITNAME";
             sql += " ,@TRACKID, GETDATE())";
 
-            var res = ExecuteNonQuery(transac, sql, param, conectStr);
+            var res = ExecuteNonQuery(transac, sql, param, conStr);
             return res;
 
         }
 
-        public int UpdateTransfer(TrackOfflineReq d, SqlTransaction transac = null)
+        public int UpdateTransfer(TrackOfflineReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.company);
@@ -122,7 +122,7 @@ namespace ASSETKKF_ADO.Mssql.Track
 
         }
 
-        public int UpdateAudit(TrackOfflineReq d, SqlTransaction transac = null)
+        public int UpdateAudit(TrackOfflineReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@COMPANY", d.company);

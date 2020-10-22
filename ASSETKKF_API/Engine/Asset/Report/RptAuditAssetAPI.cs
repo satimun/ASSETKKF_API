@@ -26,6 +26,7 @@ namespace ASSETKKF_API.Engine.Asset.Report
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
                 List<ASSETKKF_MODEL.Response.Report.RptAuditAsset> obj = new List<RptAuditAsset>();
 
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
@@ -33,16 +34,16 @@ namespace ASSETKKF_API.Engine.Asset.Report
                 switch (mode)
                 {
                     case "main":
-                        obj = ASSETKKF_ADO.Mssql.Asset.RptAuditAssetADO.GetInstant(conString).GetAuditAssetMainLists(dataReq);
+                        obj = ASSETKKF_ADO.Mssql.Asset.RptAuditAssetADO.GetInstant().GetAuditAssetMainLists(dataReq,null,conString);
                         break;
 
                     default:
-                        obj = ASSETKKF_ADO.Mssql.Asset.RptAuditAssetADO.GetInstant(conString).GetAuditAssetLists(dataReq);
+                        obj = ASSETKKF_ADO.Mssql.Asset.RptAuditAssetADO.GetInstant().GetAuditAssetLists(dataReq,null,conString);
                         break;
                 }               
 
 
-                var objTRN = ASSETKKF_ADO.Mssql.Asset.RptAuditAssetADO.GetInstant(conString).GetAuditAssetTRNLists(dataReq);
+                var objTRN = ASSETKKF_ADO.Mssql.Asset.RptAuditAssetADO.GetInstant().GetAuditAssetTRNLists(dataReq,null,conString);
 
 
 

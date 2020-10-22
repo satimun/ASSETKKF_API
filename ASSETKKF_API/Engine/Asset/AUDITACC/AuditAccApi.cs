@@ -28,12 +28,14 @@ namespace ASSETKKF_API.Engine.Asset.AUDITACC
             {
                 DBMode = dataReq.DBMode;
                 res._result.ServerAddr = ConnectionString();
+                res._result.DBMode = DBMode;
+
                 List<AuditAcc> auditLst = new List<AuditAcc>();
                 var mode = String.IsNullOrEmpty(dataReq.MODE) ? dataReq.MODE : dataReq.MODE.ToLower();
                 switch (mode)
                 {
                     default:
-                        auditLst = AuditAccAdo.GetInstant().GetData(dataReq);
+                        auditLst = AuditAccAdo.GetInstant().GetData(dataReq,null,conString);
                         break;
                 }
 
