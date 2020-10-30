@@ -62,5 +62,6 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string IMGPATH { get; set; }
         public string INPNAME { get; set; }
         public string FILEPATH { get; set; }
+        public string SACC { get; set; }
     }
 }

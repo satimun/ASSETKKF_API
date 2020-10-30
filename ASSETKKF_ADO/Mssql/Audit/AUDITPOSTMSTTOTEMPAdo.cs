@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ASSETKKF_MODEL.Data.Mssql.Asset;
 using ASSETKKF_MODEL.Request.Asset;
+using ASSETKKF_MODEL.Response.Audit;
 using Dapper;
 
 namespace ASSETKKF_ADO.Mssql.Audit
@@ -58,7 +59,9 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTMSTTOTEMP> getDataToSendDep(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME  FROM  FT_ASAUDITPOSTMSTTOTEMP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B";
+            sql = "SELECT  B.*,(select NAMEMPT from [CENTRALDB].[centraldb].[dbo].[vTEMPLOY] where [CODEMPID]= B.INPID) as INPNAME  ";
+            sql += " ,(SELECT SACC FROM [dbo].[FT_ASSTProblem] () where COMPANY = B.COMPANY and PCODE = B.PCODE) as SACC";
+            sql += " FROM  FT_ASAUDITPOSTMSTTOTEMP_COMPANY(" + QuoteStr(d.COMPANY) + ")  B";
             sql += " where B.SQNO = " + QuoteStr(d.SQNO);
             sql += " and B.COMPANY = " + QuoteStr(d.COMPANY);
 
@@ -155,6 +158,15 @@ namespace ASSETKKF_ADO.Mssql.Audit
         }
 
 
+
+        public List<AuditTmpCompareTRN> getAuditTmpComparetoTRN(AuditPostReq d, SqlTransaction transac = null, string conStr = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " select * from  FT_AUDITTMPCOMPARETOTRN(" + QuoteStr(d.COMPANY) + "," + QuoteStr(d.SQNO) + ") as a ";
+
+            var res = Query<AuditTmpCompareTRN>(sql, param, conStr).ToList();
+            return res;
+        }
 
     }
 }

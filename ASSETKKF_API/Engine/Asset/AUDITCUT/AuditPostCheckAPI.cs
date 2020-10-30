@@ -99,11 +99,11 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             AREACODE = dataReq.AREACODE,
                             AREANAME = dataReq.AREANAME,
                             ASSETNO = dataReq.ASSETNO,
-                            FINDY = objProblem.FINDY,
-                            PCODE = objProblem.Pcode,
-                            PNAME = objProblem.Pname,
+                            FINDY = objProblem!=null? objProblem.FINDY:null,
+                            PCODE = objProblem != null ? objProblem.Pcode : null,
+                            PNAME = objProblem != null ? objProblem.Pname : null,
                             UCODE = dataReq.UCODE,
-                            PFLAG = objProblem.PFLAG
+                            PFLAG = objProblem != null ? objProblem.PFLAG : null
 
                         };
                         var reqPostMstPhone = new AUDITPOSTMSTReq();

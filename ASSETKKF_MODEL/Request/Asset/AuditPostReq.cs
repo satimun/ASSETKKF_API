@@ -55,6 +55,11 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string DBMode { get; set; }
         public string ConnStr { get; set; }
 
+        public string COMPANY_TRN { get; set; }
+        public string SQNO_TRN { get; set; }
+        public string MEMO_TRN { get; set; }
+        public string INPID_TRN { get; set; }
+
     }
 
         public class AuditPostCheckReq

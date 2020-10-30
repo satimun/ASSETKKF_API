@@ -623,54 +623,8 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
 
-            sql = @"Select * 
+            sql = "select * from FT_AUDITASSETNOBYOFFICECODE(" + QuoteStr(d.Company) + "," +QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.OFFICECODE) + "," + QuoteStr(d.yrmn) + ")";
 
-                ,case when PROGRESS =  0 Then 'fa fa-check-square-o' else 'fa fa-check-square-o' end ICONFAFA
-                ,case when PROGRESS =  0 Then '#A93226' else '#138D75' end ICONCOLOR
-
-                from (
-                Select COMPANY,YR,MN,SQNO,AUDIT_NO
-                ,ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME 
-                ,MIN(PCODE) as PCODE,MIN(PNAME) as PNAME
-                ,MIN(INPDT) AS STARTDT ,MAX(INPDT) AS LASTDT
-                ,SUM(QTY) as QTY_TOTAL,SUM(QTY_CHECKED) as QTY_CHECKED
-
-                ,
-                ( select COUNT(AssETNO) from FT_ASAUDITPOSTTRN() where SQNO = t.SQNO and COMPANY = t.COMPANY and ASSETNO = t.ASSETNO) as QTY_TRN
-
-
-                ,SUM(QTY_WAIT) AS QTY_WAIT
-                , (Case when sum(QTY) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end ) as PROGRESS  
-                FROM (
-                select Z.*
-
-                , m.AUDIT_NO,m.YR,m.MN,m.YRMN,m.CUTDT ,m.DEPMST,m.DEPNM
-                ,p.PCODE,p.PNAME,p.INPID,p.INPDT 
-                , case when isnull(p.PCODE,'') ='' Then 0 else 1 end QTY_CHECKED 
-                , case when isnull(p.PCODE,'')<> '' Then 0 else 1 end QTY_WAIT
-                from (
-                Select d.COMPANY,d.SQNO,d.ASSETNO,d.ASSETNAME,d.DEPCODEOL,d.STNAME,1 As QTY, d.GASTCODE,d.GASTNAME,d.TYPECODE,d.TYPENAME 
-                from FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.Company) + ") as D ";
-            sql += "   where   d.COMPANY = case when ISNULL(" + QuoteStr(d.Company) + ",'') <> '' THEN    ISNULL(" + QuoteStr(d.Company) + ",'') else d.COMPANY end ";
-            sql += @"   and Exists (select * from FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") as  M where";
-            sql += @"   m.COMPANY = d.COMPANY and m.SQNO = d.SQNO  
-                 and  m.FLAG not in ('C','X') ";
-            sql += @"     and YR = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
-
-            if (!String.IsNullOrEmpty(d.yrmn))
-            {
-                sql += @"     and YRMN = " + QuoteStr(d.yrmn);
-            }
-
-            sql += @"      ) ";
-            sql += @"      and   OFFICECODE = case when ISNULL(" + QuoteStr(d.OFFICECODE) + ",'') <> '' THEN    ISNULL(" + QuoteStr(d.OFFICECODE) + ",'') else INPID end ";
-
-
-            sql += @"    ) Z 
-                left join [dbo].[FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") as P  on p.COMPANY = z.COMPANY and p.sqno = z.sqno and p.ASSETNO = z.ASSETNO and isnull(p.PCODE,'') <> '' ";
-            sql += @"        left join FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") as  M on m.COMPANY = Z.COMPANY and m.SQNO = Z.SQNO  ";
-            sql += @"    ) t group by COMPANY,YR,MN,SQNO,AUDIT_NO,ASSETNO,ASSETNAME, GASTCODE,GASTNAME,TYPECODE,TYPENAME 
-                ) Z   ";
 
             var res = Query<DashboardInspection>(sql, param, conStr).ToList();
             return res;
