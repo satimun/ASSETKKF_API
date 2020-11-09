@@ -147,7 +147,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             DynamicParameters param = new DynamicParameters();
             sql = " select * from  FT_ASAUDITPOSTMSTTOTEMP_COMPANY(" + QuoteStr(d.COMPANY) + ") as a ";
             sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as b";
-            sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO  and a.INPID = b.INPID";
+            sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO   and (a.INPID = b.INPID or b.inpdt is not null)";
             sql += " where a.SQNO = '" + d.SQNO + "'";
             sql += " and a.COMPANY = '" + d.COMPANY + "'";
             sql += " and a.ASSETNO = '" + d.ASSETNO + "'";

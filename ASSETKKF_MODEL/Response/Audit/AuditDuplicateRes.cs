@@ -17,8 +17,8 @@ namespace ASSETKKF_MODEL.Response.Audit
         public List<AuditResult> AuditResultLst { get; set; }
         public List<ASAUDITPOSTMST> POSTMSTDuplicateLST { get; set; }
         public List<ASAUDITPOSTTRN> POSTTRNDuplicateLST { get; set; }
-        //public List<ASAUDITCUTDATE> NoAuditLST { get; set; }
-        public List<ASAUDITPOSTMSTTOTEMP> NoAuditLST { get; set; }
+        public List<ASAUDITCUTDATE> NoAuditLST { get; set; }
+        //public List<ASAUDITPOSTMSTTOTEMP> NoAuditLST { get; set; }
         public List<ASAUDITPOSTMSTTOTEMP> AuditToTEMPLST { get; set; }
         public List<AuditTmpCompareTRN> AuditTmpCompareTRNLST { get; set; }
 
@@ -42,6 +42,8 @@ namespace ASSETKKF_MODEL.Response.Audit
         public string ASSETNO_TRN { get; set; }
         public string MEMO_TRN { get; set; }
         public string INPID_TRN { get; set; }
+        public string DEPCODE_TRN { get; set; }
+        public string STNAME_TRN { get; set; }
         public string ASSETNAME { get; set; }
         public string OFFICECODE { get; set; }
         public string OFNAME { get; set; }

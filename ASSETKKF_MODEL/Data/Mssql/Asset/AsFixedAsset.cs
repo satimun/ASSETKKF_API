@@ -141,6 +141,8 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string DBMode { get; set; }
         public string ConnStr { get; set; }
 
+        public string AUDIT { get; set; }
+
         public List<AsFixedAsset> AsFixedAssetLST { get; set; }
         public ResultDataResponse _result = new ResultDataResponse();
     }

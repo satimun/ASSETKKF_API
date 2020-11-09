@@ -453,8 +453,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITPOST
                 var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRN(dataReq,null,null,conStr);
                 res.POSTTRNDuplicateLST = lstPostTRN;
 
-                //var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(dataReq,null,null,conStr);
-                var lstNoAudit = lstPostMSTToTEMP.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
+                var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(dataReq,null,null,conStr);
+                //var lstNoAudit = lstPostMSTToTEMP.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
                 res.NoAuditLST = lstNoAudit;
             }
             return res;
@@ -670,8 +670,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITPOST
                 var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRN(dataReq,null,null,conStr);
                 res.POSTTRNDuplicateLST = lstPostTRN;
 
-                //var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(dataReq,null,null,conStr);
-                var lstNoAudit = lstPostMSTToTEMP.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
+                var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(dataReq,null,null,conStr);
+                //var lstNoAudit = lstPostMSTToTEMP.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
                 res.NoAuditLST = lstNoAudit;
             }
             return res;
@@ -718,8 +718,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITPOST
                 var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRN(dataReq,null,null,conStr);
                 res.POSTTRNDuplicateLST = lstPostTRN;
 
-                //var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(dataReq,null,null,conStr);
-                var lstNoAudit = lstPostMSTToTEMP.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
+                var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(dataReq,null,null,conStr);
+                //var lstNoAudit = lstPostMSTToTEMP.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
                 res.NoAuditLST = lstNoAudit;
             }
             return res;
@@ -798,8 +798,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITPOST
                 var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRN(dataReq,null,null,conStr);
                 res.POSTTRNDuplicateLST = lstPostTRN;
 
-                //var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(dataReq,null,null,conStr);
-                var lstNoAudit = lstPostMSTToTEMP.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
+                var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(dataReq,null,null,conStr);
+                //var lstNoAudit = lstPostMSTToTEMP.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
                 res.NoAuditLST = lstNoAudit;
             }
             return res;
@@ -871,8 +871,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITPOST
                 var lstPostTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getPOSTTRN(dataReq,null,null,conStr);
                 res.POSTTRNDuplicateLST = lstPostTRN;
 
-                //var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(dataReq,null,null,conStr);
-                var lstNoAudit = lstPostMSTToTEMP.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
+                var lstNoAudit = ASSETKKF_ADO.Mssql.Audit.AUDITCUTDATEAdo.GetInstant().getNoAudit(dataReq,null,null,conStr);
+                //var lstNoAudit = lstPostMSTToTEMP.Where(p => String.IsNullOrEmpty(p.PCODE)).ToList();
                 res.NoAuditLST = lstNoAudit;
             }
 

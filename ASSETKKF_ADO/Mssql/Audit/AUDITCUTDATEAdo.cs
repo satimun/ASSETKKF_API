@@ -32,9 +32,12 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql = "SELECT  *    FROM   FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") as C";
             sql += " where C.SQNO = " + QuoteStr(d.SQNO);
             sql += " and C.COMPANY = " + QuoteStr(d.COMPANY);
-            sql += " AND  ASSETNO NOT IN  ( SELECT  X.ASSETNO  FROM  FT_ASAUDITPOSTMST() X  ";
+            sql += " AND  ASSETNO NOT IN  ( SELECT  X.ASSETNO  FROM  FT_ASAUDITPOSTMST_COMPANY(" + QuoteStr(d.COMPANY) + ") X  ";
             sql += " WHERE X.SQNO =" + QuoteStr(d.SQNO);
             sql += " AND  X.PCODE <> '' )";
+            sql += " AND  ASSETNO NOT IN  ( SELECT  Y.ASSETNO  FROM  FT_ASAUDITPOSTMSTTOTEMP_COMPANY(" + QuoteStr(d.COMPANY) + ") Y  ";
+            sql += " WHERE Y.SQNO =" + QuoteStr(d.SQNO);
+            sql += " AND  Y.PCODE <> '' )";
 
             var res = Query<ASAUDITCUTDATE>(sql, param, conStr).ToList();
             return res;

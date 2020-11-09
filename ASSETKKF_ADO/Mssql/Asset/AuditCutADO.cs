@@ -116,14 +116,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASSETKKF_MODEL.Response.Asset.AuditCutList> getAuditDepList2(ASSETKKF_MODEL.Request.Asset.AuditCutReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
-            string cmd = " SELECT M.Company,max(M.SQNO) as SQNO,min(isnull(DEPCODEOL,'')) as DEPCODEOL,max(isnull(M.Audit_NO,'')) as Audit_NO";
-            cmd += " ,M.DEPMST as id,DEPNM,max(M.YR) as YR,max(M.MN) as MN,max(M.YRMN) as YRMN,max(D.DEPCODE) as DEPCODE,max(D.CUTDT) as CUTDT,max(D.STNAME) as STNAME";
-            cmd += "  ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST ) as Descriptions ";
-            cmd += " FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") M ,FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.Company) + ") D";
-            cmd += " where D.SQNO = M.SQNO ";
-            cmd += " and D.Company = M.Company ";
-            cmd += " and M.Audit_NO is not null";
+            string cmd = " SELECT M.DEPMST as id,DEPNM ,(isnull(M.DEPNM,'') + ' : ' +M.DEPMST ) as Descriptions ";
+            cmd += " FROM  FT_ASAUDITCUTDATEMST_COMPANY(" + QuoteStr(d.Company) + ") M ";
+            cmd += " WHERE M.Audit_NO is not null";
             cmd += " and  M.FLAG not in ('X')";
+            cmd += " AND exists (select * from FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.Company) + ") D where D.SQNO = M.SQNO)";
 
             if (!String.IsNullOrEmpty(d.Company))
             {
@@ -131,25 +128,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 comp = "'" + d.Company.Replace(",", "','") + "'";
                 cmd += " and M.COMPANY in (" + comp + ") ";
             }
-
-            if ((!d.Menu3 && !d.Menu4) && ((!String.IsNullOrEmpty(d.DeptCode)) || d.DeptLST != null))
-            {
-                cmd += " and (";
-                if (!String.IsNullOrEmpty(d.DeptCode))
-                {
-                    cmd += " DEPCODEOL = '" + d.DeptCode + "'";
-                }
-                if (d.DeptLST != null && d.DeptLST.Length > 0)
-                {
-                    var arrDept = d.DeptLST.Split(",");
-                    foreach (string s in arrDept)
-                    {
-                        cmd += " or DEPCODEOL like ' " + s + "%'";
-                    }
-
-                }
-                cmd += " )";
-            }
+            
 
             if ((!d.Menu3 && !d.Menu4))
             {
@@ -164,12 +143,6 @@ namespace ASSETKKF_ADO.Mssql.Asset
             {
                 cmd += " and M.YR = " + QuoteStr(d.YR);
             }
-
-            if (!String.IsNullOrEmpty(d.MN))
-            {
-                cmd += " and M.MN = " + QuoteStr(d.MN);
-            }
-
 
 
             cmd += " group by M.Company,M.DEPMST,DEPNM";
