@@ -71,13 +71,14 @@ namespace ASSETKKF_ADO.Mssql.Track
             param.Add("@FLAG", d.flag);
             param.Add("@MEMO1", d.memo1);
             param.Add("@TRACKID", d.ucode);
+            param.Add("@ASSETNAME", d.assetname);
 
             sql = "insert into TRACKPOSTMST";
             sql += " (COMPANY,AUDIT_NO,DEPCODEOL ";
-            sql += " ,INPID,INPDT,ASSETNO,MEMO1,FLAG ";
+            sql += " ,INPID,INPDT,ASSETNO,ASSETNAME,MEMO1,FLAG ";
             sql += " ,TRACKID,TRACKDT)";
             sql += " values (@COMPANY,@AUDIT_NO,@DEPCODEOL ";
-            sql += " ,@INPID,@INPDT,@ASSETNO,@MEMO1,@FLAG";
+            sql += " ,@INPID,@INPDT,@ASSETNO,@ASSETNAME,@MEMO1,@FLAG";
             sql += " ,@TRACKID, GETDATE())";
 
             var res = ExecuteNonQuery(transac, sql, param, conStr);

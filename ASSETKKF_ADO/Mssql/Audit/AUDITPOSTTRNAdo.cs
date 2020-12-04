@@ -200,9 +200,9 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
 
-            //sql += " AND  isnull(STY,'') = '' ";
-            sql += " AND  isnull(SNDST,'') = 'Y' ";
-            sql += " AND  isnull(SNDACC,'') = '' ";
+            sql += " AND  isnull(P.STY,'') = '' ";
+            sql += " AND  isnull(P.SNDST,'') = 'Y' ";
+            sql += " AND  isnull(P.SNDACC,'') = '' ";
 
             sql += " and ISNULL(D.FLAG_ACCEPT,'')  in ('','0') ";
 

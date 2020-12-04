@@ -119,6 +119,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " AND OFFICECODE =" + QuoteStr(d.OFFICECODE);
             }
 
+            if (d.isdept)
+            {
+                sql += " and isnull(Audit_NO,'') like 'DU%' ";
+            }
+            else
+            {
+                sql += " and isnull(Audit_NO,'') like 'AU%' ";
+            }
+
 
             sql += " Group BY COMPANY,YR,MN,YRMN,DEPMST,DEPNM,SQNO,Flag";
 
@@ -191,6 +200,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.OFFICECODE))
             {
                 sql += " AND OFFICECODE =" + QuoteStr(d.OFFICECODE);
+            }
+
+            if (d.isdept)
+            {
+                sql += " and isnull(Audit_NO,'') like 'DU%' ";
+            }
+            else
+            {
+                sql += " and isnull(Audit_NO,'') like 'AU%' ";
             }
 
 
@@ -270,6 +288,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.OFFICECODE))
             {
                 sql += " AND OFFICECODE =" + QuoteStr(d.OFFICECODE);
+            }
+
+            if (d.isdept)
+            {
+                sql += " and isnull(Audit_NO,'') like 'DU%' ";
+            }
+            else
+            {
+                sql += " and isnull(Audit_NO,'') like 'AU%' ";
             }
 
 
@@ -625,6 +652,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             sql = "select * from FT_AUDITASSETNOBYOFFICECODE(" + QuoteStr(d.Company) + "," +QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.OFFICECODE) + "," + QuoteStr(d.yrmn) + ")";
 
+            if (d.isdept)
+            {
+                sql += " and isnull(Audit_NO,'') like 'DU%' ";
+            }
+            else
+            {
+                sql += " and isnull(Audit_NO,'') like 'AU%' ";
+            }
 
             var res = Query<DashboardInspection>(sql, param, conStr).ToList();
             return res;
@@ -692,6 +727,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.OFFICECODE))
             {
                 sql += " AND OFFICECODE =" + QuoteStr(d.OFFICECODE);
+            }
+
+            if (d.isdept)
+            {
+                sql += " and isnull(Audit_NO,'') like 'DU%' ";
+            }
+            else
+            {
+                sql += " and isnull(Audit_NO,'') like 'AU%' ";
             }
 
 

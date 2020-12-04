@@ -43,6 +43,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ," + QuoteStr(d.YR);
             sql += " ," + QuoteStr(d.MN);
             sql += " ," + QuoteStr(USERID);
+            sql += " ," + QuoteStr(d.YRMN);
             sql += " ) as C where 1 = 1";
 
             sql += "  and ISNULL(FLAG_ACCEPT,'') in ('','0') ";
@@ -84,6 +85,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ," + QuoteStr(d.YR);
             sql += " ," + QuoteStr(d.MN);
             sql += " ," + QuoteStr(USERID);
+            sql += " ," + QuoteStr(d.YRMN);
             sql += " ) as C where 1 = 1";
 
             sql += "  and ISNULL(FLAG_ACCEPT,'') in ('1') ";
@@ -126,6 +128,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ," + QuoteStr(d.YR);
             sql += " ," + QuoteStr(d.MN);
             sql += " ," + QuoteStr(USERID);
+            sql += " ," + QuoteStr(d.YRMN);
             sql += " ) as C where 1 = 1";
 
             sql += "  and ISNULL(FLAG_ACCEPT,'') in ('2') ";

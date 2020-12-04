@@ -10,6 +10,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string COMPANY { get; set; }
         public string YEAR { get; set; }
         public string MN { get; set; }
+        public string YRMN { get; set; }
 
 
         public string DEPMST { get; set; }
@@ -59,6 +60,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string SQNO_TRN { get; set; }
         public string MEMO_TRN { get; set; }
         public string INPID_TRN { get; set; }
+        public bool isdept { get; set; }
 
     }
 
@@ -90,6 +92,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string cutdt { get; set; }
         public string DBMode { get; set; }
         public string ConnStr { get; set; }
+        public bool isdept { get; set; }
     }
 
     public class AUDITPOSTMSTReq
@@ -121,5 +124,6 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string FLAG { get; set; }
         public string DBMode { get; set; }
         public string ConnStr { get; set; }
+        public bool isdept { get; set; }
     }
 }

@@ -44,6 +44,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ," + QuoteStr(d.YR);
             sql += " ," + QuoteStr(d.MN);
             sql += " ," + QuoteStr(USERID);
+            sql += " ," + QuoteStr(d.YRMN);
             sql += " ) as C where 1 = 1";
 
 
@@ -62,6 +63,11 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.CUTDT) + "))";
 
 
+            }
+
+            if (!String.IsNullOrEmpty(d.YRMN))
+            {
+                sql += " and YRMN = '" + d.YRMN + "'";
             }
 
             var res = Query<AuditAcc>(sql, param, conStr).ToList();

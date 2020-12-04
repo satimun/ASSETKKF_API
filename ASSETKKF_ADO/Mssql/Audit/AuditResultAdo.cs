@@ -53,6 +53,11 @@ namespace ASSETKKF_ADO.Mssql.Audit
 
             }
 
+            if (!String.IsNullOrEmpty(d.YRMN))
+            {
+                sql += " and YRMN = " + QuoteStr(d.YRMN);
+            }
+
             var res = Query<AuditResult>(sql, param, conStr).ToList();
             return res;
         }

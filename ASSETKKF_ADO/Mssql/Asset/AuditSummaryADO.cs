@@ -82,6 +82,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 //cmd += " and DEPCODEOL = (SELECT distinct DEPCODEEOL FROM [dbo].[FT_UserAsset] ( '" + d.OFFICECODE + "') where COMPANY = c.COMPANY )";
             }
 
+            if (d.isdept)
+            {
+                cmd += " and isnull(Audit_NO,'') like 'DU%' ";
+            }
+            else
+            {
+                cmd += " and isnull(Audit_NO,'') like 'AU%' ";
+            }
+
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conStr).ToList();
 
             return res;
@@ -121,6 +130,16 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " )";
 
             }
+
+            if (d.isdept)
+            {
+                cmd += " and isnull(Audit_NO,'') like 'DU%' ";
+            }
+            else
+            {
+                cmd += " and isnull(Audit_NO,'') like 'AU%' ";
+            }
+
             cmd += " group by company,depcodeol,SQNO,audit_no";
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conStr).ToList();
             return res;
@@ -160,6 +179,16 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " )";
                 
             }
+
+            if (d.isdept)
+            {
+                cmd += " and isnull(Audit_NO,'') like 'DU%' ";
+            }
+            else
+            {
+                cmd += " and isnull(Audit_NO,'') like 'AU%' ";
+            }
+
             cmd += " group by company,depcodeol,SQNO,audit_no";
             var res = Query<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary>(cmd, param, conStr).ToList();
             return res;
@@ -203,6 +232,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.yrmn))
             {
                 cmd += " YRMN = '" + d.yrmn + "'";
+            }
+
+            if (d.isdept)
+            {
+                cmd += " and isnull(Audit_NO,'') like 'DU%' ";
+            }
+            else
+            {
+                cmd += " and isnull(Audit_NO,'') like 'AU%' ";
             }
 
             cmd += " group by company,YRMN,DEPMST";
@@ -257,6 +295,15 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and YRMN = '" + d.yrmn + "'";
             }
 
+            if (d.isdept)
+            {
+                cmd += " and isnull(Audit_NO,'') like 'DU%' ";
+            }
+            else
+            {
+                cmd += " and isnull(Audit_NO,'') like 'AU%' ";
+            }
+
             cmd += " group by company,depcodeol,SQNO,audit_no";
             cmd += " order by company,depcodeol,SQNO,audit_no";
             var res = Query<AuditDeptSummary>(cmd, param, conStr).ToList();
@@ -270,13 +317,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " where M.FLAG not in ('X','C')  and audit_no is not null";
             cmd += " and COMPANY in (" + QuoteStr(d.Company) + ") ";
 
-            if ((!d.Menu3 && !d.Menu4))
+            if (d.isdept)
             {
                 cmd += " and isnull(M.Audit_NO,'') like 'DU%' ";
             }
-            else if (d.Menu4)
+            else
             {
-                cmd += " and isnull(M.Audit_NO,'') not like 'DU%' ";
+                cmd += " and isnull(M.Audit_NO,'') like 'AU%' ";
             }
 
             //if (!String.IsNullOrEmpty(d.Company))
@@ -305,13 +352,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += " where M.FLAG not in ('X','C')  and audit_no is not null";
             cmd += " and COMPANY in (" + QuoteStr( d.Company) + ") ";
 
-            if ((!d.Menu3 && !d.Menu4))
+            if (d.isdept)
             {
                 cmd += " and isnull(M.Audit_NO,'') like 'DU%' ";
             }
-            else if (d.Menu4)
+            else
             {
-                cmd += " and isnull(M.Audit_NO,'') not like 'DU%' ";
+                cmd += " and isnull(M.Audit_NO,'') like 'AU%' ";
             }
 
             //if (!String.IsNullOrEmpty(d.Company))

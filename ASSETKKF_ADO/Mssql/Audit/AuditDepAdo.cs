@@ -43,6 +43,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " ," + QuoteStr(d.YR);
             sql += " ," + QuoteStr(d.MN);
             sql += " ," + QuoteStr(USERID);
+            sql += " ," + QuoteStr(d.YRMN);
             sql += " ) where 1 = 1";
 
             if (!String.IsNullOrEmpty(d.DEPMST))

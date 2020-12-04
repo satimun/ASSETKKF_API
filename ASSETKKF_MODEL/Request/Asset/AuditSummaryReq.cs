@@ -25,6 +25,7 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string mode { get; set; }
         public string DBMode { get; set; }
         public string ConnStr { get; set; }
+        public bool isdept { get; set; }
 
     }
 }

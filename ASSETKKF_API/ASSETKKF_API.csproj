@@ -47,4 +47,8 @@
     <ProjectReference Include="..\ASSETKKF_MODEL\ASSETKKF_MODEL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NETCore.App" Version="2.2.8" />
+  </ItemGroup>
+
 </Project>

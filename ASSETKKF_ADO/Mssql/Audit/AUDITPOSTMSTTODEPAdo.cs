@@ -55,7 +55,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " left outer join [FT_ASAUDITCUTDATEMST_COMPANY](" + QuoteStr(d.COMPANY) + ") as D on D.sqno = B.sqno";
             sql += " where B.SQNO = " + QuoteStr(d.SQNO);
             sql += " and B.COMPANY = " + QuoteStr(d.COMPANY);
-            //sql += " and isnull(STY,'') = '' ";
+            sql += " and isnull(B.STY,'') = '' ";
             sql += " and ISNULL(D.FLAG_ACCEPT,'')  in ('','0') ";
 
             if (!String.IsNullOrEmpty(d.filter))

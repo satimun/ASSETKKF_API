@@ -259,6 +259,19 @@ namespace ASSETKKF_API.Engine.Asset.Track
         {
             try
             {
+                ASSETKKF_MODEL.Data.Mssql.Asset.AsFixedAsset req1 = new AsFixedAsset()
+                {
+                    ASSETNO = dataReq.assetno
+                };
+
+                AsFixedAsset asset = ASSETKKF_ADO.Mssql.Asset.AsFixedAssetAdo.GetInstant().Search(req1, null, conStr).FirstOrDefault();
+                if (asset != null)
+                {
+                    dataReq.assetname = asset.ASSETNAME;
+                }
+
+
+
                 var obj = InsertTrackPostMST(dataReq,conStr);
                 if (obj.Result > 0)
                 {
