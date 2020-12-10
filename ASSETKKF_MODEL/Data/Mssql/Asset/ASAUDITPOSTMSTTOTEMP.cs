@@ -63,5 +63,9 @@ namespace ASSETKKF_MODEL.Data.Mssql.Asset
         public string INPNAME { get; set; }
         public string FILEPATH { get; set; }
         public string SACC { get; set; }
+        public string STFLAG { get; set; }
+        public string STOPTYPE { get; set; }
+        public string STFLAGNM { get; set; }
+
     }
 }

@@ -22,6 +22,7 @@ namespace ASSETKKF_MODEL.Request.Report
         public bool Menu4 { get; set; }
         public string YEAR { get; set; }
         public string MN { get; set; }
+        public string YRMN { get; set; }
         public string OFFICECODE { get; set; }
         public string TYPECODE { get; set; }
         public string GASTCODE { get; set; }

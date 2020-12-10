@@ -51,7 +51,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     MEMO1 = dataReq.MEMO1,
                     IMGPATH = dataReq.IMGPATH,
                     FileToUpload = dataReq.FileToUpload,
-                    PFLAG = dataReq.PFLAG
+                    PFLAG = dataReq.PFLAG,
+                    isdept = dataReq.isdept
                 };
 
                 //var updateAuditPost = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().updateAUDITPOSTMST(dataReq);
@@ -115,7 +116,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     COMPANY = dataReq.COMPANY,
                     LEADERCODE = dataReq.LEADERCODE,
                     AREACODE = dataReq.AREACODE,
-                    UCODE = dataReq.UCODE
+                    UCODE = dataReq.UCODE,
+                    isdept = dataReq.isdept
                 };
                 res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1, null, conString);
 
@@ -137,10 +139,11 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     Company = dataReq.COMPANY,
                     year = res.AUDITPOSTMST.YR.ToString(),
                     mn = res.AUDITPOSTMST.MN.ToString(),
-                    sqno = dataReq.SQNO
+                    sqno = dataReq.SQNO,
+                    isdept = dataReq.isdept
                 };
-                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(reqSum, null, conString);
-                res.DashboardInspectionLST = lstSum;
+                //var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(reqSum, null, conString);
+                //res.DashboardInspectionLST = lstSum;
 
 
                 res.AREACODE = dataReq.AREACODE;

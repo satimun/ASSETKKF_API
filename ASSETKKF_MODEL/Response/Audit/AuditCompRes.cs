@@ -15,6 +15,7 @@ namespace ASSETKKF_MODEL.Response.Audit
         public List<ASAUDITCUTDATE> NoAuditLST { get; set; }
         public List<ASAUDITPOSTMSTTOTEMP> AuditToTEMPLST { get; set; }
         public List<ASAUDITPOSTMSTTODEP> AUDITPOSTMSTTODEPLST { get; set; }
+        public int send_acc { get; set; }
 
         public ResultDataResponse _result = new ResultDataResponse();
     }

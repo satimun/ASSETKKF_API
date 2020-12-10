@@ -60,6 +60,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 cmd += " and MN =" + QuoteStr(d.MN);
             }
 
+            if (!String.IsNullOrEmpty(d.YRMN))
+            {
+                cmd += " and YRMN =" + QuoteStr(d.YRMN);
+            }
+
             if (!String.IsNullOrEmpty(d.audit_no))
             {
                 //param.Add("@AUDITNO", d.audit_no);

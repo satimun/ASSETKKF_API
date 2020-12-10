@@ -69,6 +69,20 @@ namespace ASSETKKF_ADO.Mssql.Audit
                 sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
                 sql += " where DEPMST = '" + d.DEPMST + "'";
                 sql += " and company = '" + d.COMPANY + "'";
+                if (!String.IsNullOrEmpty(d.YEAR))
+                {
+                    sql += " and YR = " + QuoteStr(d.YEAR);
+                }
+
+                if (!String.IsNullOrEmpty(d.MN))
+                {
+                    sql += " and MN = " + QuoteStr(d.MN);
+                }
+
+                if (!String.IsNullOrEmpty(d.YRMN))
+                {
+                    sql += " and YRMN = " + QuoteStr(d.YRMN);
+                }
                 sql += " group by[DEPCODEOL])";
             }
 
@@ -151,11 +165,11 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTMST> getNoDuplicateAll(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " Select * from  [FT_ASAUDITPOSTMST] () as P";
+            sql = " Select * from  [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.COMPANY) + ") as P";
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += "  AND P.PCODE <> ''  ";
-            sql += "  AND  P.ASSETNO IN ( SELECT  X.ASSETNO FROM [FT_ASAUDITPOSTMST] () X ";
+            sql += "  AND  P.ASSETNO IN ( SELECT  X.ASSETNO FROM [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.COMPANY) + ") X ";
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += "  and  X.PCODE <> ''  GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) = 1 )  ";
@@ -167,12 +181,12 @@ namespace ASSETKKF_ADO.Mssql.Audit
         public List<ASAUDITPOSTMST> getDuplicateAll(AuditPostReq d, string flag = null, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
-            sql = " Select * from  [FT_ASAUDITPOSTMST] () as P";
+            sql = " Select * from  [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.COMPANY) + ") as P";
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += "  AND P.PCODE <> ''  ";
             sql += "  AND SNDST = 'Y'  ";
-            sql += "  AND  P.ASSETNO IN ( SELECT  X.ASSETNO FROM [FT_ASAUDITPOSTMST] () X ";
+            sql += "  AND  P.ASSETNO IN ( SELECT  X.ASSETNO FROM [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.COMPANY) + ") X ";
             sql += " where P.SQNO = " + QuoteStr(d.SQNO);
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += "  and  X.PCODE <> ''  GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) > 1 )  ";

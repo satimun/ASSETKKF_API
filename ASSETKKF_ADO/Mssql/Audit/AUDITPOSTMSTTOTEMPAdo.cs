@@ -146,7 +146,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
         {
             DynamicParameters param = new DynamicParameters();
             sql = " select * from  FT_ASAUDITPOSTMSTTOTEMP_COMPANY(" + QuoteStr(d.COMPANY) + ") as a ";
-            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as b";
+            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE_COMPANY] (" + QuoteStr(d.COMPANY) + ") as b";
             sql += " on b.SQNO = a.SQNO and a.COMPANY = b.COMPANY and b.ASSETNO = a.ASSETNO   and (a.INPID = b.INPID or b.inpdt is not null)";
             sql += " where a.SQNO = '" + d.SQNO + "'";
             sql += " and a.COMPANY = '" + d.COMPANY + "'";
@@ -165,6 +165,15 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql = " select * from  FT_AUDITTMPCOMPARETOTRN(" + QuoteStr(d.COMPANY) + "," + QuoteStr(d.SQNO) + ") as a ";
 
             var res = Query<AuditTmpCompareTRN>(sql, param, conStr).ToList();
+            return res;
+        }
+
+        public List<ASAUDITPOSTMSTTOTEMP> getAuditTmpFIXEDASSET(AuditPostReq d, SqlTransaction transac = null, string conStr = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " select * from  FT_ASAUDITPOSTMSTTOTEMP_ASFIXEDASSET(" + QuoteStr(d.COMPANY) + "," + QuoteStr(d.SQNO) + ") as a ";
+
+            var res = Query<ASAUDITPOSTMSTTOTEMP>(sql, param, conStr).ToList();
             return res;
         }
 

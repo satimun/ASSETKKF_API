@@ -39,7 +39,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     DeptCode = dataReq.DeptCode,
                     DeptLST = dataReq.DeptLST,
                     Menu3 = dataReq.Menu3,
-                    Menu4 = dataReq.Menu4
+                    Menu4 = dataReq.Menu4,
                 };
 
                 List<ASSETKKF_MODEL.Response.Asset.AuditCutList> obj = new List<ASSETKKF_MODEL.Response.Asset.AuditCutList>();

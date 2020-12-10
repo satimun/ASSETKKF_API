@@ -72,7 +72,7 @@ namespace ASSETKKF_API.Engine.Asset.Report
                 var dt = getProblemByDep(dataReq,conStr);
 
                 string JSONresult,jsonrow;
-                JSONresult = JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.Indented);
+                
 
                 List<string> columns = new List<string>();
                 List<string> rows = new List<string>();
@@ -86,12 +86,30 @@ namespace ASSETKKF_API.Engine.Asset.Report
 
                     foreach (DataRow row in dt.Rows)
                     {
+                        var depmst = row[0].ToString();
+                        AuditSummaryReq req1 = new AuditSummaryReq();
+                        req1 = dataReq;
+                        req1.depmst = depmst;
+
+                        var obj = ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant().getQuantityByDep(req1, null, conStr).FirstOrDefault();
+
+                        if(obj != null )
+                        {
+
+                            row[2] = obj.QTY_ASSET;
+                            row[3] = obj.QTY_AUDIT;
+                        }
+
+
+
                         //rows.Add(string.Join(";", row.ItemArray.Select(item => item.ToString())));
                         jsonrow = JsonConvert.SerializeObject(row.ItemArray, Newtonsoft.Json.Formatting.Indented);
                         rows.Add(jsonrow);
                     }
 
                 }
+
+                JSONresult = JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.Indented);
 
                 if (!String.IsNullOrEmpty(JSONresult))
                 {
@@ -129,12 +147,12 @@ namespace ASSETKKF_API.Engine.Asset.Report
                 var dt = getProblemByDepcodeol(dataReq,conStr);
 
                 string JSONresult, jsonrow;
-                JSONresult = JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.Indented);
+                
 
                 List<string> columns = new List<string>();
                 List<string> rows = new List<string>();
 
-                if (dt.Columns.Count > 0)
+                if (dt != null && dt.Columns.Count > 0)
                 {
                     foreach (DataColumn column in dt.Columns)
                     {
@@ -143,12 +161,28 @@ namespace ASSETKKF_API.Engine.Asset.Report
 
                     foreach (DataRow row in dt.Rows)
                     {
+                        var depcodeeol = row[0].ToString();
+                        AuditSummaryReq req1 = new AuditSummaryReq();
+                        req1 = dataReq;
+                        req1.DEPCODEOL = depcodeeol;
+
+                        var obj = ASSETKKF_ADO.Mssql.Report.PivotDataAdo.GetInstant().getQuantityByDEPCODEOL(req1, null, conStr).FirstOrDefault();
+
+                        if (obj != null)
+                        {
+
+                            row[2] = obj.QTY_ASSET;
+                            row[3] = obj.QTY_AUDIT;
+                        }
+
                         //rows.Add(string.Join(";", row.ItemArray.Select(item => item.ToString())));
                         jsonrow = JsonConvert.SerializeObject(row.ItemArray, Newtonsoft.Json.Formatting.Indented);
                         rows.Add(jsonrow);
                     }
 
                 }
+
+                JSONresult = JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.Indented);
 
                 if (!String.IsNullOrEmpty(JSONresult))
                 {

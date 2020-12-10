@@ -1,4 +1,5 @@
-﻿using ASSETKKF_MODEL.Request.Asset;
+﻿using ASSETKKF_ADO.Mssql.Audit;
+using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Response;
 using ASSETKKF_MODEL.Response.Audit;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +51,13 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
                     case "depedittrn":
                         res = depedittrn(dataReq, res,conString);
                         break;
+                    case "checkacc":
+                        res = checkacc(dataReq, res, conString);
+                        break;
+                    case "compliance_close":
+                        res = compliance_close(dataReq, res, conString);
+                        break;
+
                 }
 
             }
@@ -356,6 +364,49 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCOMP
             }
 
 
+            return res;
+        }
+
+        private  AuditCompRes checkacc(AuditPostReq dataReq, AuditCompRes res, string conStr = null)
+        {
+            try
+            {
+                var obj = AuditCompAdo.GetInstant().getAuditAcc(dataReq,  null, conString).FirstOrDefault();
+                if(obj != null)
+                {
+                    res.send_acc = obj.QTY_TOTAL;
+                }
+
+                res._result._code = "200";
+                res._result._message = "";
+                res._result._status = "OK";
+
+            }
+            catch (Exception ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Internal Server Error";
+            }
+            return res;
+        }
+
+        private AuditCompRes compliance_close(AuditPostReq dataReq, AuditCompRes res, string conStr = null)
+        {
+            try
+            {
+                var updateCutMST = AuditManagerAdo.GetInstant().saveAUDITCUTDATEMST(dataReq, null, conStr);
+
+                res._result._code = "200";
+                res._result._message = "";
+                res._result._status = "OK";
+            }
+            catch (Exception ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Internal Server Error";
+            }
             return res;
         }
 

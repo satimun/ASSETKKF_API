@@ -1,4 +1,5 @@
 ﻿using ASSETKKF_MODEL.Data.Mssql.Audit;
+using ASSETKKF_MODEL.Request.Asset;
 using ASSETKKF_MODEL.Request.Audit;
 using Dapper;
 using System;
@@ -65,5 +66,23 @@ namespace ASSETKKF_ADO.Mssql.Audit
             var res = Query<AuditComp>(sql, param, conStr).ToList();
             return res;
         }
+
+        public List<AuditComp> getAuditAcc(AuditPostReq d, SqlTransaction transac = null, string conStr = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " SELECT  SQNO,COUNT(ASSETNO) AS QTY_TOTAL  FROM ( ";
+            sql += "  SELECT  SQNO,ASSETNO   FROM     FT_ASAUDITPOSTMSTTODEP_COMPANY(" + QuoteStr(d.COMPANY) + ")   B, FT_ASSTProblem() A   ";
+            sql += " WHERE  A.PCODE = B.PCODE  AND  A.SACC = 'Y'  AND A.company = B.company";
+            sql += " UNION ";
+            sql += " SELECT  SQNO,ASSETNO   FROM   FT_ASAUDITPOSTTRN_COMPANY(" + QuoteStr(d.COMPANY) + ") B  WHERE  B.SNDACC = 'Y'   ";
+            sql += " ) AS X  ";
+            sql += " where SQNO = " + QuoteStr(d.SQNO);
+            sql += " GROUP BY  SQNO ";
+            //sql += " HAVING  COUNT(ASSETNO) = 0 ";
+
+            var res = Query<AuditComp>(sql, param, conStr).ToList();
+            return res;
+        }
+
     }
 }

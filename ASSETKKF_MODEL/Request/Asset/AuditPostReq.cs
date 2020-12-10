@@ -61,6 +61,9 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string MEMO_TRN { get; set; }
         public string INPID_TRN { get; set; }
         public bool isdept { get; set; }
+        public string STFLAG { get; set; }
+        public string STOPTYPE { get; set; }
+        public string STFLAGNM { get; set; }
 
     }
 
@@ -93,6 +96,9 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string DBMode { get; set; }
         public string ConnStr { get; set; }
         public bool isdept { get; set; }
+        public string STFLAG { get; set; }
+        public string STOPTYPE { get; set; }
+        public string STFLAGNM { get; set; }
     }
 
     public class AUDITPOSTMSTReq
@@ -125,5 +131,8 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string DBMode { get; set; }
         public string ConnStr { get; set; }
         public bool isdept { get; set; }
+        public string STFLAG { get; set; }
+        public string STOPTYPE { get; set; }
+        public string STFLAGNM { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace ASSETKKF_ADO.Mssql.Audit
             sql += " and P.COMPANY = " + QuoteStr(d.COMPANY);
             sql += " and  M.FLAG not in ('X','C')";
 
-            sql += " AND  P.ASSETNO IN ( SELECT  X.ASSETNO    FROM   FT_ASAUDITPOSTTRN()  X";
+            sql += " AND  P.ASSETNO IN ( SELECT  X.ASSETNO    FROM    [FT_ASAUDITPOSTTRN_COMPANY](" + QuoteStr(d.COMPANY) + ")  X";
             sql += "  where  X.SQNO = " + QuoteStr(d.SQNO);
             sql += "  and x.COMPANY = " + QuoteStr(d.COMPANY);
             sql += " GROUP BY  X.ASSETNO  HAVING  COUNT(X.ASSETNO) >1  )";
@@ -65,19 +65,33 @@ namespace ASSETKKF_ADO.Mssql.Audit
             {
                 sql += " and MN = '" + d.MN + "'";
             }
-            if (!String.IsNullOrEmpty(d.DEPMST))
-            {
-                sql += " and DEPCODEOL in (SELECT [DEPCODEOL] ";
-                sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
-                sql += " where DEPMST = '" + d.DEPMST + "'";
-                sql += " and company = '" + d.COMPANY + "'";
-                sql += " group by[DEPCODEOL])";
-            }
+            //if (!String.IsNullOrEmpty(d.DEPMST))
+            //{
+            //    sql += " and DEPCODEOL in (SELECT [DEPCODEOL] ";
+            //    sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.COMPANY) + ") ";
+            //    sql += " where DEPMST = '" + d.DEPMST + "'";
+            //    sql += " and company = '" + d.COMPANY + "'";
+            //    if (!String.IsNullOrEmpty(d.YEAR))
+            //    {
+            //        sql += " and YR = " + QuoteStr(d.YEAR);
+            //    }
 
-            if (!String.IsNullOrEmpty(d.cutdt))
-            {
-                sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
-            }
+            //    if (!String.IsNullOrEmpty(d.MN))
+            //    {
+            //        sql += " and MN = " + QuoteStr(d.MN);
+            //    }
+
+            //    if (!String.IsNullOrEmpty(d.YRMN))
+            //    {
+            //        sql += " and YRMN = " + QuoteStr(d.YRMN);
+            //    }
+            //    sql += " group by[DEPCODEOL])";
+            //}
+
+            //if (!String.IsNullOrEmpty(d.cutdt))
+            //{
+            //    sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
+            //}
 
             if (!String.IsNullOrEmpty(d.OFFICECODE))
             {
@@ -295,6 +309,15 @@ namespace ASSETKKF_ADO.Mssql.Audit
             var res = Query<ASAUDITPOSTTRN>(sql, param, conStr).ToList();
             return res;
 
+        }
+
+        public List<ASAUDITPOSTTRN> getAuditTrnFIXEDASSET(AuditPostReq d, SqlTransaction transac = null, string conStr = null)
+        {
+            DynamicParameters param = new DynamicParameters();
+            sql = " select * from  FT_ASAUDITPOSTTRN_ASFIXEDASSET(" + QuoteStr(d.COMPANY) + "," + QuoteStr(d.SQNO) + ") as a ";
+
+            var res = Query<ASAUDITPOSTTRN>(sql, param, conStr).ToList();
+            return res;
         }
 
 

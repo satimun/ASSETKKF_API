@@ -42,7 +42,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             cmd += ",Case when isnull(sum(QTY_TOTAL),0)  = 0  then 0 else ((CAST(sum(QTY_WAIT)  AS float) / CAST(sum(QTY_TOTAL)   AS float)) * 100) end as PROGRESS_WAIT  ";
             cmd += "from FT_AuditProblems (" + QuoteStr(d.TYPECODE) + "," + QuoteStr(d.GASTCODE) + "," + QuoteStr(d.OFFICECODE) + "," + QuoteStr(d.PCODE);
             cmd += "," + QuoteStr(d.Company) + "," + QuoteStr(d.YEAR) + "," + QuoteStr(d.MN) + "," + QuoteStr(d.DEPCODEOL);
-            cmd += "," + QuoteStr(d.cutdt) + "," + QuoteStr(d.inpdt);
+            cmd += "," + QuoteStr(d.cutdt) + "," + QuoteStr(d.inpdt) + "," + QuoteStr(d.YRMN);
 
             cmd    += ") where 1 = 1";
 
@@ -145,7 +145,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
 
             cmd += "from FT_AuditProblems (" + QuoteStr(d.TYPECODE) + "," + QuoteStr(d.GASTCODE) + "," + QuoteStr(d.OFFICECODE) + "," + QuoteStr(d.PCODE);
             cmd += "," + QuoteStr(d.Company) + "," + QuoteStr(d.YEAR) + "," + QuoteStr(d.MN) + "," + QuoteStr(d.DEPCODEOL);
-            cmd += "," + QuoteStr(d.cutdt) + "," + QuoteStr(d.inpdt);
+            cmd += "," + QuoteStr(d.cutdt) + "," + QuoteStr(d.inpdt) + "," + QuoteStr(d.YRMN);
 
             cmd += ") where 1 = 1";
 

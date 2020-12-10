@@ -37,7 +37,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                 COMPANY = dataReq.COMPANY,
                 LEADERCODE = dataReq.LEADERCODE,
                 AREACODE = dataReq.AREACODE,
-                UCODE = dataReq.UCODE
+                UCODE = dataReq.UCODE,
+                isdept = dataReq.isdept
             };
 
             try
@@ -103,7 +104,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                             PCODE = objProblem != null ? objProblem.Pcode : null,
                             PNAME = objProblem != null ? objProblem.Pname : null,
                             UCODE = dataReq.UCODE,
-                            PFLAG = objProblem != null ? objProblem.PFLAG : null
+                            PFLAG = objProblem != null ? objProblem.PFLAG : null,
+                            isdept = dataReq.isdept
 
                         };
                         var reqPostMstPhone = new AUDITPOSTMSTReq();
@@ -249,6 +251,7 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     OFFICECODE = dataReq.OFFICECODE,
                     TYPECODE = dataReq.TYPECODE,
                     GASTCODE = dataReq.GASTCODE,
+                    isdept = dataReq.isdept
 
                 };
 
@@ -271,10 +274,11 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     Company = dataReq.COMPANY,
                     year = dataReq.YEAR,
                     mn = dataReq.MN,
-                    sqno = dataReq.SQNO
+                    sqno = dataReq.SQNO,
+                    isdept = dataReq.isdept
                 };
-                var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(reqSum,transac,conString);
-                res.DashboardInspectionLST = lstSum;
+                //var lstSum = ASSETKKF_ADO.Mssql.Asset.DashboardADO.GetInstant().getInspectionByDEPMST(reqSum,transac,conString);
+                //res.DashboardInspectionLST = lstSum;
             }
 
             dataRes.data = res;

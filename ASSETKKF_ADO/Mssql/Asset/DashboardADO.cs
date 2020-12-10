@@ -57,12 +57,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
 
+            int isdep = d.isdept ? 1 : 0;
+
             sql = @"Select COMPANY,YR,MN,YRMN,DEPMST,DEPNM,SQNO,Flag,SUM(QTY_TOTAL) as QTY_TOTAL,SUM(QTY_CHECKED) as QTY_CHECKED
 ,SUM(QTY_PROBLEM) as QTY_PROBLEM,SUM(QTY_NOPROBLEM) as QTY_NOPROBLEM,SUM(QTY_TRN) as QTY_TRN,SUM(QTY_WAIT) as QTY_WAIT,MIN(MIN_INPDT) as StartDT
 ,MAX(MAX_INPDT) as LastDT
  ,case when SUM(QTY_Total) > 0 then  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) else 0 end as PROGRESS ";
 
-            sql += " from [AuditSummary_company](" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ")";
+            sql += " from AuditSummary_company (" + QuoteStr(d.Company) + "," + QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.yrmn) + "," + isdep + ")";
 
             sql += " where 1 =1";
 
@@ -142,13 +144,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<DashboardInspection> getInspectionByDEPCODEOL(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
+            int isdep = d.isdept ? 1 : 0;
 
             sql = @"Select COMPANY,YR,MN,YRMN,DEPMST,SQNO,Flag,DEPCODEOL,STNAME,SUM(QTY_TOTAL) as QTY_TOTAL,SUM(QTY_CHECKED) as QTY_CHECKED
 ,SUM(QTY_PROBLEM) as QTY_PROBLEM,SUM(QTY_NOPROBLEM) as QTY_NOPROBLEM,SUM(QTY_TRN) as QTY_TRN,SUM(QTY_WAIT) as QTY_WAIT,MIN(MIN_INPDT) as StartDT
 ,MAX(MAX_INPDT) as LastDT
  ,case when SUM(QTY_Total) > 0 then  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) else 0 end as PROGRESS ";
 
-            sql += " from [AuditSummary_company](" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ")";
+            sql += " from AuditSummary_company (" + QuoteStr(d.Company) + "," + QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.yrmn) + "," + isdep + ")";
 
             sql += " where 1 =1";
 
@@ -225,13 +228,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<DashboardInspection> getInspectionByOFFICECODE(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
+            int isdep = d.isdept ? 1 : 0;
 
             sql = @"Select COMPANY,YR,MN,DEPMST,SQNO,Flag,DEPCODEOL,OFFICECODE,OFNAME,SUM(QTY_TOTAL) as QTY_TOTAL,SUM(QTY_CHECKED) as QTY_CHECKED
 ,SUM(QTY_PROBLEM) as QTY_PROBLEM,SUM(QTY_NOPROBLEM) as QTY_NOPROBLEM,SUM(QTY_TRN) as QTY_TRN,SUM(QTY_WAIT) as QTY_WAIT,MIN(MIN_INPDT) as StartDT
 ,MAX(MAX_INPDT) as LastDT
 ,case when SUM(QTY_Total) > 0 then  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) else 0 end as PROGRESS ";
 
-            sql += " from [AuditSummary_company](" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ")";
+            sql += " from AuditSummary_company (" + QuoteStr(d.Company) + "," + QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.yrmn) + "," + isdep + ")";
 
             sql += " where 1 =1";
 
@@ -342,7 +346,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " group by ASSETNO ) as P)  as QTY_CHECKED  ";
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
-            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE_COMPANY] (" + QuoteStr(d.Company) + ") AS PM ";
             sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -369,7 +373,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " group by P.ASSETNO ) as P)  as QTY_PROBLEM  ";
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
-            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE_COMPANY] (" + QuoteStr(d.Company) + ") AS PM ";
             sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.TYPECODE = C.TYPECODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -511,7 +515,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " group by ASSETNO ) as P)  as QTY_CHECKED  ";
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
-            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE_COMPANY] (" + QuoteStr(d.Company) + ") AS PM ";
             sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' = ISNULL(PFLAG,'')  and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -538,7 +542,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " group by P.ASSETNO ) as P)  as QTY_PROBLEM  ";
 
             sql += " ,(	select  COUNT(P.ASSETNO) from ( select  P.ASSETNO from [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.Company) + ") P";
-            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE] () AS PM ";
+            sql += " left outer join  [dbo].[FT_ASAUDITPOSTMST_PHONE_COMPANY] (" + QuoteStr(d.Company) + ") AS PM ";
             sql += " on PM.SQNO = P.SQNO and PM.Company = P.Company  and PM.ASSETNO = P.ASSETNO  and PM.INPDT = P.INPDT";
             sql += " where  P.FLAG  in ('P') and (PCODE is not null and PCODE  <> ''  ) and 'Y' <> ISNULL(PFLAG,'')  and P.GASTCODE = C.GASTCODE and 'Y' <> ISNULL(SNDST,'') ";
             sql += " and P.COMPANY = " + QuoteStr(d.Company) + " and P.YR  = " + QuoteStr(d.year) + " and MN = " + QuoteStr(d.mn);
@@ -669,13 +673,14 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<DashboardInspection> getAuditOFFICECODE(AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
+            int isdep = d.isdept ? 1 : 0;
 
             sql = @"Select COMPANY,YR,MN,DEPMST,SQNO,Flag,DEPCODEOL,OFFICECODE,OFNAME,SUM(QTY_TOTAL) as QTY_TOTAL,SUM(QTY_CHECKED) as QTY_CHECKED
 ,SUM(QTY_PROBLEM) as QTY_PROBLEM,SUM(QTY_NOPROBLEM) as QTY_NOPROBLEM,SUM(QTY_TRN) as QTY_TRN,SUM(QTY_WAIT) as QTY_WAIT,MIN(MIN_INPDT) as StartDT
 ,MAX(MAX_INPDT) as LastDT
  ,case when SUM(QTY_Total) > 0 then  CAST(((CAST(SUM(QTY_CHECKED) as DECIMAL(9,2))/CAST(SUM(QTY_Total) as DECIMAL(9,2)))*100)as DECIMAL(9,2)) else 0 end as PROGRESS ";
 
-            sql += " from [AuditSummary_company](" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ")";
+            sql += " from AuditSummary_company (" + QuoteStr(d.Company) + "," + QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.yrmn) + "," + isdep + ")";
 
             sql += " where 1 =1";
 

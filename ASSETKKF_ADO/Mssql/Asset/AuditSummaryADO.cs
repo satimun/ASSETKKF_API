@@ -28,12 +28,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
+            int isdep = d.isdept ? 1 : 0;
             string cmd = " select sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT,sum(QTY_PROBLEM) as QTY_PROBLEM,sum(QTY_NOPROBLEM) as QTY_NOPROBLEM ,sum(QTY_TRN) as QTY_TRN ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
             //cmd += "   ,(select COUNT(AssETNO) from FT_ASAUDITPOSTTRN_COMPANY(" + QuoteStr(d.Company) + ")";
             //cmd += "  where yr = " + d.year + " and mn = " + d.mn + " ) as QTY_TRN";
             //cmd += " from AuditSummary (" + d.year + "," + d.mn + ") as C where 1 = 1 and audit_no is not null";
-            cmd += " from AuditSummary_company (" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ") as C where 1 = 1 and audit_no is not null";
+            cmd += " from AuditSummary_company (" + QuoteStr(d.Company) + "," + QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.yrmn) + "," + isdep + ") as C where 1 = 1 and audit_no is not null";
 
             if (!String.IsNullOrEmpty(d.Company))
             {
@@ -99,10 +100,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetDeptSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
+            int isdep = d.isdept ? 1 : 0;
             string cmd = " select company,depcodeol,max(stname) as stname,max(DEPMST) as DEPMST,max(DEPNM) as DEPNM,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
             //cmd += "from AuditSummary (" + d.year + "," + d.mn + ") where 1 = 1  and audit_no is not null";
-            cmd += "from AuditSummary_company (" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ") as C where 1 = 1 and audit_no is not null";
+            cmd += "from from AuditSummary_company (" + QuoteStr(d.Company) + "," + QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.yrmn) + "," + isdep + ") as C where 1 = 1 and audit_no is not null";
 
             if (!String.IsNullOrEmpty(d.Company))
             {
@@ -148,10 +150,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<ASSETKKF_MODEL.Data.Mssql.Asset.AuditSummary> GetDEPCODEOLSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
+            int isdep = d.isdept ? 1 : 0;
+
             string cmd = " select company,depcodeol,max(stname) as stname,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
             //cmd += "from AuditSummary (" + d.year + "," + d.mn + ") where 1 = 1  and audit_no is not null";
-            cmd += "from AuditSummary_company (" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ") as C where 1 = 1 and audit_no is not null";
+            cmd += "from from AuditSummary_company (" + QuoteStr(d.Company) + "," + QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.yrmn) + "," + isdep + ") as C where 1 = 1 and audit_no is not null";
 
             if (!String.IsNullOrEmpty(d.Company))
             {
@@ -197,10 +201,12 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<AuditDeptSummary> GetDEPMSTSummary(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
+            int isdep = d.isdept ? 1 : 0;
+
             string cmd = " select company,YRMN,DEPMST ,max(DEPNM) as DEPNM,max(SQNO) as SQNO,max(audit_no) as audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT,sum(QTY_TRN) as QTY_TRN ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
             //cmd += "from AuditSummary  (" + d.year + "," + d.mn + ") where 1 = 1  and audit_no is not null";
-            cmd += "from AuditSummary_company (" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ") as C where 1 = 1 and audit_no is not null";
+            cmd += " from AuditSummary_company (" + QuoteStr(d.Company) + "," + QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.yrmn) + "," + isdep + ") as C where 1 = 1 and audit_no is not null";
 
             if (!String.IsNullOrEmpty(d.Company))
             {
@@ -252,11 +258,13 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<AuditDeptSummary> GetSummaryByDepMst(ASSETKKF_MODEL.Request.Asset.AuditSummaryReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
+            int isdep = d.isdept ? 1 : 0;
+
             string cmd = " select company,yrmn,max(DEPMST) as DEPMST,depcodeol,max(stname) as stname,SQNO,audit_no,sum(QTY_TOTAL) as QTY_TOTAL,sum(QTY_CHECKED) as QTY_CHECKED,sum(QTY_WAIT) as QTY_WAIT ";
             cmd += ", Case when sum(QTY_TOTAL) > 0 then CAST(((CAST(sum(QTY_CHECKED) as DECIMAL(9,2)) /CAST(sum(QTY_TOTAL) as DECIMAL(9,2)))*100) as DECIMAL(9,2)) else 0 end progress ";
             cmd += ",max(yr) as yr,max(mn) as mn,max(yrmn) as yrmn";
             //cmd += " from AuditSummary (" + d.year + "," + d.mn + ") where 1 = 1  and audit_no is not null";
-            cmd += "from AuditSummary_company (" + QuoteStr(d.Company) + "," + d.year + "," + d.mn + ") as C where 1 = 1 and audit_no is not null";
+            cmd += " from AuditSummary_company (" + QuoteStr(d.Company) + "," + QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.yrmn) + "," + isdep + ") as C where 1 = 1 and audit_no is not null";
 
             if (!String.IsNullOrEmpty(d.Company))
             {

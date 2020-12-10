@@ -37,7 +37,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             sql += " ,(CAST(P.MN AS varchar) + ' / ' + CAST(P.YR AS varchar) + ' - ' + CAST(P.YRMN AS varchar) ) as AUDIT_AT  ";
             sql += " from  [FT_ASAUDITPOSTMST_COMPANY] (" + QuoteStr(d.company) + ") as P ";
            // sql += " left outer join [FT_UserAsset] ('') as U on U.OFFICECODE = P.INPID and U.COMPANY = P.COMPANY   ";
-            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE] () as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO   and P.INPID = D.INPID";
+            sql += " left outer join [FT_ASAUDITPOSTMST_PHONE_COMPANY] (" + QuoteStr(d.company) + ") as D on D.SQNO = P.SQNO and D.COMPANY = P.COMPANY and D.ASSETNO = P.ASSETNO   and P.INPID = D.INPID";
             sql += " where 1 = 1";
 
 
@@ -61,6 +61,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.MN))
             {
                 sql += " and P.MN =" + QuoteStr(d.MN);
+            }
+
+            if (!String.IsNullOrEmpty(d.YRMN))
+            {
+                sql += " and P.YRMN =" + QuoteStr(d.YRMN);
             }
 
             if (d.cutdt != null)
@@ -181,6 +186,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and C.MN =" + QuoteStr(d.MN);
             }
 
+            if (!String.IsNullOrEmpty(d.YRMN))
+            {
+                sql += " and C.YRMN =" + QuoteStr(d.YRMN);
+            }
+
             if (d.cutdt != null)
             {
                 param.Add("@CUTDT", d.cutdt);
@@ -255,7 +265,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " )";
             }
 
-            sql += " and ASSETNO not in (select assetno from [FT_ASAUDITPOSTMST]() P where 1 =1";
+            sql += " and ASSETNO not in (select assetno from [FT_ASAUDITPOSTMST_COMPANY](" + QuoteStr(d.company) + ") P where 1 =1";
 
             if (!String.IsNullOrEmpty(d.company))
             {
@@ -277,6 +287,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.MN))
             {
                 sql += " and P.MN =" + QuoteStr(d.MN);
+            }
+
+            if (!String.IsNullOrEmpty(d.YRMN))
+            {
+                sql += " and P.YRMN =" + QuoteStr(d.YRMN);
             }
 
             if (d.cutdt != null)
@@ -501,6 +516,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " and OFFICECODE = " + QuoteStr(d.OFFICECODE);
             }
 
+            if (!string.IsNullOrEmpty(d.YRMN))
+            {
+                sql += " and YRMN = " + QuoteStr(d.YRMN);
+            }
+
             var res = Query<RptAuditAsset>(sql, param, conStr).ToList();
             return res;
         }
@@ -532,6 +552,22 @@ namespace ASSETKKF_ADO.Mssql.Asset
                 sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.company) + ") ";
                 sql += " where DEPMST = '" + d.DEPMST + "'";
                 sql += " and company = '" + d.company + "'";
+
+                if (!String.IsNullOrEmpty(d.YEAR))
+                {
+                    sql += " and YR = " + QuoteStr(d.YEAR);
+                }
+
+                if (!String.IsNullOrEmpty(d.MN))
+                {
+                    sql += " and MN = " + QuoteStr(d.MN);
+                }
+
+                if (!String.IsNullOrEmpty(d.YRMN))
+                {
+                    sql += " and YRMN = " + QuoteStr(d.YRMN);
+                }
+
                 sql += " group by[DEPCODE])";
             }
 
@@ -543,6 +579,11 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.MN))
             {
                 sql += " and P.MN =" + QuoteStr(d.MN);
+            }
+
+            if (!String.IsNullOrEmpty(d.YRMN))
+            {
+                sql += " and P.YRMN =" + QuoteStr(d.YRMN);
             }
 
             if (d.cutdt != null)

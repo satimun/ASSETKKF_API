@@ -26,6 +26,7 @@ namespace ASSETKKF_MODEL.Request.Report
 
         public string YEAR { get; set; }
         public string MN { get; set; }
+        public string YRMN { get; set; }
 
         public string OFFICECODE { get; set; }
         public string TYPECODE { get; set; }

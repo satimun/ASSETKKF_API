@@ -289,19 +289,33 @@ namespace ASSETKKF_ADO.Mssql.Asset
 			{
 				sql += " and MN = '" + d.MN + "'";
 			}
-			if (!String.IsNullOrEmpty(d.DEPMST))
-			{
-				sql += " and DEPCODEOL in (SELECT [DEPCODEOL] ";
-				sql += " FROM FT_ASAUDITCUTDATE() ";
-				sql += " where DEPMST = '" + d.DEPMST + "'";
-				sql += " and company = '" + d.COMPANY + "'";
-				sql += " group by[DEPCODEOL])";
-			}
+			//if (!String.IsNullOrEmpty(d.DEPMST))
+			//{
+			//	sql += " and DEPCODEOL in (SELECT [DEPCODEOL] ";
+			//	sql += " FROM FT_ASAUDITCUTDATE() ";
+			//	sql += " where DEPMST = '" + d.DEPMST + "'";
+			//	sql += " and company = '" + d.COMPANY + "'";
+			//	if (!String.IsNullOrEmpty(d.YEAR))
+			//	{
+			//		sql += " and YR = " + QuoteStr(d.YEAR);
+			//	}
 
-			if (!String.IsNullOrEmpty(d.cutdt))
-			{
-				sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
-			}
+			//	if (!String.IsNullOrEmpty(d.MN))
+			//	{
+			//		sql += " and MN = " + QuoteStr(d.MN);
+			//	}
+
+			//	if (!String.IsNullOrEmpty(d.YRMN))
+			//	{
+			//		sql += " and YRMN = " + QuoteStr(d.YRMN);
+			//	}
+			//	sql += " group by[DEPCODEOL])";
+			//}
+
+			//if (!String.IsNullOrEmpty(d.cutdt))
+			//{
+			//	sql += " and DATEADD(dd, 0, DATEDIFF(dd, 0, cutdt)) = DATEADD(dd, 0, DATEDIFF(dd, 0, " + QuoteStr(d.cutdt) + "))";
+			//}
 
 			if (!String.IsNullOrEmpty(d.OFFICECODE))
 			{

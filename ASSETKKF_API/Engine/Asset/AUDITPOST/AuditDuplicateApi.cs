@@ -83,6 +83,22 @@ namespace ASSETKKF_API.Engine.Asset.AUDITPOST
                     case "confirmtrntotmp":
                         res = confirmtrntotmp(dataReq, res, conString);
                         break;
+
+                    case "audittmptofixedasset":
+                        res = audittmptofixedasset(dataReq, res, conString);
+                        break;
+
+                    case "audittrntofixedasset":
+                        res = audittrntofixedasset(dataReq, res, conString);
+                        break;
+
+                    case "confirmtmptofixedasset":
+                        res = confirmtmptofixedasset(dataReq, res, conString);
+                        break;
+
+                    case "confirmtrntofixedasset":
+                        res = confirmtrntofixedasset(dataReq, res, conString);
+                        break;
                 }
 
             }
@@ -117,6 +133,146 @@ namespace ASSETKKF_API.Engine.Asset.AUDITPOST
                 }
             }
             dataRes.data = res;
+        }
+
+        private AuditDuplicateRes confirmtmptofixedasset(AuditPostReq dataReq, AuditDuplicateRes res, string conStr = null)
+        {
+            try
+            {
+                //Save to AuditTMP
+                AUDITPOSTMSTReq req1 = new AUDITPOSTMSTReq()
+                {
+                    MODE = "update",
+                    SQNO = dataReq.SQNO,
+                    COMPANY = dataReq.COMPANY,
+                    ASSETNO = dataReq.ASSETNO,
+                    UCODE = dataReq.UCODE,
+                    FINDY = dataReq.FINDY,
+                    PCODE = dataReq.PCODE,
+                    PNAME = dataReq.PNAME,
+                    MEMO1 = dataReq.MEMO1 + " " + dataReq.STFLAGNM,
+                };
+                ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTOTEMPAdo.GetInstant().SP_AUDITPOSTMSTTOTEMP(req1, null, null, conStr);
+
+
+                
+
+                res._result._code = "200";
+                res._result._message = "";
+                res._result._status = "OK";
+
+
+            }
+            catch (Exception ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Internal Server Error";
+            }
+
+
+            return res;
+        }
+
+        private AuditDuplicateRes confirmtrntofixedasset(AuditPostReq dataReq, AuditDuplicateRes res, string conStr = null)
+        {
+            try
+            {
+                
+                //Update to AuditTRN
+                AUDITPOSTMSTReq req = new AUDITPOSTMSTReq()
+                {
+                    SQNO = dataReq.SQNO,
+                    COMPANY = dataReq.COMPANY,
+                    ASSETNO = dataReq.ASSETNO,
+                    INPID = dataReq.INPID,
+                    MEMO1 = dataReq.MEMO1 + " " + dataReq.STFLAGNM,
+                    UCODE = dataReq.UCODE,
+                    MODE = "updateTRN_TMP"
+
+                };
+
+                var updateSNDST = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().SP_AUDITPOSTTRNPHONE(req, null, null, conStr);
+
+                res._result._code = "200";
+                res._result._message = "";
+                res._result._status = "OK";
+
+
+            }
+            catch (Exception ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Internal Server Error";
+            }
+
+
+            return res;
+        }
+
+        private AuditDuplicateRes audittmptofixedasset(AuditPostReq dataReq, AuditDuplicateRes res, string conStr = null)
+        {
+            try
+            {
+                var lstTEMP = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTOTEMPAdo.GetInstant().getAuditTmpFIXEDASSET(dataReq, null, conStr);
+                res.AuditToTEMPLST = lstTEMP;
+
+
+                if ((lstTEMP != null && lstTEMP.Count > 0) )
+                {
+                    res._result._code = "200";
+                    res._result._message = "";
+                    res._result._status = "OK";
+                }
+                else
+                {
+                    res._result._code = "404";
+                    res._result._message = "";
+                    res._result._status = "NOT FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Internal Server Error";
+            }
+
+
+            return res;
+        }
+
+        private AuditDuplicateRes audittrntofixedasset(AuditPostReq dataReq, AuditDuplicateRes res, string conStr = null)
+        {
+            try
+            {
+
+                var lstTTRN = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTTRNAdo.GetInstant().getAuditTrnFIXEDASSET(dataReq, null, conStr);
+                res.POSTTRNDuplicateLST = lstTTRN;
+
+                if ((lstTTRN != null && lstTTRN.Count > 0))
+                {
+                    res._result._code = "200";
+                    res._result._message = "";
+                    res._result._status = "OK";
+                }
+                else
+                {
+                    res._result._code = "404";
+                    res._result._message = "";
+                    res._result._status = "NOT FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                res._result._code = "500 ";
+                res._result._message = ex.Message;
+                res._result._status = "Internal Server Error";
+            }
+
+
+            return res;
         }
 
         private AuditDuplicateRes confirmtrntotmp(AuditPostReq dataReq, AuditDuplicateRes res, string conStr = null)

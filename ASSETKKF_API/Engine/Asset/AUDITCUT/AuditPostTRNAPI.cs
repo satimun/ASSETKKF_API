@@ -66,7 +66,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                     AuditPostReq req1 = new AuditPostReq()
                     {
                         COMPANY = dataReq.COMPANY,
-                        SQNO = dataReq.SQNO
+                        SQNO = dataReq.SQNO,
+                        isdept = dataReq.isdept
                     };
                     var lstPostMSTToTEMP = ASSETKKF_ADO.Mssql.Audit.AUDITPOSTMSTTOTEMPAdo.GetInstant().getDataToSendDep(req1,null,null,conString);
                     res.AuditToTEMPLST = lstPostMSTToTEMP;
@@ -90,7 +91,8 @@ namespace ASSETKKF_API.Engine.Asset.AUDITCUT
                         COMPANY = dataReq.COMPANY,
                         LEADERCODE = dataReq.LEADERCODE,
                         AREACODE = dataReq.AREACODE,
-                        UCODE = dataReq.UCODE
+                        UCODE = dataReq.UCODE,
+                        isdept = dataReq.isdept
                     };
 
                     res.AUDITPOSTTRNLST = ASSETKKF_ADO.Mssql.Asset.AuditCutADO.GetInstant().getAUDITPOSTTRN(req1,null,conString);

@@ -19,9 +19,11 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string SQNO { get; set; }
         public string YR { get; set; }
         public string MN { get; set; }
+        public string YRMN { get; set; }
         public string DBMode { get; set; }
         public string ConnStr { get; set; }
         public bool isdept { get; set; }
+        public bool isaudit { get; set; }
 
     }
 
@@ -38,9 +40,11 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string DEPMST { get; set; }
         public string YR { get; set; }
         public string MN { get; set; }
+        public string YRMN { get; set; }
         public string DBMode { get; set; }
         public string ConnStr { get; set; }
         public bool isdept { get; set; }
+        public bool isaudit { get; set; }
     }
 
     public class AuditCutPostReq
@@ -52,9 +56,11 @@ namespace ASSETKKF_MODEL.Request.Asset
         public string AREACODE { get; set; }
         public string YR { get; set; }
         public string MN { get; set; }
+        public string YRMN { get; set; }
         public string DBMode { get; set; }
         public string ConnStr { get; set; }
         public bool isdept { get; set; }
+        public bool isaudit { get; set; }
     }
 
     #endregion
