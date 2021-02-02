@@ -654,8 +654,9 @@ namespace ASSETKKF_ADO.Mssql.Asset
         {
             DynamicParameters param = new DynamicParameters();
 
-            sql = "select * from FT_AUDITASSETNOBYOFFICECODE(" + QuoteStr(d.Company) + "," +QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.OFFICECODE) + "," + QuoteStr(d.yrmn) + ")";
+            sql = "select * from FT_AUDITASSETNOBYOFFICECODE(" + QuoteStr(d.Company) + "," +QuoteStr(d.year) + "," + QuoteStr(d.mn) + "," + QuoteStr(d.OFFICECODE) + "," + QuoteStr(d.yrmn) + ") ";
 
+            sql += " where 1 =1";
             if (d.isdept)
             {
                 sql += " and isnull(Audit_NO,'') like 'DU%' ";

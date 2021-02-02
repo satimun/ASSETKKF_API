@@ -548,7 +548,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
             if (!String.IsNullOrEmpty(d.DEPMST))
             {
                 //sql += " and P.DEPMST =" + QuoteStr(d.DEPMST);
-                sql += "and DEPCODE in (SELECT [DEPCODE] ";
+                sql += "and (isnull(DEPCODE,'') = '' or DEPCODE in (SELECT [DEPCODE] ";
                 sql += " FROM FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.company) + ") ";
                 sql += " where DEPMST = '" + d.DEPMST + "'";
                 sql += " and company = '" + d.company + "'";
@@ -568,7 +568,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
                     sql += " and YRMN = " + QuoteStr(d.YRMN);
                 }
 
-                sql += " group by[DEPCODE])";
+                sql += " group by[DEPCODE]) )";
             }
 
             if (!String.IsNullOrEmpty(d.YEAR))
@@ -767,7 +767,7 @@ namespace ASSETKKF_ADO.Mssql.Asset
         public List<Multiselect> GetAuditOFFICE(ASSETKKF_MODEL.Request.Report.RptAuditAssetReq d, SqlTransaction transac = null, string conStr = null)
         {
             DynamicParameters param = new DynamicParameters();
-            string cmd = " SELECT  OFFICECODE as id,(OFFICECODE + ' : ' + OFNAME) as description   FROM  ( ";
+            string cmd = " SELECT DISTINCT OFFICECODE as id,(OFFICECODE + ' : ' + OFNAME) as description   FROM  ( ";
             cmd += " Select    OFFICECODE,MAX(OFNAME) AS OFNAME,DEPCODEOL,MAX(STNAME) AS STNAME,DEPCODE  from  FT_ASAUDITCUTDATE_COMPANY(" + QuoteStr(d.company) + ") D where 1 = 1 ";
 
             if (!String.IsNullOrEmpty(d.company))
